@@ -3,202 +3,115 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f2f2f2"
+    android:layout_marginTop="@dimen/dimen_10dp"
+    android:background="@color/white"
     android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimen_30dp"
+        android:background="@android:color/white">
+
+        <com.jaldeeinc.jaldee.singlerowcalendar.DatePickerTimeline
+            android:id="@+id/main_single_row_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:deselection="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSelectedCalendarDate"
+            app:longPress="false"
+            android:gravity="center"
+            app:multiSelection="false" />
+
+        <TextView
+            android:id="@+id/tvSelectedCalendarDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/font_medium"
+            android:text="SELECT A DATE"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dimen_15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSelectedCalendarDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/lightGrey"
+            android:textSize="@dimen/dimen_16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCalendarDate"
+            app:layout_constraintStart_toEndOf="@+id/tvSelectedCalendarDate"
+            app:layout_constraintTop_toTopOf="@+id/tvSelectedCalendarDate" />
+
+        <Button
+            android:id="@+id/btn_calendar"
+            android:layout_width="17dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:background="@drawable/icon_calendar2"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCalendarDate"
+            app:layout_constraintStart_toEndOf="@+id/tvSelectedCalendarDate"
+            app:layout_constraintTop_toTopOf="@+id/tvSelectedCalendarDate" />
+
+        <!--<Button
+            android:id="@+id/btnRight_calendar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/angle_right_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCalendarDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvSelectedCalendarDate" />
+
+        <Button
+            android:id="@+id/btnLeft_calendar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/angle_left_icon"
+            app:layout_constraintEnd_toStartOf="@+id/btnRight_calendar"
+            app:layout_constraintTop_toTopOf="@+id/btnRight_calendar" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding15"
-        android:layout_marginEnd="@dimen/padding15"
-        android:layout_marginTop="@dimen/padding20">
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginEnd="@dimen/dimen_15dp">
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Time"
             android:layout_centerVertical="true"
-            android:textAllCaps="true"
-            android:visibility="gone"
-            android:textColor="@color/title_color"
-            android:textSize="@dimen/txtsize_14">
+            android:fontFamily="@font/font_medium"
+            android:text="Available Time"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dimen_15dp"
+            android:visibility="visible">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-        <ImageView
-            android:id="@+id/iv_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/close"
-            android:padding="@dimen/padding5"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/padding5"
-            app:tint="@color/gray">
-
-        </ImageView>
-
+        </TextView>
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_appoint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:orientation="vertical">
-
-        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:letterSpacing="0.1"
-            android:text=""
-            android:textColor="@color/appoint_theme"
-            android:textSize="@dimen/dimen_30sp">
-
-        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:letterSpacing="0.1"
-            android:text=""
-            android:textColor="@color/appoint_theme"
-            android:textSize="@dimen/dimen_30sp">
-
-        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-    </LinearLayout>
-
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose your new date"
-        android:textSize="@dimen/txtsize_14"
-        android:textAllCaps="true"
-        android:textColor="@color/title_color"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/padding15">
-
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding5"
-        android:layout_marginStart="@dimen/dimen_20dp"
-        android:layout_marginEnd="@dimen/dimen_20dp">
-
-
-    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-        android:layout_width="200dp"
-        android:layout_height="@dimen/padding60"
-        app:neomorph_shadow_type="outer"
-        app:neomorph_layer_type="hardware"
-        app:neomorph_background_color="#f2f2f2"
-        app:neomorph_corner_radius="10dp"
-        app:neomorph_elevation="3dp"
-        app:neomorph_shadow_visible="true"
-        app:neomorph_view_type="rectangular"
-        android:layout_weight="0.2"
-        app:neomorph_shadow_color="@color/light_grey"
-        app:neomorph_highlight_color="#FFFFFF">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/iv_minus"
-                android:layout_width="@dimen/padding15"
-                android:layout_height="wrap_content"
-                android:src="@drawable/minus"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/dimen_20dp"
-                app:tint="@color/location_theme">
-
-            </ImageView>
-
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/tv_calenderDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="@dimen/txtsize_14"
-                android:textColor="@color/title_color"
-                android:layout_centerInParent="true">
-
-
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-
-            <ImageView
-                android:id="@+id/iv_add"
-                android:layout_width="@dimen/padding15"
-                android:layout_height="wrap_content"
-                android:src="@drawable/plus"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_20dp"
-                app:tint="@color/location_theme">
-
-            </ImageView>
-
-        </RelativeLayout>
-
-    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
-
-        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-            android:id="@+id/fl_calender"
-            android:layout_width="@dimen/dimen_65dp"
-            android:layout_height="@dimen/padding60"
-            app:neomorph_shadow_type="outer"
-            app:neomorph_layer_type="hardware"
-            app:neomorph_background_color="#F2f2f2"
-            app:neomorph_corner_radius="10dp"
-            app:neomorph_elevation="3dp"
-            app:neomorph_view_type="rectangular"
-            app:neomorph_shadow_color="@color/light_grey"
-            app:neomorph_highlight_color="@color/neomorph_highlight_color">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_calen"
-                app:tint="@color/location_theme"
-                android:layout_gravity="center"/>
-
-        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
-
-    </LinearLayout>
-
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose your Slot"
-        android:textSize="@dimen/txtsize_14"
-        android:textAllCaps="true"
-        android:textColor="@color/title_color"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/padding15">
-
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_slots"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:visibility="visible"
         android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp">
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:visibility="visible">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -206,30 +119,31 @@
         android:id="@+id/ll_noSlots"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:visibility="gone"
         android:layout_marginTop="@dimen/txtsize_10"
         android:layout_marginBottom="@dimen/txtsize_10"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <ImageView
-        android:id="@+id/no_slots"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/confused"
-        android:tintMode="multiply"
-        app:tint="#f2f2f2">
+        <ImageView
+            android:id="@+id/no_slots"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/confused"
+            android:tintMode="multiply"
+            app:tint="#f2f2f2">
 
-    </ImageView>
+        </ImageView>
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding5"
-            android:textColor="@color/title_color"
-            android:text="No slots available for selected date">
+            android:fontFamily="@font/font_semibold"
+            android:text="No slots available for selected date"
+            android:textColor="@color/title_color">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        </TextView>
 
     </LinearLayout>
 
@@ -237,61 +151,30 @@
         android:id="@+id/ll_seeMoreHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding5"
         android:layout_gravity="end"
-        android:visibility="gone"
-        android:layout_marginEnd="@dimen/padding25">
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_marginEnd="@dimen/padding25"
+        android:visibility="gone">
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scroll down to see more"
-            android:textSize="@dimen/txtsize_12"
             android:layout_gravity="center"
-            android:textColor="@color/title_color">
+            android:fontFamily="@font/font_medium"
+            android:text="Scroll down to see more"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/txtsize_12">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </TextView>
 
         <pl.droidsonroids.gif.GifImageView
             android:layout_width="@dimen/padding20"
             android:layout_height="@dimen/dimen_30dp"
-            android:src="@drawable/down_arrow"
-            android:layout_marginStart="@dimen/padding5">
+            android:layout_marginStart="@dimen/padding5"
+            android:src="@drawable/down_arrow">
 
         </pl.droidsonroids.gif.GifImageView>
 
     </LinearLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_submit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/padding45"
-        android:layout_marginStart="@dimen/padding15"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/padding15"
-        android:layout_marginBottom="@dimen/dimen_20dp"
-        app:cardBackgroundColor="@color/location_theme"
-        app:cardCornerRadius="@dimen/padding3">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="OK"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txtsize_14">
-
-            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
 
 </LinearLayout>

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fl_slotBackground"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dimen_45dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/padding3"
     app:cardCornerRadius="@dimen/padding5"
-    app:cardElevation="@dimen/padding3"
-    android:id="@+id/fl_slotBackground">
+    android:background="@drawable/unselected_slot_1"
+    app:cardElevation="0dp">
 
+        <TextView
+            android:id="@+id/tv_timeSlot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/font_medium"
+            android:paddingStart="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_10dp"
+            android:text="09:30 AM"
+            android:textColor="@color/black7"
+            android:textSize="12sp">
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-        android:id="@+id/tv_timeSlot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="09:30 AM"
-        android:layout_gravity="center"
-        android:paddingStart="@dimen/dimen_10dp"
-        android:paddingEnd="@dimen/dimen_10dp"
-        android:textColor="@color/location_theme"
-        android:textSize="12sp">
-
-    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
+        </TextView>
 </androidx.cardview.widget.CardView>

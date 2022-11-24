@@ -1,7 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import static com.jaldeeinc.jaldee.activities.Appointment.dateTime;
-import static com.jaldeeinc.jaldee.activities.Appointment.earliestAvailable;
 import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 import android.os.Bundle;
@@ -40,6 +38,9 @@ import retrofit2.Response;
  */
 
 public class AppointmentDate<mAdapter> extends AppCompatActivity {
+    static String dateTime;
+    static TextView earliestAvailable;
+
     ArrayList timeslot = new ArrayList();
     ArrayList timeslotFormat = new ArrayList();
     RecyclerView recycle_timeslots;
@@ -129,7 +130,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 //            sAdapter.notifyDataSetChanged();
         } else {
             tv_noavail_slot.setVisibility(View.VISIBLE);
-            Appointment.timeslotdate("Time Slots not available", "");
+           // Appointment.timeslotdate("Time Slots not available", "");
             Toast.makeText(this, "Time Slots not available", Toast.LENGTH_SHORT).show();
 
         }
@@ -153,7 +154,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                 }
                 changedDate = sdf.format(last_date);
                 ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), changedDate, accountId);
-                Appointment.timeslotdates(changedDate);
+               // Appointment.timeslotdates(changedDate);
             }
         });
 
@@ -239,7 +240,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                                 if (schedResponse.get(i).getId() != 0) {
                                     id = String.valueOf(schedResponse.get(i).getId());
                                     ApiScheduleId(id, mDate, accountIDs);
-                                    Appointment.schedid(id);
+                                   // Appointment.schedid(id);
                                 }
 
 
@@ -294,7 +295,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                                         if (schedResponse.get(i).getId() != 0) {
                                             id = String.valueOf(schedResponse.get(i).getId());
                                             ApiScheduleId(id, mDate, accountIDs);
-                                            Appointment.schedid(id);
+                                           // Appointment.schedid(id);
 
                                         }
 
@@ -340,7 +341,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                                         if (schedResponse.get(i).getId() != 0) {
                                             id = String.valueOf(schedResponse.get(i).getId());
                                             ApiScheduleId(id, mDate, accountIDs);
-                                            Appointment.schedid(id);
+                                            //Appointment.schedid(id);
 
                                         }
 
@@ -374,7 +375,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                             tv_noavail_slot.setVisibility(View.VISIBLE);
                             recycle_timeslots.setAlpha(0);
                             Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
-                            Appointment.schedid(String.valueOf(response.body().size()));
+                           // Appointment.schedid(String.valueOf(response.body().size()));
                         }
 
                     }

@@ -82,9 +82,6 @@
             android:name=".activities.ImageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CheckInReconfirmation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.ReconfirmationActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -127,6 +124,7 @@
             android:name=".activities.ItemsActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.OrdersHistoryActivity" />
+        <activity android:name=".activities.MyPaymentsActivity" />
         <activity android:name=".activities.JdnActivity" />
         <activity
             android:name=".activities.SearchResultsActivity"
@@ -165,11 +163,7 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AppointmentConfirmation"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.CheckInConfirmation"
+            android:name=".activities.BookingConfirmation"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.ActiveListing" />
@@ -204,6 +198,9 @@
         </activity>
         <activity
             android:name=".activities.Register"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.MaintananceActivity"
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.AppointmentDate"
@@ -261,11 +258,6 @@
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.Appointment"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".activities.PaymentDetail"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
@@ -282,19 +274,11 @@
             android:name=".activities.CheckinFamilyMember"
             android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.CheckinFamilyMemberAppointment"
-            android:screenOrientation="unspecified" />
-        <activity
             android:name=".activities.CheckinFamilyMemberDonation"
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.MessageActivity"
             android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.DetailInboxList"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddMemberChekin"
             android:screenOrientation="unspecified" />
@@ -304,9 +288,6 @@
         <activity
             android:name=".activities.BillActivity"
             android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.OneTimeQuestionnaire"
-            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.MyFirebaseMessagingService"

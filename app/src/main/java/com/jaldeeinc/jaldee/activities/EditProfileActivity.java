@@ -5,12 +5,21 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -64,11 +73,13 @@ public class EditProfileActivity extends AppCompatActivity {
     DatabaseHandler db;
     Context mContext;
     static SimpleDateFormat simpleDateFormat;
-    LinearLayout Llayout;
+    LinearLayout Llayout, ll_delete_account;
     String countryCode = "";
     static EditText edtTelegramNumber, edtWhtsAppNumber;
     CountryCodePicker WhtsappCCodePicker, TelegramCCodePicker;
-
+    Dialog dialog = null;
+    LinearLayout ll_delete, ll_Cancel, ll_acountdelete, ll_goodbye, ll_close;
+    ImageView iv_close;
     private static final String DATE_PATTERN =
             "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
 
@@ -109,7 +120,7 @@ public class EditProfileActivity extends AppCompatActivity {
         edtWhtsAppNumber = findViewById(R.id.edtWhtsAppNumber);
         edtTelegramNumber = findViewById(R.id.edtTelegram);
         txtphoneChange = (TextView) findViewById(R.id.txtphoneChange);
-
+        ll_delete_account = (LinearLayout) findViewById(R.id.ll_delete_account);
 
 //        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 //        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -118,6 +129,54 @@ public class EditProfileActivity extends AppCompatActivity {
 
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
+
+        ll_delete_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog = new Dialog(EditProfileActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setContentView(R.layout.delete_account_dialog);
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                layoutParams.copyFrom(dialog.getWindow().getAttributes());
+                layoutParams.width = ActionBar.LayoutParams.MATCH_PARENT;
+                layoutParams.height = 700;
+
+                layoutParams.gravity = Gravity.CENTER;
+                dialog.getWindow().setAttributes(layoutParams);
+
+                ll_delete = (LinearLayout) dialog.findViewById(R.id.ll_delete);
+                ll_Cancel = (LinearLayout) dialog.findViewById(R.id.ll_Cancel);
+                ll_acountdelete = (LinearLayout) dialog.findViewById(R.id.ll_acountdelete);
+                ll_acountdelete.setVisibility(View.VISIBLE);
+                ll_goodbye = (LinearLayout) dialog.findViewById(R.id.ll_goodbye);
+                ll_goodbye.setVisibility(View.GONE);
+                iv_close = (ImageView) dialog.findViewById(R.id.iv_close);
+                ll_close = (LinearLayout) dialog.findViewById(R.id.ll_close);
+                ll_close.setVisibility(View.GONE);
+
+                ll_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ApiDeleteAccount();
+                    }
+                });
+
+                ll_Cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
         txtphoneChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -460,8 +519,11 @@ public class EditProfileActivity extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
+            da.show();
+            da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+            da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
             return da;
         }
 
@@ -480,5 +542,66 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
                 };
+    }
+
+    private void ApiDeleteAccount() {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<ResponseBody> call = apiService.deleteConsumerAccount();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog((Activity) mContext, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+
+                        Toast.makeText(mContext, "Account Deleted", Toast.LENGTH_LONG).show();
+                        SharedPreference.getInstance(mContext).clear();
+                        DatabaseHandler db = new DatabaseHandler(mContext);
+                        db.deleteDatabase();
+
+                        ll_acountdelete.setVisibility(View.GONE);
+                        ll_goodbye.setVisibility(View.VISIBLE);
+                        ll_close.setVisibility(View.VISIBLE);
+                        ll_close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                                Intent intent = new Intent(mContext, Register.class);
+                                startActivity(intent);
+                                ((Activity) mContext).finish();
+
+                            }
+                        });
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog((Activity) mContext, mDialog);
+
+            }
+        });
+
     }
 }

@@ -37,13 +37,11 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.Format;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapter.ViewHolder> {
 
@@ -229,7 +227,11 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                viewHolder.tvServiceType.setText("Appointment");
+                if(servicesInfoList.get(position).getAppointmentServiceInfo().getServiceBookingType().equalsIgnoreCase(Constants.SERVICE_BOOKING_TYPE_REQUEST)) {
+                    viewHolder.tvServiceType.setText("Request");
+                }else {
+                    viewHolder.tvServiceType.setText("Appointment");
+                }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
 

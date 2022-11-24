@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -24,8 +21,10 @@ import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ImageActivity;
 import com.jaldeeinc.jaldee.activities.VideoActivity;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 
@@ -43,8 +42,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
     private int selectedPosition = 0;
     private IFilesInterface iFilesInterface;
     private String labelName = "";
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi",".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
-    String[] formats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi",".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
 
 
 
@@ -92,13 +89,13 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                     if (data.getType() != null && data.getType().equalsIgnoreCase(".pdf")) {
 
-                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
 
                     } else if (data.getType()!= null && data.getType().contains("audio")) {
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.audio_icon));
 
-                    } else if (Arrays.asList(formats).contains(extension)) {
+                    } else if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
 
@@ -116,9 +113,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                     if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
 
-                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
 
-                    } else if (Arrays.asList(formats).contains(extension)) {
+                    } else if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
 
@@ -154,9 +151,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                         if (data.getType() != null && data.getType().equalsIgnoreCase(".pdf")) {
 
-                            openOnlinePdf(context, data.getImagePath());
+                            Config.openOnlinePdf(context, data.getImagePath());
 
-                        } else if (Arrays.asList(formats).contains(extension)) {
+                        } else if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                             Intent intent = new Intent(context, VideoActivity.class);
                             intent.putExtra("urlOrPath", data.getImagePath());
@@ -189,7 +186,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                             openPdf(context, data.getImagePath());
 
-                        } else if (Arrays.asList(formats).contains(extension)) {
+                        } else if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                             Intent intent = new Intent(context, VideoActivity.class);
                             intent.putExtra("urlOrPath", data.getImagePath());
@@ -352,12 +349,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
                 Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private void openOnlinePdf(Context mContext, String filePath) {
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
-        context.startActivity(browserIntent);
     }
 
 }

@@ -59,20 +59,21 @@
 
             </androidx.cardview.widget.CardView>-->
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            <TextView
                 android:id="@+id/tv_providerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/font_medium"
                 android:maxLines="1"
                 android:text=""
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/dimen_16sp"
                 android:visibility="gone">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+            </TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +82,7 @@
                 android:orientation="horizontal"
                 android:weightSum="3">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_spName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -89,12 +90,13 @@
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     android:layout_weight="2.1"
                     android:ellipsize="end"
+                    android:fontFamily="@font/font_semibold"
                     android:maxLines="2"
                     android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_18sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -113,11 +115,12 @@
                         android:backgroundTint="@color/red"
                         android:visibility="gone">
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        <TextView
                             android:id="@+id/tv_qnr_info_needed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
+                            android:fontFamily="@font/font_regular"
                             android:paddingTop="@dimen/padding3"
                             android:paddingBottom="@dimen/padding3"
                             android:text="Info Needed"
@@ -126,7 +129,7 @@
                             android:textStyle="bold"
                             android:visibility="visible">
 
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                        </TextView>
 
                     </RelativeLayout>
 
@@ -136,14 +139,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding2"
                         android:layout_marginBottom="@dimen/padding2"
-                        android:background="@drawable/custom_status">
+                        android:background="@drawable/custom_status"
+                        android:gravity="center"
+                        android:visibility="gone">
 
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        <TextView
                             android:id="@+id/tv_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:fontFamily="@font/font_regular"
+                            android:gravity="center"
                             android:padding="@dimen/padding3"
                             android:text=""
                             android:textColor="@color/white"
@@ -151,7 +158,7 @@
                             android:textStyle="bold"
                             android:visibility="visible">
 
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                        </TextView>
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -175,17 +182,18 @@
 
                 </ImageView>
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                <TextView
                     android:id="@+id/tv_serviceName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:fontFamily="@font/font_regular"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_16sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                </TextView>
 
 
             </LinearLayout>
@@ -199,33 +207,35 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                <TextView
                     android:id="@+id/tv_forHint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_regular"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_12dp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                </TextView>
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_bookingFor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_5dp"
+                    android:fontFamily="@font/font_semibold"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_16sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
 
             </LinearLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            <TextView
                 android:id="@+id/tv_tokenno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -233,16 +243,17 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/padding3"
                 android:layout_marginEnd="@dimen/dimen_40dp"
+                android:fontFamily="@font/font_regular"
                 android:text=""
                 android:textColor="@color/location_theme"
                 android:textSize="14dp"
-                android:visibility="gone"></com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                <TextView
                     android:id="@+id/tv_dateAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -250,19 +261,20 @@
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/padding3"
                     android:layout_marginEnd="@dimen/dimen_40dp"
+                    android:fontFamily="@font/font_regular"
                     android:text=""
                     android:textColor="@color/location_theme"
                     android:textSize="14dp">
 
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                </TextView>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                <TextView
                     android:id="@+id/tv_payment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -270,6 +282,7 @@
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/padding3"
                     android:layout_marginEnd="@dimen/dimen_40dp"
+                    android:fontFamily="@font/font_regular"
                     android:text=""
                     android:textColor="@color/colorAccent"
                     android:textSize="14dp"

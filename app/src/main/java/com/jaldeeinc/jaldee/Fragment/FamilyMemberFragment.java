@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.DialogFragment;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +18,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -550,7 +550,7 @@ public class FamilyMemberFragment extends RootFragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog  da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog  da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
             return  da;
         }

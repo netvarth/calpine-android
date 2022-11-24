@@ -1,15 +1,14 @@
 package com.jaldeeinc.jaldee.custom;
 
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -40,7 +38,6 @@ import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
@@ -58,13 +55,10 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import butterknife.BindView;
@@ -74,8 +68,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class OrderActionsDialog extends Dialog {
 
@@ -417,12 +409,8 @@ public class OrderActionsDialog extends Dialog {
                         dialog.setContentView(R.layout.rating);
                         dialog.setCancelable(true);
                         dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {

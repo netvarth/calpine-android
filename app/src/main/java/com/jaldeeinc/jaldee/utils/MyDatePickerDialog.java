@@ -7,6 +7,8 @@ import androidx.fragment.app.DialogFragment;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.R;
+
 import java.util.Calendar;
 
 /**
@@ -24,7 +26,7 @@ public class MyDatePickerDialog extends DialogFragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+        return new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
     }
 
     private DatePickerDialog.OnDateSetListener dateSetListener =

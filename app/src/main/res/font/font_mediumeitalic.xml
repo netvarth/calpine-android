@@ -2,6 +2,8 @@
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
     <!--        android:font="@font/inter_variablefont_slnt_wght"
 -->
+    <!--<font
+        android:font="@font/font_montserrat_mediumitalic"/>-->
     <font
-        android:font="@font/font_montserrat_mediumitalic"/>
+        android:font="@font/poppins_mediumitalic" />
 </font-family>

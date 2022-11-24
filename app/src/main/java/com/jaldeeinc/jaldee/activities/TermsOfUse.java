@@ -25,7 +25,6 @@ public class TermsOfUse extends AppCompatActivity {
     WebView webview;
     private Dialog progressBar;
     Context mContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +46,7 @@ public class TermsOfUse extends AppCompatActivity {
             }
         });
         webview = findViewById(R.id.mWebview_about);
+
         //WebView loading start
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -72,8 +72,10 @@ public class TermsOfUse extends AppCompatActivity {
                     progressBar.dismiss();
                 }
             }
+
         });
         //Webview loading end
+
     }
 
     @Override

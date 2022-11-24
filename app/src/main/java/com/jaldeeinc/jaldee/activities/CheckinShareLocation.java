@@ -1,7 +1,9 @@
 package com.jaldeeinc.jaldee.activities;
 
 
+import static com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy.REQUEST_ID_MULTIPLE_PERMISSIONS;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -11,28 +13,33 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.os.Bundle;
+import android.provider.Settings;
+import android.text.Html;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-//import androidx.core.BuildConfig;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import android.text.Html;
-import android.util.Log;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.provider.Settings;
 
-import com.google.gson.Gson;
+import com.google.android.material.snackbar.Snackbar;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -41,14 +48,6 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ShareLocation;
 import com.jaldeeinc.jaldee.service.LocationUpdatesService;
-
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,8 +60,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy.REQUEST_ID_MULTIPLE_PERMISSIONS;
 
 
 public class CheckinShareLocation extends AppCompatActivity implements
@@ -256,7 +253,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
         modeLabel.setVisibility(View.VISIBLE);
         ApiActiveCheckIn();
-        if(from!=null && from.equalsIgnoreCase("checkin")){
+        if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
             checkinMessage.setVisibility(View.VISIBLE);
         }
         else{
@@ -523,6 +520,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.i(TAG, "onRequestPermissionResult");
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
@@ -535,9 +533,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
             } else {
                 // Permission denied.
                 Snackbar.make(
-                        findViewById(R.id.activity_main),
-                        R.string.permission_denied_explanation,
-                        Snackbar.LENGTH_INDEFINITE)
+                                findViewById(R.id.activity_main),
+                                R.string.permission_denied_explanation,
+                                Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.settings, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -592,7 +590,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                             Laboutus.setVisibility(View.GONE);
                             checkinMessage.setVisibility(View.GONE);
                         } else {
-                            if(from!=null && from.equalsIgnoreCase("checkin")){
+                            if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
                                 checkinMessage.setVisibility(View.VISIBLE);
                             }
                             else{

@@ -216,7 +216,7 @@
 
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:layout_width="84dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dimen_15dp"

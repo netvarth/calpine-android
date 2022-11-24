@@ -922,12 +922,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                         dialog.setContentView(R.layout.rating);
                         dialog.setCancelable(true);
                         dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {

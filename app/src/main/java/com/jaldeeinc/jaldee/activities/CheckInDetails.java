@@ -1,12 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,7 +20,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -43,8 +37,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,12 +61,6 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
-import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomerNotes;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
@@ -74,6 +69,7 @@ import com.jaldeeinc.jaldee.custom.PrescriptionDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
@@ -117,7 +113,6 @@ import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -125,151 +120,119 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
-
 public class CheckInDetails extends AppCompatActivity implements IDeleteImagesInterface, ISaveNotes {
 
-    @BindView(R.id.tv_providerName)
-    CustomTextViewMedium tvProviderName;
-
+    @BindView(R.id.tv_datehint)
+    TextView tv_datehint;
+    @BindView(R.id.ll_token)
+    LinearLayout ll_token;
+    @BindView(R.id.tv_token_number)
+    TextView tv_token_number;
+    @BindView(R.id.tv_tokenWaitTime)
+    TextView tvTokenWaitTime;
+    @BindView(R.id.ll_tokenWaitTime)
+    LinearLayout ll_tokenWaitTime;
+    @BindView(R.id.ll_batch)
+    LinearLayout ll_batch;
     @BindView(R.id.tv_doctorName)
-    CustomTextViewBold tvDoctorName;
-
-    @BindView(R.id.tv_serviceName)
-    CustomTextViewMedium tvServiceName;
-
+    TextView tvDoctorName;
+    @BindView(R.id.tv_doctorName1)
+    TextView tvDoctorName1;
+    @BindView(R.id.tv_locationName)
+    TextView tvLocationName;
     @BindView(R.id.iv_teleService)
     ImageView ivTeleService;
-
-    @BindView(R.id.tv_locationName)
-    CustomTextViewMedium tvLocationName;
-
-    @BindView(R.id.tv_confirmationNumber)
-    CustomTextViewBold tvConfirmationNumber;
-
-    @BindView(R.id.tv_status)
-    CustomTextViewBold tvStatus;
-
-    @BindView(R.id.tv_amount)
-    CustomTextViewBold tvAmount;
-
+    @BindView(R.id.tv_serviceName)
+    TextView tvServiceName;
     @BindView(R.id.tv_consumerName)
-    CustomTextViewBold tvConsumerName;
-
+    TextView tvConsumerName;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    @BindView(R.id.tv_phoneNumber)
+    TextView tvPhoneNumber;
     @BindView(R.id.tv_date)
-    CustomTextViewBold tvDate;
-
+    TextView tvDate;
     @BindView(R.id.tv_time)
-    CustomTextViewBold tvTime;
-
-
+    TextView tvTime;
+    @BindView(R.id.tv_providerName)
+    TextView tvProviderName;
+    @BindView(R.id.tv_providerName1)
+    TextView tvProviderName1;
+    @BindView(R.id.tv_confirmationNumber)
+    TextView tvConfirmationNumber;
+    @BindView(R.id.tv_amount)
+    TextView tvAmount;
     @BindView(R.id.tv_viewMore)
-    CustomTextViewSemiBold tvViewMore;
-
+    TextView tvViewMore;
     @BindView(R.id.tv_billText)
-    CustomTextViewSemiBold tvBillText;
-
+    TextView tvBillText;
     @BindView(R.id.tv_bill_receiptText)
-    CustomTextViewSemiBold tvBillReceiptText;
-
+    TextView tvBillReceiptText;
     @BindView(R.id.cv_back)
     CardView cvBack;
-
     @BindView(R.id.cv_share)
     CardView cvShare;
-
     @BindView(R.id.cv_bill)
     CardView cvBill;
-
     @BindView(R.id.cv_enquiry)
     CardView cvEnquiry;
-
     @BindView(R.id.ll_payment)
     LinearLayout llPayment;
-
     @BindView(R.id.ll_cancel)
     LinearLayout llCancel;
-
     @BindView(R.id.ll_moreDetails)
-    NeomorphFrameLayout llMoreDetails;
-
+    CardView llMoreDetails;
     @BindView(R.id.ll_message)
     LinearLayout llMessage;
-
     @BindView(R.id.ll_reschedule)
     LinearLayout llReschedule;
-
     @BindView(R.id.ll_location)
     LinearLayout llLocation;
-
-    @BindView(R.id.ll_rating)
-    LinearLayout llRating;
-
     @BindView(R.id.iv_ltIcon)
     ImageView ivLtIcon;
-
+    @BindView(R.id.tv_trackingText)
+    TextView tvTrackingText;
+    @BindView(R.id.ll_rating)
+    LinearLayout llRating;
     @BindView(R.id.ll_customerNotes)
     LinearLayout llCustomerNotes;
-
     @BindView(R.id.tv_customerNotes)
-    CustomTextViewMedium tvCustomerNotes;
-
+    TextView tvCustomerNotes;
     @BindView(R.id.ll_instructions)
     LinearLayout llInstructions;
-
-    @BindView(R.id.tv_trackingText)
-    CustomTextViewMedium tvTrackingText;
-
     @BindView(R.id.tv_amountToPay)
-    CustomTextViewRegularItalic tvAmountToPay;
-
-    @BindView(R.id.tv_tokenWaitTime)
-    CustomTextViewBoldItalic tvTokenWaitTime;
-
-    @BindView(R.id.tv_hint)
-    CustomTextViewLight tvHint;
-
-    @BindView(R.id.tv_queueTime)
-    CustomTextViewSemiBold tvQueueTime;
-
-    @BindView(R.id.tv_title)
-    CustomTextViewSemiBold tvTitle;
-
+    TextView tvAmountToPay;
     @BindView(R.id.cv_meetingDetails)
-    NeomorphFrameLayout cvMeetingDetails;
-
+    CardView cvMeetingDetails;
     @BindView(R.id.iv_meetingIcon)
     ImageView ivMeetingIcon;
-
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
     @BindView(R.id.iv_Qr)
     ImageView ivQR;
-
     @BindView(R.id.ll_prescription)
     LinearLayout llPrescription;
-
-    @BindView(R.id.ll_viewMore)
-    LinearLayout llMore;
-
-    @BindView(R.id.tv_phoneNumber)
-    CustomTextViewBold tvPhoneNumber;
-
-    @BindView(R.id.ll_phoneNumber)
-    LinearLayout llPhoneNumber;
-
     @BindView(R.id.ll_sendAttachments)
     LinearLayout llSendAttachments;
-
     @BindView(R.id.ll_viewAttachments)
     LinearLayout llViewAttachments;
-
     @BindView(R.id.ll_questionnaire)
     LinearLayout llQuestionnaire;
-
     @BindView(R.id.ll_service_option_qnr)
     LinearLayout ll_service_option_qnr;
-
-    @BindView(R.id.scroll_view)
+    @BindView(R.id.scrollView)
     ScrollView scrollView;
+    @BindView(R.id.tv_cnsmrDetails_Heading)
+    TextView tv_cnsmrDetails_Heading;
+    @BindView(R.id.icon_text)
+    TextView icon_text;
+    @BindView(R.id.iv_location_icon)
+    ImageView iv_location_icon;
+    @BindView(R.id.iv_prvdr_phone_icon)
+    ImageView iv_prvdr_phone_icon;
+    @BindView(R.id.iv_prvdr_email_icon)
+    ImageView iv_prvdr_email_icon;
+
 
     boolean firstTimeRating = false;
     boolean isTvViewMore = false;
@@ -293,17 +256,15 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
     int id;
 
     // files related
-    Bitmap bitmap;
     File f, file;
     String path, from, from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
     TextView tv_attach, tv_camera;
     private BottomSheetDialog bDialog;
-    CustomTextViewSemiBold tvErrorMessage;
+    TextView tvErrorMessage;
     RecyclerView recycle_image_attachment;
     private int GALLERY = 1, CAMERA = 2;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private Uri mImageUri;
     ImagePreviewAdapter imagePreviewAdapter;
@@ -315,12 +276,14 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_in_details);
+        //setContentView(R.layout.activity_check_in_details);
+        setContentView(R.layout.activity_booking_details);
+
+
         ButterKnife.bind(CheckInDetails.this);
         mContext = CheckInDetails.this;
         iDeleteImagesInterface = (IDeleteImagesInterface) this;
         iSaveNotes = this;
-
 
         Intent i = getIntent();
         if (i != null) {
@@ -333,6 +296,14 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
             fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
             click_action = i.getStringExtra("click_action");
         }
+
+
+        tv_datehint.setText("Date & Time-window");
+        ll_batch.setVisibility(View.GONE);
+        tv_cnsmrDetails_Heading.setText("Booking For");
+        Glide.with(mContext).load(R.drawable.location_icon_1).into(iv_location_icon);
+        Glide.with(mContext).load(R.drawable.phone_icon_1).into(iv_prvdr_phone_icon);
+        Glide.with(mContext).load(R.drawable.email_icon_1).into(iv_prvdr_email_icon);
 
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -347,8 +318,8 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
 
                 Intent intent = new Intent(CheckInDetails.this, RescheduleCheckinActivity.class);
                 intent.putExtra("uniqueId", activeCheckIn.getProviderAccount().getUniqueId());
-                intent.putExtra("ynwuuid", activeCheckIn.getYnwUuid());
                 intent.putExtra("providerId", activeCheckIn.getProviderAccount().getId());
+                intent.putExtra("ynwuuid", activeCheckIn.getYnwUuid());
                 startActivity(intent);
             }
         });
@@ -381,7 +352,6 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
 
                 try {
                     Intent intent = new Intent(CheckInDetails.this, ChatActivity.class);
-
                     if (activeCheckIn.getYnwUuid().contains("h_")) {
                         uuid = activeCheckIn.getYnwUuid().replace("h_", "");
                         intent.putExtra("uuid", uuid);
@@ -715,13 +685,10 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
 
     @Override
     protected void onResume() {
-
         try {
-
             // Api call
             if (uid != null) {
                 getBookingDetails(uid, id);
-
             } else {
 
                 // this gets called when activity is launched from push notification
@@ -735,7 +702,6 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
             }
 
             updateImages();
-
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -743,7 +709,6 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
     }
 
     private void getBookingDetails(String uid, int id) {
-
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckInDetails.this, CheckInDetails.this.getResources().getString(R.string.dialog_log_in));
@@ -790,10 +755,8 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                             }
                             updateUI(activeCheckIn);
                         }
-
                     }
                 } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
                     e.printStackTrace();
                 }
             }
@@ -815,10 +778,18 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
 
                     if (checkInInfo.getProvider().getBusinessName() != null && !checkInInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
                         tvDoctorName.setText(checkInInfo.getProvider().getBusinessName());
+                        tvDoctorName.setVisibility(View.VISIBLE);
+                        tvDoctorName1.setText(checkInInfo.getProvider().getBusinessName());
+                        tvDoctorName1.setVisibility(View.VISIBLE);
                     } else {
                         String name = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
                         tvDoctorName.setText(name);
+                        tvDoctorName.setVisibility(View.VISIBLE);
+                        tvDoctorName1.setText(name);
+                        tvDoctorName1.setVisibility(View.VISIBLE);
                     }
+                    tvProviderName1.setText(checkInInfo.getProviderAccount().getBusinessName());
+                    tvProviderName1.setVisibility(View.VISIBLE);
                     tvProviderName.setVisibility(View.VISIBLE);
                     tvProviderName.setText(checkInInfo.getProviderAccount().getBusinessName());
                     tvProviderName.setOnClickListener(new View.OnClickListener() {
@@ -836,7 +807,12 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                         }
                     });
                 } else {
-                    tvProviderName.setVisibility(View.INVISIBLE);
+                    tvProviderName.setVisibility(View.GONE);
+                    tvProviderName1.setVisibility(View.GONE);
+                    tvDoctorName1.setVisibility(View.VISIBLE);
+                    tvDoctorName1.setText(checkInInfo.getProviderAccount().getBusinessName());
+                    tvDoctorName1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    tvDoctorName.setVisibility(View.VISIBLE);
                     tvDoctorName.setText(checkInInfo.getProviderAccount().getBusinessName());
                     tvDoctorName.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -857,7 +833,6 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 if (checkInInfo.getCheckinEncId() != null) {
                     //Encode with a QR Code image
                     String statusUrl = Constants.URL + "status/" + checkInInfo.getCheckinEncId();
-
                     WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
                     Display display = manager.getDefaultDisplay();
                     Point point = new Point();
@@ -873,7 +848,6 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                             BarcodeFormat.QR_CODE.toString(), smallerDimension);
                     try {
                         Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                        Glide.with(context).load(bitmap).into(ivQR);
 
                         ivQR.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -920,7 +894,6 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 } else {
                     llMoreDetails.setVisibility(View.GONE);
                 }
-
                 if (checkInInfo.getService() != null) {
 
                     if (checkInInfo.getService().getDeptName() != null) {
@@ -979,15 +952,14 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 }
                 // to set Phone number
                 if (checkInInfo.getWaitlistPhoneNumber() != null && !checkInInfo.getWaitlistPhoneNumber().isEmpty()) {
-                    llPhoneNumber.setVisibility(View.VISIBLE);
+                    tvPhoneNumber.setVisibility(View.VISIBLE);
                     countryCode = checkInInfo.getCountryCode();
                     tvPhoneNumber.setText(countryCode + "\u00a0" + checkInInfo.getWaitlistPhoneNumber());
                 } else {
-                    hideView(llPhoneNumber);
+                    hideView(tvPhoneNumber);
                 }
                 // to set status
                 if (checkInInfo.getWaitlistStatus() != null) {
-
                     if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")) {
                         llRating.setVisibility(View.VISIBLE);
                     } else {
@@ -1013,7 +985,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 // to set paid info
                 if (checkInInfo.getAmountPaid() != 0) {
                     llPayment.setVisibility(View.VISIBLE);
-                    tvAmount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(checkInInfo.getAmountPaid()) + " " + "PAID");
+                    tvAmount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(checkInInfo.getAmountPaid()));
                 } else {
 
                     llPayment.setVisibility(View.GONE);
@@ -1021,6 +993,13 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
 
                 // to set consumer name
                 if (checkInInfo.getWaitlistingFor() != null) {
+                    String fName = checkInInfo.getWaitlistingFor().get(0).getFirstName();
+                    String lName = checkInInfo.getWaitlistingFor().get(0).getLastName();
+                    if (fName != null && !fName.trim().isEmpty()) {
+                        icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+                    } else if (lName != null && !lName.trim().isEmpty()) {
+                        icon_text.setText(String.valueOf(lName.trim().charAt(0)));
+                    }
                     tvConsumerName.setText(checkInInfo.getWaitlistingFor().get(0).getFirstName() + " " + checkInInfo.getWaitlistingFor().get(0).getLastName());
 
                 }
@@ -1030,7 +1009,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                     String date = getCustomDateString(checkInInfo.getDate());
                     String time = checkInInfo.getQueue().getQueueStartTime() + " - " + checkInInfo.getQueue().getQueueEndTime();
                     tvDate.setText(date);
-                    tvQueueTime.setText(time);
+                    tvTime.setText(time);
 
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1041,10 +1020,10 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                     tvTitle.setText("Token Details");
                     isToken = true;
                     if (checkInInfo.getCalculationMode() != null && !checkInInfo.getCalculationMode().equalsIgnoreCase("NoCalc")) {
-
-                        tvHint.setText("Token #");
-                        tvTime.setText(String.valueOf(checkInInfo.getToken()));
-                        tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
+                        ll_token.setVisibility(View.VISIBLE);
+                        tv_token_number.setText(String.valueOf(checkInInfo.getToken()));
+                        ll_tokenWaitTime.setVisibility(View.VISIBLE);
+                        tvTokenWaitTime.setVisibility(View.VISIBLE);
                         if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                             tvTokenWaitTime.setVisibility(View.VISIBLE);
                             if (checkinDate.after(today)) {   //future upcomming checkin/token service time
@@ -1058,32 +1037,26 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                         }
 
                     } else {
-                        tvHint.setText("Token #");
-                        tvTime.setText(String.valueOf(checkInInfo.getToken()));
-                        tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
+                        ll_token.setVisibility(View.VISIBLE);
+                        tv_token_number.setText(String.valueOf(checkInInfo.getToken()));
                         tvTokenWaitTime.setVisibility(View.GONE);
+                        ll_tokenWaitTime.setVisibility(View.GONE);
                     }
                 } else {
                     tvTitle.setText("CheckIn Details");
                     isToken = false;
-                    if (checkinDate.after(today)) {    //future upcomming checkin/token service time
-                        tvHint.setText("Starts at");
-                        tvTime.setText(checkInInfo.getServiceTime());
-                    } else {
-                        tvHint.setText("Est wait time");
+                    ll_tokenWaitTime.setVisibility(View.VISIBLE);
+                    tvTokenWaitTime.setVisibility(View.VISIBLE);
 
-                        if (checkInInfo.getAppxWaitingTime() == 0) {
-                            tvTime.setText("Now");
-                        } else {
-                            tvTime.setText(Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
-                        }
+                    if (checkinDate.after(today)) {    //future upcomming checkin/token service time
+                        tvTokenWaitTime.setText("Starts at : " + (checkInInfo.getServiceTime()));
+                    } else {
+                        tvTokenWaitTime.setText("Estimated waiting time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
                     }
                     if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                         tvTime.setVisibility(View.VISIBLE);
-                        tvHint.setVisibility(View.VISIBLE);
                     } else {
                         tvTime.setVisibility(View.GONE);
-                        tvHint.setVisibility(View.GONE);
                     }
                 }
 
@@ -1179,7 +1152,9 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 }
 
                 // hide instructions link when there are no post instructions
-                if (checkInInfo.getService() != null && checkInInfo.getService().isPostInfoEnabled()) {
+                if (checkInInfo.getService() != null && checkInInfo.getService().isPostInfoEnabled()
+                        && ((checkInInfo.getService().getPostInfoText() != null && !checkInInfo.getService().getPostInfoText().trim().isEmpty())
+                        || (checkInInfo.getService().getPostInfoTitle() != null && !checkInInfo.getService().getPostInfoTitle().trim().isEmpty()))) {
                     if (isActive) {
                         llInstructions.setVisibility(View.VISIBLE);
                     }
@@ -1385,12 +1360,8 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                         dialog.setContentView(R.layout.rating);
                         dialog.setCancelable(true);
                         dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
@@ -1736,30 +1707,16 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type;
+        MediaTypeAndExtention type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            String extension = "";
-
-            if (imagePathList.get(i).getImagePath().contains(".")) {
-                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
-            }
-
-            if (extension.equalsIgnoreCase("pdf")) {
-                type = MediaType.parse("application/pdf");
-            } else if (extension.equalsIgnoreCase("png")) {
-                type = MediaType.parse("image/png");
-            } else if (extension.equalsIgnoreCase("jpeg")) {
-                type = MediaType.parse("image/jpeg");
-            } else {
-                type = MediaType.parse("image/*");
-            }
+            type = Config.getFileType(imagePathList.get(i).getImagePath());
 
             file = new File(imagePathList.get(i).getImagePath());
 
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type.getMediaTypeWithExtention(), file));
         }
 
         Map<String, String> query = new HashMap<>();
@@ -2038,7 +1995,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                             //Log.d(TAG, "onActivityResult: " + e.toString());
                         }
                         String orgFilePath = photoFile.getAbsolutePath();
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
@@ -2102,7 +2059,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                                 //Log.d(TAG, "onActivityResult: " + e.toString());
                             }
                             String orgFilePath = photoFile.getAbsolutePath();
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                                 if (orgFilePath == null) {
                                     orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);

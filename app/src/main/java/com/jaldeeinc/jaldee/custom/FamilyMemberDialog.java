@@ -3,9 +3,7 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,38 +21,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.CheckInActivity;
-import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.activities.DonationActivity;
-import com.jaldeeinc.jaldee.activities.OneTimeQuestionnaire;
-import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
+import com.jaldeeinc.jaldee.activities.ReconfirmationActivity;
 import com.jaldeeinc.jaldee.adapter.CheckIn_FamilyMemberListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
-import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.Questions;
-import com.jaldeeinc.jaldee.response.SearchAppoinment;
-import com.jaldeeinc.jaldee.response.SearchDonation;
-import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,6 +90,23 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService, int providerId) {
         super(appointmentActivity);
         this.context = appointmentActivity;
+        this.memId = familyMEmID;
+        this.email = email;
+        this.phone = phone;
+        this.prepayment = prepayment;
+        this.iFamilyMemberDetails = iFamilyMemberDetails;
+        this.profileDetails = profileDetails;
+        this.multiple = multiple;
+        this.update = update;
+        this.countryCode = countryCode;
+        this.isVirtualService = isVirtualService;
+        this.isAppointment = true;
+        this.providerId = providerId;
+    }
+
+    public FamilyMemberDialog(ReconfirmationActivity reconfirmationActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService, int providerId) {
+        super(reconfirmationActivity);
+        this.context = reconfirmationActivity;
         this.memId = familyMEmID;
         this.email = email;
         this.phone = phone;
@@ -231,11 +235,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
                 if (!phone.equalsIgnoreCase("")) {
                     if ((!cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") && phone.trim().length() >= 7) || (cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") && phone.trim().length() == 10)) {
-                       /* if (isVirtualService) {
-                            iFamilyMemberDetails.sendFamilyMbrPhoneAndEMail(phone, email, countryCode);
-                            dismiss();
 
-                        } else {*/
                         if (prepayment != null) {
                             appointment();
                         } else {
@@ -356,9 +356,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                 }
             } else {
                 ApiGetOneTimeQNR();
-               /* iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
-                Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
-                dismiss();*/
             }
         }
 
@@ -387,10 +384,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                 }
             } else {
                 ApiGetOneTimeQNR();
-               /* iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
-                iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
-                Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
-                dismiss();*/
             }
         }
 
@@ -719,7 +712,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         Call<Questionnaire> call = apiService.getOneTimeQnr(memId, consumerId, providerId);
         //Call<Questionnaire> call = apiService.getOneTimeQuestionss(providerConsumerId,  consumerId, providerId);
 
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+        //Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<Questionnaire>() {
             @Override
             public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
@@ -737,30 +730,11 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                                 }
                             }
                         }
-                        Intent intent = new Intent();
 
-                        if (isOneTimeQnrAvailable) {
-                            intent.setClass(context, OneTimeQuestionnaire.class);
-                            intent.putExtra("providerId", providerId);
-                            intent.putExtra("consumerId", consumerId);
-                            intent.putExtra("familyMemId", memId);
-
-                            intent.putExtra("requestFor", "");
-                            intent.putExtra("requestFrom", "familyMemberDialog");
-                            //intent.putExtra("iFamilyMemberDetails", (Serializable) iFamilyMemberDetails);
-
-                            context.startActivity(intent);
-                            Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
-                            iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
-                            dismiss();
-                        } else {
-                            Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
-                            iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
-                            dismiss();
-                        }
-
+                        Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
+                        iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
+                        dismiss();
 
                     } else {
 
@@ -787,183 +761,4 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             }
         });
     }
-    /*private void ApiGetFamilyMemberProviderConsumer() {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(context).create(ApiInterface.class);
-
-        Call<ArrayList<ProviderConsumerFamilyMemberModel>> call = apiService.getFamilyMemberProviderConsumer(consumerId, providerId);
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-        call.enqueue(new Callback<ArrayList<ProviderConsumerFamilyMemberModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ProviderConsumerFamilyMemberModel>> call, Response<ArrayList<ProviderConsumerFamilyMemberModel>> response) {
-
-                try {
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-
-                        //String reader = response.body().toString();
-                        ArrayList<ProviderConsumerFamilyMemberModel> providerConsumerFamilyMemberModels = response.body();
-                        if (providerConsumerFamilyMemberModels != null && providerConsumerFamilyMemberModels.size() > 0) {
-                            boolean isAlreadyAddedToProviderConsumer = false;
-                            if (firstName != null && lastName != null) {
-                                for (int j = 0; j < providerConsumerFamilyMemberModels.size(); j++) {
-                                    ProviderConsumerFamilyMemberModel j2 = providerConsumerFamilyMemberModels.get(j);
-                                    String fName = j2.getFirstName();
-                                    String lName = j2.getLastName();
-                                    if (j2.getJaldeeConsumer() != 0 && j2.getJaldeeConsumer() == consumerId) {
-                                        jaldeeProviderConsumerId = j2.getId();
-                                    }
-                                    if ((firstName != null && lastName != null) && (firstName.equals(fName)) && (lastName.equals(lName))) {
-                                        isAlreadyAddedToProviderConsumer = true;
-                                        providerConsumerId = j2.getId();
-                                    }
-                                }
-                            }
-                            if (isAlreadyAddedToProviderConsumer) {
-                                ApiGetOneTimeQNR(providerConsumerId);
-                            } else {
-                                apiAddFamilyMEmbersProviderConsumer(memId, jaldeeProviderConsumerId, providerId);
-                            }
-                        } else {
-                            apiAddFamilyMEmbersProviderConsumer(0, consumerId, providerId);
-                        }
-
-                    } else {
-
-                        Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
-
-                        Config.logV("Error" + response.errorBody().string());
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<ProviderConsumerFamilyMemberModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-
-            }
-        });
-    }
-
-    private void apiAddFamilyMEmbersProviderConsumer(int familyMemID, int providerConsumerId, int providerId) {
-        try {
-            ApiInterface apiService = ApiClient.getClient(context).create(ApiInterface.class);
-            Call<ResponseBody> call = apiService.AddFamilyMEmberProviderConsumer(familyMemID, providerConsumerId, String.valueOf(providerId));
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-------------------------" + response.code());
-                        if (response.code() == 200) {
-                            ApiGetFamilyMemberProviderConsumer();
-                        }
-                        if (response.code() == 422) {
-                            Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void ApiGetOneTimeQNR(int providerConsumerId) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(context).create(ApiInterface.class);
-
-        Call<Questionnaire> call = apiService.getOneTimeQuestions(providerConsumerId, providerId);
-        //Call<Questionnaire> call = apiService.getOneTimeQuestionss(providerConsumerId,  consumerId, providerId);
-
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-        call.enqueue(new Callback<Questionnaire>() {
-            @Override
-            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
-
-                try {
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        Questionnaire oneTimeQnr = response.body();
-                        boolean isOneTimeQnrAvailable = false;
-                        if (oneTimeQnr != null && oneTimeQnr.getQuestionsList() != null && oneTimeQnr.getQuestionsList().size() > 0) {
-                            for (Questions qns : oneTimeQnr.getQuestionsList()) {
-                                if (qns.getGetQuestions() != null && qns.getGetQuestions().size() > 0) {
-                                    isOneTimeQnrAvailable = true;
-                                }
-                            }
-                        }
-                        Intent intent = new Intent();
-
-                        if (isOneTimeQnrAvailable) {
-                           intent.setClass(context, OneTimeQuestionnaire.class);
-                            intent.putExtra("providerId", providerId);
-                            intent.putExtra("providerConsumerId", providerConsumerId);
-                            intent.putExtra("requestFor", "");
-                            intent.putExtra("requestFrom", "familyMemberDialog");
-                            //intent.putExtra("iFamilyMemberDetails", (Serializable) iFamilyMemberDetails);
-
-                            context.startActivity(intent);
-                            Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
-                            iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
-                            dismiss();
-                        } else {
-                            Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
-                            iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
-                            dismiss();
-                        }
-
-
-
-                    } else {
-
-                        Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
-
-                        Config.logV("Error" + response.errorBody().string());
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Questionnaire> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-
-            }
-        });
-    }*/
 }

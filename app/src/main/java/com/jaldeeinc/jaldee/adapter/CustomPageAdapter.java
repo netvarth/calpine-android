@@ -2,34 +2,26 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Environment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.LinearLayout;
-
 import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 import com.squareup.picasso.Callback;
 
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -82,10 +74,26 @@ public class CustomPageAdapter extends PagerAdapter {
         }
 
         final String finalUrl = url;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension.equalsIgnoreCase("pdf")) {
+        MediaTypeAndExtention type;
+        type = Config.getFileType(url);
+        if (type.getMediaType().equals(Constants.docType)) {
+            if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                Glide.with(mContext).load(R.drawable.pdf).fitCenter().into(imageView);
+            } else {
+                Glide.with(mContext).load(R.drawable.icon_document).fitCenter().into(imageView);
+            }
 
-            Glide.with(mContext).load(R.drawable.pdf).fitCenter().into(imageView);
+        } else if (type.getMediaType().equals(Constants.audioType)) {
+
+            Glide.with(mContext).load(R.drawable.audio_icon).fitCenter().into(imageView);
+
+        } else if (type.getMediaType().equals(Constants.videoType)) {
+
+            Glide.with(mContext).load(R.drawable.video_icon).fitCenter().into(imageView);
+
+        } else if (type.getMediaType().equals(Constants.txtType)) {
+
+            Glide.with(mContext).load(R.drawable.icon_text).fitCenter().into(imageView);
 
         } else {
             PicassoTrustAll.getInstance(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
@@ -113,13 +121,13 @@ public class CustomPageAdapter extends PagerAdapter {
                 } else {
                     // Download code here
                     String url = mGalleryImage.get(position);
-                    URL url1 = null;
+                   /* URL url1 = null;
                     try {
                         url1 = new URL(url);
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                    String filname= FilenameUtils.getName(url1.getPath());
+                    String filname = FilenameUtils.getName(url1.getPath());
 
                     File file = new File(Uri.parse(url).toString());
                     DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -135,6 +143,18 @@ public class CustomPageAdapter extends PagerAdapter {
                     DownloadManager manager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
                     if (manager != null) {
                         manager.enqueue(request);
+                    }*/
+
+                    MediaTypeAndExtention type = Config.getFileType(url);
+
+                    if (type.getMediaType().equals(Constants.docType) || type.getMediaType().equals(Constants.audioType)
+                            || type.getMediaType().equals(Constants.videoType) || type.getMediaType().equals(Constants.txtType)
+                            || type.getMediaType().equals(Constants.imgType)) {
+                        if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Config.openOnlinePdf(mContext, url);
+                        } else {
+                            Config.openOnlineDoc(mContext, url);
+                        }
                     }
 
                 }

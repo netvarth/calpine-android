@@ -31,7 +31,43 @@ public class Bookings implements Serializable {
     String videoCallMessage;
     boolean isRescheduled;
     String deptName;
+    boolean isDate;
+    boolean isDateTime;
+    boolean isNoDateTime;
     ArrayList<RlsdQnr> releasedQnr;
+    String uniqueId;
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public boolean isDate() {
+        return isDate;
+    }
+
+    public void setIsDate(boolean date) {
+        isDate = date;
+    }
+
+    public boolean isDateTime() {
+        return isDateTime;
+    }
+
+    public void setIsDateTime(boolean dateTime) {
+        isDateTime = dateTime;
+    }
+
+    public boolean isNoDateTime() {
+        return isNoDateTime;
+    }
+
+    public void setIsNoDateTime(boolean noDateTime) {
+        isNoDateTime = noDateTime;
+    }
 
     public ArrayList<RlsdQnr> getReleasedQnr() {
         return releasedQnr;

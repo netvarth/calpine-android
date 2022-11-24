@@ -1,8 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -10,20 +8,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,7 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
@@ -45,17 +39,13 @@ import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
-import com.jaldeeinc.jaldee.adapter.QueuesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddNotes;
 import com.jaldeeinc.jaldee.custom.CheckInSlotsDialog;
-import com.jaldeeinc.jaldee.custom.CustomAutoSemiBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
@@ -75,18 +65,15 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +85,6 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -109,119 +95,85 @@ import retrofit2.Response;
 public class RescheduleCheckinActivity extends AppCompatActivity implements ISelectQ, ISelectedQueue, ISendMessage {
 
 
+    @BindView(R.id.toolbartitle)
+    TextView toolbartitle;
+    @BindView(R.id.ll_slots)
+    LinearLayout ll_slots;
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
+    @BindView(R.id.tv_userName)
+    TextView tv_userName;
     @BindView(R.id.tv_spName)
-    CustomTextViewBold tvSpName;
-
+    TextView tvSpName;
     @BindView(R.id.tv_locationName)
-    CustomTextViewMedium tvLocationName;
-
-    @BindView(R.id.tv_serviceName)
-    CustomTextViewBold tvServiceName;
-
+    TextView tvLocationName;
     @BindView(R.id.iv_teleService)
     ImageView ivteleService;
-
-    @BindView(R.id.tv_number)
-    CustomTextViewMedium tvNumber;
-
-    @BindView(R.id.tv_email)
-    CustomTextViewMedium tvEmail;
-
+    @BindView(R.id.tv_serviceName)
+    TextView tvServiceName;
+    @BindView(R.id.icon_text)
+    TextView icon_text;
     @BindView(R.id.tv_consumerName)
-    CustomTextViewBold tvConsumerName;
-
-    @BindView(R.id.tv_date)
-    CustomTextViewBold tvDate;
-
-    @BindView(R.id.tv_time)
-    CustomTextViewBold tvTime;
-
-    @BindView(R.id.tv_changeTime)
-    CustomTextViewBold tvChangeTime;
-
+    TextView tvConsumerName;
+    @BindView(R.id.tv_number)
+    TextView tvNumber;
+    @BindView(R.id.tv_email)
+    TextView tvEmail;
     @BindView(R.id.tv_actualTime)
-    CustomTextViewBold tvActualTime;
-
-    @BindView(R.id.cv_back)
-    CardView cvBack;
-
+    TextView tvActualTime;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.tv_time1)
+    TextView tvTime1;
+    @BindView(R.id.tv_date)
+    TextView tvDate;
     @BindView(R.id.cv_submit)
     CardView cvSubmit;
-
     @BindView(R.id.cv_cancel)
     CardView cvCancel;
-
-    @BindView(R.id.iv_minus)
-    ImageView ivMinus;
-
-    @BindView(R.id.iv_add)
-    ImageView ivPlus;
-
-    @BindView(R.id.tv_calenderDate)
-    CustomAutoSemiBold tvCalenderDate;
-
-    @BindView(R.id.tv_userName)
-    CustomTextViewBold tv_userName;
-
-    @BindView(R.id.providerlabel)
-    CustomTextViewMedium tv_labelprovider;
-
     @BindView(R.id.cv_addNote)
-    CardView cvAddNote;
-
+    LinearLayout cvAddNote;
     @BindView(R.id.cv_attachFile)
-    CardView cvAttachFile;
-
-    @BindView(R.id.rescheduleTitle)
-    CustomTextViewMedium tv_title;
-
+    LinearLayout cvAttachFile;
     @BindView(R.id.tv_term)
-    CustomTextViewMedium tv_bookingFor;
-
+    TextView tv_bookingFor;
     @BindView(R.id.tv_peopleAhead)
-    CustomTextViewBold tv_peopleAhead;
-
+    TextView tv_peopleAhead;
     @BindView(R.id.attach_file_size)
-    CustomTextViewMedium tvAttachFileSize;
-
+    TextView tvAttachFileSize;
     @BindView(R.id.tv_addNote)
-    CustomTextViewMedium tvAddNotes;
+    TextView tvAddNotes;
+    @BindView(R.id.iv_location_icon)
+    ImageView iv_location_icon;
+    @BindView(R.id.iv_prvdr_phone_icon)
+    ImageView iv_prvdr_phone_icon;
+    @BindView(R.id.iv_prvdr_email_icon)
+    ImageView iv_prvdr_email_icon;
+    @BindView(R.id.ll_booking1)
+    LinearLayout ll_booking1;
+    @BindView(R.id.ll_booking2)
+    LinearLayout ll_booking2;
 
 
     int queueId, serviceId, locationId, accountId;
     String apiDate;
-    private CheckInSlotsDialog slotsDialog;
-    private RecyclerView rvSlots;
-    private LinearLayout llNoSlots, llChangeTo;
-    private NeomorphFrameLayout cvCalender;
-    QueuesAdapter queuesAdapter;
-    private LinearLayout llSeeMoreHint;
-    ArrayList<QueueTimeSlotModel> queuesData = new ArrayList<>();
-    private ISelectedQueue iSelectedQueue;
     private ISelectQ iSelectQ;
     private Context mContext;
-    final Calendar myCalendar = Calendar.getInstance();
     ActiveCheckIn checkInInfo = new ActiveCheckIn();
     private AddNotes addNotes;
     private ISendMessage iSendMessage;
     private String userMessage = "";
     BottomSheetDialog dialog;
-    CustomTextViewSemiBold tvErrorMessage;
+    TextView tvErrorMessage;
     TextView tv_attach, tv_camera;
     RecyclerView recycle_image_attachment;
     ArrayList<String> imagePathList = new ArrayList<>();
     ArrayList<String> s3ImgPathList = new ArrayList<>();
     ArrayList<String> imagePathLists = new ArrayList<>();
     private int GALLERY = 1, CAMERA = 2;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
-    private static final String IMAGE_DIRECTORY = "/Jaldee" +
-            "";
-    String path;
-    File f;
     private Uri mImageUri;
-    Bitmap bitmap;
     File file;
-    String value, user;
+    String user;
     ActiveCheckIn activeCheckIn = new ActiveCheckIn();
     SearchTerminology mSearchTerminology;
     int userId;
@@ -233,11 +185,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         setContentView(R.layout.activity_reschedule_checkin);
         ButterKnife.bind(RescheduleCheckinActivity.this);
         mContext = this;
-        iSelectQ = this;
         iSendMessage = this;
-        iSelectedQueue = this;
 
-        initializations();
+        iSelectQ = this;
 
         Intent i = getIntent();
         uniqueId = i.getStringExtra("uniqueId");
@@ -251,71 +201,18 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         if (uniqueId != null) {
             ApiSearchViewTerminology(Integer.parseInt(uniqueId));
         }
-
+        Glide.with(mContext).load(R.drawable.location_icon_1).into(iv_location_icon);
+        Glide.with(mContext).load(R.drawable.phone_icon_1).into(iv_prvdr_phone_icon);
+        Glide.with(mContext).load(R.drawable.email_icon_1).into(iv_prvdr_email_icon);
 
         // click actions
-
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                updateSelectedDate(year, monthOfYear, dayOfMonth);
-            }
-        };
-
-        cvCalender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DatePickerDialog da = new DatePickerDialog(mContext, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-
-                da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-                da.show();
-                da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
-                da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-
-
-            }
-        });
-
-        cvBack.setOnClickListener(new View.OnClickListener() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 finish();
             }
         });
-
-        tvChangeTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                try {
-                    if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getQueue() != null) {
-                        slotsDialog = new CheckInSlotsDialog(RescheduleCheckinActivity.this, checkInInfo.getService().getId(), checkInInfo.getQueue().getLocation().getId(), iSelectQ, checkInInfo.getProviderAccount().getId(), checkInInfo.getDate());
-                        slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                        slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        slotsDialog.show();
-                        DisplayMetrics metrics = RescheduleCheckinActivity.this.getResources().getDisplayMetrics();
-                        int width = (int) (metrics.widthPixels * 1);
-                        slotsDialog.setCancelable(false);
-                        slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
 
         cvAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -513,56 +410,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             }
         });
 
-        ivPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dtStart = tvCalenderDate.getText().toString();
-                Config.logV("Date----------------" + dtStart);
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                try {
-                    date = format.parse(dtStart);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Date added_date = addDays(date, 1);
-                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                //to convert Date to String, use format method of SimpleDateFormat class.
-                String strDate = dateFormat.format(added_date);
-                tvCalenderDate.setText(strDate);
-                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                apiDate = selecteddateParse.format(added_date);
-                UpdateDAte(apiDate);
-            }
-        });
-
-        ivMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dtStart = tvCalenderDate.getText().toString();
-                Config.logV("Date----------------" + dtStart);
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                try {
-                    date = format.parse(dtStart);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                Date added_date = subtractDays(date, 1);
-                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                //to convert Date to String, use format method of SimpleDateFormat class.
-                String strDate = dateFormat.format(added_date);
-                tvCalenderDate.setText(strDate);
-                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                apiDate = selecteddateParse.format(added_date);
-                UpdateDAte(apiDate);
-            }
-        });
-
-
         cvSubmit.setClickable(false);
         cvSubmit.setEnabled(false);
         cvSubmit.setOnClickListener(new View.OnClickListener() {
@@ -572,78 +419,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 reScheduleCheckin(checkInInfo.getProviderAccount().getId());
             }
         });
-    }
-
-    private void initializations() {
-
-        rvSlots = findViewById(R.id.rv_slots);
-        llSeeMoreHint = findViewById(R.id.ll_seeMoreHint);
-        llNoSlots = findViewById(R.id.ll_noSlots);
-        cvCalender = findViewById(R.id.fl_calender);
-        llChangeTo = findViewById(R.id.ll_changeTo);
-    }
-
-    private void updateSelectedDate(int year, int monthOfYear, int dayOfMonth) {
-
-        try {
-
-            SimpleDateFormat simpledateformat = new SimpleDateFormat("EEE");
-            Date date = new Date(year, monthOfYear, dayOfMonth - 1);
-            String dayOfWeek = simpledateformat.format(date);
-
-            String sMonth = "";
-            if (monthOfYear < 9) {
-                sMonth = "0" + String.valueOf(monthOfYear + 1);
-            } else {
-                sMonth = String.valueOf(monthOfYear + 1);
-            }
-
-            String mDate = dayOfWeek + ", " + dayOfMonth +
-                    "/" + (sMonth) +
-                    "/" + year;
-            tvCalenderDate.setText(mDate);
-
-            String apiFormat = "yyyy-MM-dd"; // your format
-            SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
-            String pickedDate = apiSdf.format(myCalendar.getTime());
-            tvDate.setText(getCustomDateString(pickedDate));
-            UpdateDAte(mDate);
-            apiDate = pickedDate;
-            ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(accountId), pickedDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public String UpdateDAte(String sDate) {
-        Date selecteddate = null;
-        String dtStart = tvCalenderDate.getText().toString();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        try {
-            selecteddate = format.parse(dtStart);
-            //  System.out.println(selecteddate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(accountId), sDate);
-
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorow = cal.getTime();
-        if (today.before(selecteddate)) {
-            Config.logV("Date Enabled---------------");
-            ivMinus.setEnabled(true);
-            ivMinus.setColorFilter(ContextCompat.getColor(mContext, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
-
-        } else {
-            Config.logV("Date Disabled---------------");
-            ivMinus.setEnabled(false);
-            ivMinus.setColorFilter(ContextCompat.getColor(mContext, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
-
-        return "";
     }
 
     private void reScheduleCheckin(int id) {
@@ -732,7 +507,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             //  Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
 
                             DynamicToast.make(RescheduleCheckinActivity.this, sb.toString(), AppCompatResources.getDrawable(
-                                    RescheduleCheckinActivity.this, R.drawable.ic_info_black),
+                                            RescheduleCheckinActivity.this, R.drawable.ic_info_black),
                                     ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.white), ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -749,30 +524,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-
-
-    }
-
-    public static String getCustomDateString(String d) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date1 = format.parse(d);
-        String date = format.format(date1);
-
-        if (date.endsWith("1") && !date.endsWith("11"))
-            format = new SimpleDateFormat("d'st' MMM, yyyy");
-
-        else if (date.endsWith("2") && !date.endsWith("12"))
-            format = new SimpleDateFormat("d'nd' MMM, yyyy");
-
-        else if (date.endsWith("3") && !date.endsWith("13"))
-            format = new SimpleDateFormat("d'rd' MMM, yyyy");
-
-        else
-            format = new SimpleDateFormat("d'th' MMM, yyyy");
-
-        String yourDate = format.format(date1);
-
-        return yourDate;
     }
 
     public static String getCalenderDateFormat(String d) throws ParseException {
@@ -822,21 +573,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         return formattedTime;
     }
 
-    public Date addDays(Date date, int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DATE, days);
-
-        return cal.getTime();
-    }
-
-    public Date subtractDays(Date date, int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DATE, -days);
-
-        return cal.getTime();
-    }
 
     @Override
     public void getMessage(String message) {
@@ -859,37 +595,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         });
         alertDialog.show();
     }
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
@@ -997,7 +702,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             //Log.d(TAG, "onActivityResult: " + e.toString());
                         }
                         String orgFilePath = photoFile.getAbsolutePath();
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
@@ -1058,7 +763,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 //Log.d(TAG, "onActivityResult: " + e.toString());
                             }
                             String orgFilePath = photoFile.getAbsolutePath();
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                                 if (orgFilePath == null) {
                                     orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
@@ -1123,30 +828,17 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type;
+        MediaTypeAndExtention type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            String extension = "";
-
-            if (imagePathList.get(i).contains(".")) {
-                extension = imagePathList.get(i).substring(imagePathList.get(i).lastIndexOf(".") + 1);
-            }
-            if (extension.equalsIgnoreCase("pdf")) {
-                type = MediaType.parse("application/pdf");
-            } else if (extension.equalsIgnoreCase("png")) {
-                type = MediaType.parse("image/png");
-            } else if (extension.equalsIgnoreCase("jpeg")) {
-                type = MediaType.parse("image/jpeg");
-            } else {
-                type = MediaType.parse("image/*");
-            }
+            type = Config.getFileType(imagePathList.get(i));
 
             file = new File(imagePathList.get(i));
 
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type.getMediaTypeWithExtention(), file));
         }
         RequestBody requestBody = mBuilder.build();
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -1202,16 +894,24 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     if (response.code() == 200) {
                         activeCheckIn = response.body();
                         if (activeCheckIn != null) {
-                            Bundle b = new Bundle();
-                            b.putString("terminology", mSearchTerminology.getProvider());
-                            b.putString("from", "Reschedule");
-                            b.putBoolean("livetrack", Boolean.parseBoolean(activeCheckIn.getLivetrack()));
-                            if (activeCheckIn.getYnwUuid() != null) {
-                                b.putString("uid", activeCheckIn.getYnwUuid());
+                            Intent checkin = new Intent(RescheduleCheckinActivity.this, BookingConfirmation.class);
+                            if (checkInInfo.getWaitlistingFor().get(0).getEmail() != null) {
+                                checkin.putExtra("email", checkInInfo.getWaitlistingFor().get(0).getEmail());
                             }
-                            b.putString("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));
-                            Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
-                            checkin.putExtras(b);
+                            if (checkInInfo.getWaitlistingFor().get(0).getPhoneNo() != null) {
+                                checkin.putExtra("waitlistPhonenumber", checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                if (checkInInfo.getCountryCode() != null) {
+                                    checkin.putExtra("waitlistPhonenumberCountryCode", checkInInfo.getCountryCode());
+                                }
+                            }
+                            checkin.putExtra("terminology", mSearchTerminology.getProvider());
+                            checkin.putExtra("from", Constants.RESCHEDULE);
+                            checkin.putExtra("typeOfService", Constants.CHECKIN);
+                            checkin.putExtra("livetrack", Boolean.parseBoolean(activeCheckIn.getLivetrack()));
+                            checkin.putExtra("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));
+                            if (activeCheckIn.getYnwUuid() != null) {
+                                checkin.putExtra("uid", activeCheckIn.getYnwUuid());
+                            }
                             startActivity(checkin);
                         }
 
@@ -1288,79 +988,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         });
     }
 
-    private void ApiQueueTimeSlot(String locationId, String subSeriveID, String accountID, String mDate) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(locationId, subSeriveID, mDate, accountID);
-        call.enqueue(new Callback<ArrayList<QueueTimeSlotModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<QueueTimeSlotModel>> call, Response<ArrayList<QueueTimeSlotModel>> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog((Activity) mContext, mDialog);
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
-                    if (response.code() == 200) {
-                        queuesData = response.body();
-
-                        if (queuesData != null) {
-                            if (queuesData.size() > 0) {
-                                rvSlots.setVisibility(View.VISIBLE);
-                                llChangeTo.setVisibility(View.VISIBLE);
-                                llNoSlots.setVisibility(View.GONE);
-                                tvDate.setVisibility(View.VISIBLE);
-                                tvTime.setVisibility(View.VISIBLE);
-                                cvSubmit.setClickable(true);
-                                cvSubmit.setEnabled(true);
-                                cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
-                                if (queuesData.size() > 4) {
-                                    llSeeMoreHint.setVisibility(View.VISIBLE);
-                                } else {
-                                    llSeeMoreHint.setVisibility(View.GONE);
-                                }
-                                queueId = queuesData.get(0).getId();
-                                tv_peopleAhead.setText(String.valueOf(queuesData.get(0).getQueueSize()));
-                                tvTime.setText(queuesData.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
-                                tvDate.setText(getCustomDateString(queuesData.get(0).getEffectiveSchedule().getStartDate()));
-                                tvCalenderDate.setText(getCalenderDateFormat(queuesData.get(0).getEffectiveSchedule().getStartDate()));
-                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
-                                rvSlots.setLayoutManager(mLayoutManager);
-                                queuesAdapter = new QueuesAdapter(mContext, queuesData, iSelectedQueue);
-                                rvSlots.setAdapter(queuesAdapter);
-                            } else {
-
-                                rvSlots.setVisibility(View.GONE);
-                                llNoSlots.setVisibility(View.VISIBLE);
-                                llSeeMoreHint.setVisibility(View.GONE);
-                                tvDate.setVisibility(View.GONE);
-                                tvTime.setVisibility(View.GONE);
-                                llChangeTo.setVisibility(View.GONE);
-                                cvSubmit.setClickable(false);
-                                cvSubmit.setEnabled(false);
-                                cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.inactive_text));
-
-                            }
-                        }
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog((Activity) mContext, mDialog);
-            }
-        });
-    }
-
 
     private void getCheckInInfo(String uid, int id) {
 
@@ -1375,44 +1002,14 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         checkInInfo = response.body();
-                        if (checkInInfo != null && checkInInfo.getDate() != null) {
-
-                            Date sDate = null;
-                            String dtStart = checkInInfo.getDate();
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                sDate = format.parse(dtStart);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Calendar cal = Calendar.getInstance();
-                            Date today = cal.getTime();
-                            cal.add(Calendar.DAY_OF_YEAR, 1);
-                            Date tomorow = cal.getTime();
-                            try {
-                                tvCalenderDate.setText(getCalenderDateFormat(checkInInfo.getDate()));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (today.before(sDate)) {
-                                Config.logV("Date Enabled---------------");
-                                ivMinus.setEnabled(true);
-                                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
-
-                            } else {
-                                Config.logV("Date Disabled---------------");
-                                ivMinus.setEnabled(false);
-                                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                            }
-                        }
 
                         if (checkInInfo != null) {
 
                             if (checkInInfo.getShowToken() != null && checkInInfo.getShowToken().equalsIgnoreCase("true")) {
-                                tv_title.setText("Reschedule a token");
+                                toolbartitle.setText("Reschedule a token");
                                 tv_bookingFor.setText("Token for");
                             } else {
-                                tv_title.setText("Reschedule a checkin");
+                                toolbartitle.setText("Reschedule a checkin");
                                 tv_bookingFor.setText("Checkin for");
                             }
 
@@ -1539,13 +1136,18 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 locationId = checkInInfo.getQueue().getLocation().getId();
                                 accountId = checkInInfo.getProviderAccount().getId();
                                 // api call to get slots on default date (checkin date)
-                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(accountId), apiDate);
 
+                                CheckInSlotsDialog csl;
+                                csl = new CheckInSlotsDialog(mContext, serviceId, locationId, iSelectQ, accountId, apiDate);
+                                ll_slots.addView(csl);
                             }
 
                             if (checkInInfo.getWaitlistingFor() != null) {
                                 if (checkInInfo.getWaitlistingFor().get(0).getFirstName() != null && checkInInfo.getWaitlistingFor().get(0).getLastName() != null) {
                                     String cName = Config.toTitleCase(checkInInfo.getWaitlistingFor().get(0).getFirstName()) + " " + Config.toTitleCase(checkInInfo.getWaitlistingFor().get(0).getLastName());
+                                    if (cName != null && !cName.trim().isEmpty()) {
+                                        icon_text.setText(String.valueOf(cName.trim().charAt(0)));
+                                    }
                                     tvConsumerName.setText(cName);
                                     if (checkInInfo.getWaitlistingFor().get(0).getPhoneNo() != null) {
                                         tvNumber.setVisibility(View.VISIBLE);
@@ -1574,7 +1176,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                                 String sTime = convertTime(checkInInfo.getQueue().getQueueStartTime());
                                 String eTime = convertTime(checkInInfo.getQueue().getQueueEndTime());
-                                tvActualTime.setText(oldDate + ", " + checkInInfo.getQueue().getQueueStartTime() + " - " + checkInInfo.getQueue().getQueueEndTime());
+                                tvActualTime.setText(oldDate);
+                                tvTime.setText(sTime + " " + eTime);
                             }
 
                         }
@@ -1597,19 +1200,59 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     }
 
     @Override
-    public void sendSelectedQueueInfo(String displayTime, int queueId, QueueTimeSlotModel queueDetails, String selectedDate) {
+    public void sendSelectedQueueInfo(String displayTime, int qId, QueueTimeSlotModel queueDetails, String selectedDate) {
 
+        if(queueDetails != null) {
+            queueId = qId;
+            //apiDate
+            try {
+                String oldDate = Config.getCustomDateString(selectedDate);
+                tvDate.setText(oldDate);
+                apiDate = selectedDate;  // to convert selected date to api date format
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            tvTime1.setText(displayTime);
+            tv_peopleAhead.setText(String.valueOf(queueDetails.getQueueSize()));
+
+
+            cvSubmit.setClickable(true);
+            cvSubmit.setEnabled(true);
+            cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.blue5));
+            ll_booking1.setVisibility(View.VISIBLE);
+            ll_booking2.setVisibility(View.GONE);
+
+        } else {
+            ll_booking1.setVisibility(View.GONE);
+            ll_booking2.setVisibility(View.VISIBLE);
+            cvSubmit.setClickable(false);
+            cvSubmit.setEnabled(false);
+            cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.inactive_text));
+        }
 
     }
 
     @Override
     public void sendSelectedQueue(String displayQueueTime, QueueTimeSlotModel queue, int id) {
         tv_peopleAhead.setText(String.valueOf(queue.getQueueSize()));
-        tvTime.setText(displayQueueTime.split("-")[0]);
+        tvTime1.setText(displayQueueTime.split("-")[0]);
         queueId = id;
         cvSubmit.setClickable(true);
         cvSubmit.setEnabled(true);
-        cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+        cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.blue5));
+
+    }
+
+    public static String getApiDateFormat(String d) throws ParseException {
+
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        Date date1 = format.parse(d);
+        format = new SimpleDateFormat("yyyy-MM-dd");
+        String yourDate = format.format(date1);
+
+        return yourDate;
 
     }
 }
+

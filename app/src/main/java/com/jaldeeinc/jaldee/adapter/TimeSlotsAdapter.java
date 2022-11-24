@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
@@ -122,26 +123,26 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
 
                 } else {
                     myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot_1);
-                    myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
+                    myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.black7));
                 }
             } else {
                 myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot);
                 myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.gray));
             }
             setAnimation(myViewHolder.flSlotBackground, position);
-                myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (timeSlot.isActive()) {
+            myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (timeSlot.isActive()) {
 
-                            int currentPosition = myViewHolder.getLayoutPosition();
+                        int currentPosition = myViewHolder.getLayoutPosition();
 
                         if (maxBookingsAllowed > 1) {
                             if (selectedSlotDetails.stream()
                                     .anyMatch(p -> p.getPosition() == currentPosition)) {
                                 if (selectedSlotDetails.size() > 1) {
                                     myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot_1);
-                                    myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
+                                    myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.black7));
                                     selectedSlotDetails = selectedSlotDetails.stream()
                                             .filter(e -> !Objects.equals(e.getPosition(), currentPosition))
                                             .collect(Collectors.toList());
@@ -191,8 +192,8 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
                             }
                         }
                     }
-                    }
-                });
+                }
+            });
 
         }
     }
@@ -205,7 +206,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     public class TimeSlotsAdapterViewHolder extends RecyclerView.ViewHolder {
 
         CardView flSlotBackground;
-        CustomTextViewSemiBold tvTimeSlot;
+        TextView tvTimeSlot;
 
 
         public TimeSlotsAdapterViewHolder(View view) {

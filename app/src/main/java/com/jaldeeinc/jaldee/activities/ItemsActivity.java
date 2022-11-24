@@ -1,13 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -31,13 +23,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.IDataGrid;
-import com.jaldeeinc.jaldee.Interface.IDataGridListener;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
@@ -62,10 +61,8 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.OrderitemServiceoptionadditemDialog;
-import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
-import com.jaldeeinc.jaldee.custom.ServiceOptionAddItemDialog;
-import com.jaldeeinc.jaldee.custom.ServiceOptionGridView;
+import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
@@ -76,11 +73,9 @@ import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
-import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -89,7 +84,6 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Callback;
 
 import org.json.JSONException;
@@ -194,12 +188,10 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     //files related
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     private int GALLERY = 1, CAMERA = 2;
     private Uri mImageUri;
     File f;
     String path;
-    Bitmap bitmap;
 
     /**
      * ServiceOption
@@ -845,7 +837,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                             //Log.d(TAG, "onActivityResult: " + e.toString());
                         }
                         String orgFilePath = photoFile.getAbsolutePath();
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
@@ -905,7 +897,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                                 //Log.d(TAG, "onActivityResult: " + e.toString());
                             }
                             String orgFilePath = photoFile.getAbsolutePath();
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                                 if (orgFilePath == null) {
                                     orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);

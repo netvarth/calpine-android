@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import androidx.annotation.VisibleForTesting;
@@ -471,8 +472,11 @@ Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
+            da.show();
+            da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+            da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
             return da;
         }
 

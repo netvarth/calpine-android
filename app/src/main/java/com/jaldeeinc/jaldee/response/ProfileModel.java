@@ -3,13 +3,14 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 9/7/18.
  */
 
-public class ProfileModel {
+public class ProfileModel implements Serializable {
     private JsonObject whatsAppNum;
     private JsonObject telegramNum;
     private String whtsAppCountryCode;

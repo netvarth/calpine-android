@@ -2,11 +2,6 @@ package com.jaldeeinc.jaldee.activities;
 
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -17,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -29,6 +23,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -47,7 +46,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
-import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 
@@ -162,7 +160,7 @@ public class OrderConfirmation extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
-                homeIntent.putExtra("isOrder", "ORDER");
+                homeIntent.putExtra("isOrder", Constants.ORDERS);
                 startActivity(homeIntent);
 
             }
@@ -172,7 +170,7 @@ public class OrderConfirmation extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
-                homeIntent.putExtra("isOrder", "ORDER");
+                homeIntent.putExtra("isOrder", Constants.ORDERS);
                 startActivity(homeIntent);
 
             }
@@ -441,7 +439,7 @@ public class OrderConfirmation extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
-        homeIntent.putExtra("isOrder", "ORDER");
+        homeIntent.putExtra("isOrder", Constants.ORDERS);
         startActivity(homeIntent);
     }
 

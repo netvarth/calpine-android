@@ -10,7 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/toolbar"
@@ -89,19 +90,21 @@
                         android:orientation="vertical">
 
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        <TextView
+                            android:id="@+id/tv_hint"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_8dp"
                             android:layout_marginTop="@dimen/dimen_8dp"
                             android:layout_marginEnd="@dimen/dimen_8dp"
+                            android:fontFamily="@font/font_semibold"
                             android:gravity="center_horizontal"
                             android:text="Please provide us with little more information to complete your booking"
                             android:textColor="@color/dark_black"
                             android:textSize="@dimen/dimen_15dp"
                             android:visibility="visible">
 
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                        </TextView>
 
 
                     </LinearLayout>

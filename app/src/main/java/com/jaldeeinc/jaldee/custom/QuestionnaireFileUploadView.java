@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.custom;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,9 +14,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 
@@ -288,13 +290,13 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
                     JsonObject fileInfo = new JsonObject();
 
                     String path = files.get(i).getImagePath();
-                    String mimeType = getMimeType(path);
+                    MediaTypeAndExtention type = Config.getFileType(path);
 
-                    if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+                    if (type.getMediaType().equals(Constants.audioType) || type.getMediaType().equals(Constants.videoType)) {
 
                         String filename = path.substring(path.lastIndexOf("/") + 1);
 
-                        fileInfo.addProperty("mimeType", mimeType);
+                        fileInfo.addProperty("mimeType", type.getMediaTypeWithExtention().toString());
                         fileInfo.addProperty("url", filename);
 
                     } else {
@@ -344,14 +346,6 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
         return true;
     }
-
-    public static String getMimeType(String path) {
-        String extension = path.substring(path.lastIndexOf("."));
-        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
-        return mimeType;
-    }
-
 
 }
 

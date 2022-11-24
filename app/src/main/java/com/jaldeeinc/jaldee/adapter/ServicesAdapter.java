@@ -239,7 +239,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
             viewHolder.llDonationRange.setVisibility(View.GONE);
             viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-            viewHolder.tvServiceType.setText("Appointment");
+            if (child.getAppointmentServiceInfo().getServiceBookingType().equalsIgnoreCase(Constants.SERVICE_BOOKING_TYPE_REQUEST)) {
+                viewHolder.tvServiceType.setText("Request");
+            } else {
+                viewHolder.tvServiceType.setText("Appointment");
+            }
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
 

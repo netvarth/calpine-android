@@ -2,12 +2,10 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -17,12 +15,13 @@ import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.model.UserMessage;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,71 +139,70 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     mGalleryAttachments.add(message.getAttachments().get(i).getS3path());
                 }
                 ll_attachments.setVisibility(View.VISIBLE);
-                String extension = MimeTypeMap.getFileExtensionFromUrl(message.getAttachments().get(0).getS3path());
+
                 if (message.getAttachments().size() == 1) {
-                    Picasso.Builder builder = new Picasso.Builder(iv_attach1.getContext());
-                    builder.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
+                    MediaTypeAndExtention type = Config.getFileType(message.getAttachments().get(0).getS3path());
+
                     iv_attach1.setVisibility(View.VISIBLE);
                     attachText.setVisibility(View.GONE);
                     iv_attach2.setVisibility(View.GONE);
-                    if (extension.equalsIgnoreCase("pdf")) {
-                        builder.build().load(message.getAttachments().get(0).getThumbPath()).fit().into(iv_attach1);
+                    if (type.getMediaType().equals(Constants.docType)) {
+                        if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Glide.with(mContext).load(R.drawable.pdf).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                        } else {
+                            Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                        }
+                    } else if (type.getMediaType().equals(Constants.audioType)) {
+                        Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                    } else if (type.getMediaType().equals(Constants.videoType)) {
+                        Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                    } else if (type.getMediaType().equals(Constants.txtType)) {
+                        Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(iv_attach1);
                     } else {
-                        builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_attach1);
+                        Glide.with(mContext).load(message.getAttachments().get(0).getS3path()).placeholder(R.drawable.icon_noimage).override(100, 200).into(iv_attach1);
                     }
-                } else if (message.getAttachments().size() == 2) {
-                    Picasso.Builder builder = new Picasso.Builder(iv_attach1.getContext());
-                    builder.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
+                } else if (message.getAttachments().size() >= 2) {
+                    MediaTypeAndExtention type1 = Config.getFileType(message.getAttachments().get(0).getS3path());
+                    MediaTypeAndExtention type2 = Config.getFileType(message.getAttachments().get(1).getS3path());
+
+                    if (type1.getMediaType().equals(Constants.docType)) {
+                        if (type1.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Glide.with(mContext).load(R.drawable.pdf).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                        } else {
+                            Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(iv_attach1);
                         }
-                    });
-                    builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_attach1);
-                    Picasso.Builder builder1 = new Picasso.Builder(iv_attach2.getContext());
-                    builder1.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
-                    if (extension.equalsIgnoreCase("pdf")) {
-                        builder.build().load(message.getAttachments().get(1).getThumbPath()).fit().into(iv_attach2);
+                    } else if (type1.getMediaType().equals(Constants.audioType)) {
+                        Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                    } else if (type1.getMediaType().equals(Constants.videoType)) {
+                        Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(iv_attach1);
+                    } else if (type1.getMediaType().equals(Constants.txtType)) {
+                        Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(iv_attach1);
                     } else {
-                        builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_attach2);
+                        Glide.with(mContext).load(message.getAttachments().get(0).getS3path()).placeholder(R.drawable.icon_noimage).override(100, 200).into(iv_attach1);
                     }
-                    iv_attach1.setVisibility(View.VISIBLE);
-                    iv_attach2.setVisibility(View.VISIBLE);
-                    attachText.setVisibility(View.GONE);
-                } else if (message.getAttachments().size() > 2) {
-                    Picasso.Builder builder = new Picasso.Builder(iv_attach1.getContext());
-                    builder.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
+
+                    if (type2.getMediaType().equals(Constants.docType)) {
+                        if (type2.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Glide.with(mContext).load(R.drawable.pdf).placeholder(R.drawable.icon_noimage).into(iv_attach2);
+                        } else {
+                            Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(iv_attach2);
                         }
-                    });
-                    builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_attach1);
-                    Picasso.Builder builder1 = new Picasso.Builder(iv_attach2.getContext());
-                    builder1.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
-                    if (extension.equalsIgnoreCase("pdf")) {
-                        builder.build().load(message.getAttachments().get(1).getThumbPath()).fit().into(iv_attach2);
+                    } else if (type2.getMediaType().equals(Constants.audioType)) {
+                        Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(iv_attach2);
+                    } else if (type2.getMediaType().equals(Constants.videoType)) {
+                        Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(iv_attach2);
+                    } else if (type2.getMediaType().equals(Constants.txtType)) {
+                        Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(iv_attach2);
                     } else {
-                        builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_attach2);
+                        Glide.with(mContext).load(message.getAttachments().get(1).getS3path()).placeholder(R.drawable.icon_noimage).override(100, 200).into(iv_attach2);
                     }
-                    int size = message.getAttachments().size() - 2;
-                    attachText.setText("+ " + size + " more");
-                    attachText.setVisibility(View.VISIBLE);
+                    if (message.getAttachments().size() == 2) {
+                        attachText.setVisibility(View.GONE);
+                    } else if (message.getAttachments().size() > 2) {
+                        int size = message.getAttachments().size() - 2;
+                        attachText.setText("+ " + size + " more");
+                        attachText.setVisibility(View.VISIBLE);
+                    }
                     iv_attach1.setVisibility(View.VISIBLE);
                     iv_attach2.setVisibility(View.VISIBLE);
                 }
@@ -311,68 +309,70 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     mGalleryAttachments.add(message.getAttachments().get(i).getS3path());
                 }
                 if (message.getAttachments().size() == 1) {
-                    Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
-                    builder.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
+
                     iv_img1.setVisibility(View.VISIBLE);
                     attachmentsText.setVisibility(View.GONE);
                     iv_img2.setVisibility(View.GONE);
 
-                    String url = message.getAttachments().get(0).getS3path();
-                    if (url.contains(" ")) {
-                        url = url.replaceAll(" ", "%20");
-                    }
-                    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-                    if (extension.equalsIgnoreCase("pdf")) {
-                        builder.build().load(R.drawable.pdf).fit().into(iv_img1);
+                    MediaTypeAndExtention type = Config.getFileType(message.getAttachments().get(0).getS3path());
+
+                    if (type.getMediaType().equals(Constants.docType)) {
+                        if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Glide.with(mContext).load(R.drawable.pdf).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                        } else {
+                            Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                        }
+                    } else if (type.getMediaType().equals(Constants.audioType)) {
+                        Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                    } else if (type.getMediaType().equals(Constants.videoType)) {
+                        Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                    } else if (type.getMediaType().equals(Constants.txtType)) {
+                        Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(iv_img1);
                     } else {
-                        builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_img1);
+                        Glide.with(mContext).load(message.getAttachments().get(0).getS3path()).placeholder(R.drawable.icon_noimage).override(100, 200).into(iv_img1);
                     }
 
-                } else if (message.getAttachments().size() == 2) {
-                    Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
-                    builder.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
+                } else if (message.getAttachments().size() >= 2) {
+                    MediaTypeAndExtention type1 = Config.getFileType(message.getAttachments().get(0).getS3path());
+                    MediaTypeAndExtention type2 = Config.getFileType(message.getAttachments().get(1).getS3path());
+
+                    if (type1.getMediaType().equals(Constants.docType)) {
+                        if (type1.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Glide.with(mContext).load(R.drawable.pdf).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                        } else {
+                            Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(iv_img1);
                         }
-                    });
-                    builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_img1);
-                    Picasso.Builder builder1 = new Picasso.Builder(iv_img2.getContext());
-                    builder1.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
+                    } else if (type1.getMediaType().equals(Constants.audioType)) {
+                        Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                    } else if (type1.getMediaType().equals(Constants.videoType)) {
+                        Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                    } else if (type1.getMediaType().equals(Constants.txtType)) {
+                        Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(iv_img1);
+                    } else {
+                        Glide.with(mContext).load(message.getAttachments().get(0).getS3path()).placeholder(R.drawable.icon_noimage).override(100, 200).into(iv_img1);
+                    }
+                    if (type2.getMediaType().equals(Constants.docType)) {
+                        if (type2.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                            Glide.with(mContext).load(R.drawable.pdf).placeholder(R.drawable.icon_noimage).into(iv_img2);
+                        } else {
+                            Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(iv_img2);
                         }
-                    });
-                    builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_img2);
-                    iv_img1.setVisibility(View.VISIBLE);
-                    iv_img2.setVisibility(View.VISIBLE);
-                    attachmentsText.setVisibility(View.GONE);
-                } else if (message.getAttachments().size() > 2) {
-                    Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
-                    builder.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
-                    builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_img1);
-                    Picasso.Builder builder1 = new Picasso.Builder(iv_img2.getContext());
-                    builder1.listener(new Picasso.Listener() {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
-                    builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_img2);
-                    int size = message.getAttachments().size() - 2;
-                    attachmentsText.setText("+ " + size + " more");
-                    attachmentsText.setVisibility(View.VISIBLE);
+                    } else if (type2.getMediaType().equals(Constants.audioType)) {
+                        Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(iv_img2);
+                    } else if (type2.getMediaType().equals(Constants.videoType)) {
+                        Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(iv_img2);
+                    } else if (type2.getMediaType().equals(Constants.txtType)) {
+                        Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(iv_img2);
+                    } else {
+                        Glide.with(mContext).load(message.getAttachments().get(1).getS3path()).placeholder(R.drawable.icon_noimage).override(100, 200).into(iv_img2);
+                    }
+                    if (message.getAttachments().size() == 2) {
+                        attachmentsText.setVisibility(View.GONE);
+                    } else if (message.getAttachments().size() > 2) {
+                        int size = message.getAttachments().size() - 2;
+                        attachmentsText.setText("+ " + size + " more");
+                        attachmentsText.setVisibility(View.VISIBLE);
+                    }
                     iv_img1.setVisibility(View.VISIBLE);
                     iv_img2.setVisibility(View.VISIBLE);
                 }

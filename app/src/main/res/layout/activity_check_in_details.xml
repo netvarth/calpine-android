@@ -656,7 +656,7 @@
                             android:layout_marginEnd="@dimen/dimen_5dp"
                             android:layout_marginBottom="@dimen/dimen_5dp"
                             android:elevation="@dimen/dimen_10dp"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             app:neomorph_corner_radius="@dimen/dimen_8dp"
                             app:neomorph_shadow_type="inner"
                             card_view:cardBackgroundColor="#f8f8f8">

@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,7 +68,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
-import com.jaldeeinc.jaldee.custom.CustomerInformationDialog;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
@@ -81,6 +81,7 @@ import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -127,86 +128,75 @@ import retrofit2.Response;
 
 public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
 
-    @BindView(R.id.tv_providerName)
-    CustomTextViewBold tvProviderName;
-
-    @BindView(R.id.tv_serviceName)
-    CustomTextViewBold tvServiceName;
-
-    @BindView(R.id.tv_description)
-    CustomTextViewMedium tvDescription;
-
-    @BindView(R.id.tv_date)
-    CustomTextViewBold tvDate;
-
-    @BindView(R.id.tv_time)
-    CustomTextViewBold tvTime;
-
-    @BindView(R.id.tv_changeTime)
-    CustomTextViewBold tvChangeTime;
-
-    @BindView(R.id.ll_editDetails)
-    LinearLayout llEditDetails;
-
-    @BindView(R.id.tv_number)
-    CustomTextViewMedium tvNumber;
-
-    @BindView(R.id.tv_email)
-    CustomTextViewMedium tvEmail;
-
-    @BindView(R.id.cv_addNote)
-    CardView cvAddNote;
-
-    @BindView(R.id.cv_attachFile)
-    CardView cvAttachFile;
-
-    @BindView(R.id.cv_submit)
-    CardView cvSubmit;
-
-    @BindView(R.id.ll_appoint)
-    LinearLayout llAppointment;
-
-    @BindView(R.id.ll_checkIn)
-    LinearLayout llCheckIn;
-
-    @BindView(R.id.tv_checkInDate)
-    CustomTextViewBold tvCheckInDate;
-
-    @BindView(R.id.tv_peopleInLine)
-    CustomTextViewBold tvPeopleInLine;
-
-    @BindView(R.id.tv_hint)
-    CustomTextViewSemiBold tvHint;
-
-    @BindView(R.id.tv_selectedDateHint)
-    CustomTextViewSemiBold tvSelectedDateHint;
-
-    @BindView(R.id.ll_virtualNumber)
-    LinearLayout llVirtualNumber;
-
-    @BindView(R.id.lImage)
-    ImageView lImage;
-
-    @BindView(R.id.et_virtualNumber)
-    EditText etVirtualNumber;
-
-    @BindView(R.id.tv_applyCode)
-    CustomTextViewSemiBold tvApplyCode;
-
-    @BindView(R.id.rl_coupon)
-    RelativeLayout rlCoupon;
 
     @BindView(R.id.iv_teleService)
     ImageView ivteleService;
+    @BindView(R.id.tv_serviceName)
+    TextView tvServiceName;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
+    @BindView(R.id.ll_appoint)
+    LinearLayout llAppointment;
+    @BindView(R.id.ll_checkIn)
+    LinearLayout llCheckIn;
+    @BindView(R.id.ll_slots)
+    LinearLayout ll_slots;
+    @BindView(R.id.tv_term)
+    TextView tvTerm;
+    @BindView(R.id.tv_number)
+    TextView tvNumber;
+    @BindView(R.id.tv_email)
+    TextView tvEmail;
+    @BindView(R.id.ll_onetime_qnr_Layout)
+    LinearLayout ll_onetime_qnr_Layout;
+    @BindView(R.id.tv_date)
+    TextView tvDate;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.ll_editDetails)
+    LinearLayout llEditDetails;
+    @BindView(R.id.cv_submit)
+    CardView cvSubmit;
+    @BindView(R.id.tv_checkInDate)
+    TextView tvCheckInDate;
+    @BindView(R.id.tv_peopleInLine)
+    TextView tvPeopleInLine;
+    @BindView(R.id.tv_hint)
+    TextView tvHint;
+    @BindView(R.id.tv_buttonName)
+    TextView tvButtonName;
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
+    @BindView(R.id.toolbartitle)
+    TextView toolbartitle;
+    @BindView(R.id.tv_vsHint)
+    TextView tvVsHint;
+    @BindView(R.id.cv_addNote)
+    CardView cvAddNote;
+    @BindView(R.id.cv_attachFile)
+    CardView cvAttachFile;
+    @BindView(R.id.ll_virtualNumber)
+    LinearLayout llVirtualNumber;
+    @BindView(R.id.et_virtualNumber)
+    EditText etVirtualNumber;
+    @BindView(R.id.attach_file_size)
+    TextView tvAttachFileSize;
+    @BindView(R.id.tv_addNote)
+    TextView tvAddNotes;
+    /*@BindView(R.id.icon_text)
+    static TextView icon_text;
+    @BindView(R.id.lImage)
+    ImageView lImage;*/
+
+
+    @BindView(R.id.rl_coupon)
+    RelativeLayout rlCoupon;
 
     @BindView(R.id.et_code)
     EditText etCode;
 
     @BindView(R.id.tv_apply)
     CustomTextViewBold tvApply;
-
-    @BindView(R.id.tv_buttonName)
-    CustomTextViewBold tvButtonName;
 
     @BindView(R.id.ll_preinfo)
     LinearLayout llPreInfo;
@@ -217,28 +207,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     @BindView(R.id.tv_preInfo)
     CustomTextViewMedium tvPreInfo;
 
-    @BindView(R.id.tv_term)
-    CustomTextViewMedium tvTerm;
-
-    @BindView(R.id.attach_file_size)
-    CustomTextViewMedium tvAttachFileSize;
-
-    @BindView(R.id.tv_addNote)
-    CustomTextViewMedium tvAddNotes;
-
-    @BindView(R.id.tv_vsHint)
-    CustomTextViewMedium tvVsHint;
-
     @BindView(R.id.ll_coupons)
     LinearLayout llCoupons;
-
-    @BindView(R.id.cv_back)
-    CardView cvBack;
 
     static int familyMEmID;
     static String totalAmountPay;
     static String totalServicePay;
-    static CustomTextViewBold tvConsumerName;
+    static TextView tvConsumerName;
     static Activity mActivity;
     static Context mContext;
     static RecyclerView recycle_family;
@@ -248,7 +223,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     private int providerId;
     private int locationId;
     private int uniqueId;
-    private int queueId;
+    private Integer queueId;
     private int userId;
     private int GALLERY = 1, CAMERA = 2;
     private boolean isUser;
@@ -276,7 +251,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     private String userMessage = "";
     private ICpn iCpn;
     private FamilyMemberDialog familyMemberDialog;
-    private CustomerInformationDialog customerInformationDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
     private IDeleteImagesInterface iDeleteImagesInterface;
     private CustomNotes customNotes;
@@ -304,8 +278,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     String apiDate = "";
     String calcMode;
     String path;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
-
+    static String time = null;
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
@@ -318,7 +291,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
     AdvancePaymentDetails advancePaymentDetails = new AdvancePaymentDetails();
     CountryCodePicker virtual_NmbrCCPicker;
-    CustomTextViewSemiBold tvErrorMessage;
+    TextView tvErrorMessage;
     SearchTerminology mSearchTerminology;
     ProfileModel profileDetails;
     SearchViewDetail mBusinessDataList;
@@ -329,6 +302,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     Bitmap bitmap;
     TextView tv_attach, tv_camera;
     float sQnrPrice;
+    static TextView icon_text;
+    String providerLogoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,6 +320,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         iDeleteImagesInterface = (IDeleteImagesInterface) this;
         iSaveNotes = this;
 
+        mFirstName = SharedPreference.getInstance(CheckInActivity.this).getStringValue("firstname", "");
+        mLastName = SharedPreference.getInstance(CheckInActivity.this).getStringValue("lastname", "");
+        consumerID = SharedPreference.getInstance(CheckInActivity.this).getIntValue("consumerId", 0);
+
         SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
         SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
 
@@ -360,6 +339,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         userId = intent.getIntExtra("userId", 0);
         isUser = intent.getBooleanExtra("fromUser", false);
         sector = intent.getStringExtra("sector");
+        providerLogoUrl = intent.getStringExtra("providerLogo");
         tvConsumerName = findViewById(R.id.tv_consumerName);
 
         //////////////temp serviceoptionprice////////////
@@ -369,17 +349,22 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
+        icon_text = findViewById(R.id.icon_text);
 
         virtual_NmbrCCPicker = findViewById(R.id.virtual_NmbrCCPicker);
         MultiplefamilyList.clear();
 
-        int consumerId = SharedPreference.getInstance(CheckInActivity.this).getIntValue("consumerId", 0);
-        familyMEmID = consumerId;
-        if (providerName != null) {
-            tvProviderName.setText(providerName);
+        familyMEmID = consumerID;
+
+        toolbartitle.setText("Date and Info");
+        if (isUser) {
+            ApiGetOneTimeQNR(0, consumerID, userId, null);
+        } else {
+            ApiGetOneTimeQNR(0, consumerID, providerId, null);
         }
 
         if (checkInInfo != null) {
+
             String name = checkInInfo.getName();
             tvServiceName.setText(name);
             tvDescription.setText(checkInInfo.getDescription());
@@ -395,7 +380,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                 if (checkInInfo.getCheckInServiceAvailability().getCalculationMode() != null && !checkInInfo.getCheckInServiceAvailability().getCalculationMode().equalsIgnoreCase("NoCalc")) {
                     String time = getWaitingTime(checkInInfo.getCheckInServiceAvailability().getAvailableDate(), checkInInfo.getCheckInServiceAvailability().getServiceTime(), checkInInfo.getCheckInServiceAvailability().getQueueWaitingTime());
                     tvCheckInDate.setVisibility(View.VISIBLE);
-                    tvCheckInDate.setTextSize(30);
+                    //tvCheckInDate.setTextSize(30);
                     tvHint.setVisibility(View.VISIBLE);
                     tvCheckInDate.setText(time.split("-")[1]);
                     tvHint.setText(time.split("-")[0]);
@@ -424,7 +409,18 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 //                    }
                 }
             }
+            if (checkInInfo.getCheckInServiceAvailability().getAvailableDate() != null) {
+                if (isUser) {
+                    CheckInSlotsDialog csl;
+                    csl = new CheckInSlotsDialog(mContext, checkInInfo.getId(), locationId, iSelectQ, userId, apiDate);
+                    ll_slots.addView(csl);
+                } else {
+                    CheckInSlotsDialog csl;
+                    csl = new CheckInSlotsDialog(mContext, checkInInfo.getId(), locationId, iSelectQ, providerId, apiDate);
+                    ll_slots.addView(csl);
+                }
 
+            }
 
             if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
 
@@ -433,7 +429,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                     if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp") || checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
-                        lImage.setVisibility(View.VISIBLE);
+                        // lImage.setVisibility(View.VISIBLE);
 
                         if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             tvVsHint.setText("WhatsApp number");
@@ -444,7 +440,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
-                        lImage.setVisibility(View.GONE);
+                        //lImage.setVisibility(View.GONE);
                     }
 
                     ivteleService.setVisibility(View.VISIBLE);
@@ -471,19 +467,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
                         ivteleService.setImageResource(R.drawable.ic_jaldeevideo);
 
-                    } else {
-                        ivteleService.setVisibility(View.GONE);
                     }
 
                 } else {
-                    ivteleService.setVisibility(View.GONE);
                     llVirtualNumber.setVisibility(View.GONE);
-                    lImage.setVisibility(View.GONE);
                 }
             } else {
-                ivteleService.setVisibility(View.GONE);
                 llVirtualNumber.setVisibility(View.GONE);
-                lImage.setVisibility(View.GONE);
             }
 
             if (checkInInfo.isPrePayment()) {
@@ -495,7 +485,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                 }
             }
 
-            if (checkInInfo.isPreInfoEnabled()) { //  check if pre-info is available for the service
+            /*if (checkInInfo.isPreInfoEnabled()) { //  check if pre-info is available for the service
                 llPreInfo.setVisibility(View.VISIBLE);
                 if (checkInInfo.getPreInfoTitle() != null) {
                     tvPreInfoTitle.setText(checkInInfo.getPreInfoTitle());
@@ -511,7 +501,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             } else {
 
                 llPreInfo.setVisibility(View.GONE);
-            }
+            }*/
 
 
             if (checkInInfo.getConsumerNoteTitle() != null && !checkInInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
@@ -521,9 +511,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             }
         }
 
-        mFirstName = SharedPreference.getInstance(CheckInActivity.this).getStringValue("firstname", "");
-        mLastName = SharedPreference.getInstance(CheckInActivity.this).getStringValue("lastname", "");
-        consumerID = SharedPreference.getInstance(CheckInActivity.this).getIntValue("consumerId", 0);
 
         // api calls
         ApiGetProviderDetails(uniqueId);
@@ -532,7 +519,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
 
         // click actions
-        cvBack.setOnClickListener(new View.OnClickListener() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -544,7 +531,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             @Override
             public void onClick(View v) {
                 if (tvEmail.getText().toString().equalsIgnoreCase("")) {
-                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
+                    if (isUser) {
+                        familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, userId);
+                    } else {
+                        familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
+                    }
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -576,8 +567,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         llEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
+                if (isUser) {
+                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, userId);
+                } else {
+                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
+                }
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
@@ -588,109 +582,91 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             }
         });
 
-        tvChangeTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (checkInInfo.getCheckInServiceAvailability().getAvailableDate() != null) {
-                    if (isUser) {
-                        slotsDialog = new CheckInSlotsDialog(mContext, checkInInfo.getId(), locationId, iSelectQ, userId, apiDate);
-
-                    } else {
-                        slotsDialog = new CheckInSlotsDialog(mContext, checkInInfo.getId(), locationId, iSelectQ, providerId, apiDate);
-
-                    }
-                    slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                    slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    slotsDialog.show();
-                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    slotsDialog.setCancelable(false);
-                    slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                }
-
-            }
-        });
-
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tvNumber.length() < 10) {
-                    Toast.makeText(CheckInActivity.this, "Mobile number should have 10 digits" + "", Toast.LENGTH_SHORT).show();
-                } else {
+                if (queueId != null) {
+                    if (tvNumber.length() < 10) {
+                        Toast.makeText(CheckInActivity.this, "Mobile number should have 10 digits" + "", Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean isOneTimeQnrValid = false;
+                        if (isOneTimeQnrAvailable) {
+                            try {
+                                isOneTimeQnrValid = oneTimeQuestionnaire.submitQuestionnaire();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if ((!isOneTimeQnrAvailable) || (isOneTimeQnrAvailable && isOneTimeQnrValid)) {
 
-                    if (checkInInfo.isPrePayment()) {  // check if selected service requires prepayment
-                        if (tvEmail.getText().toString() != null && tvEmail.getText().length() > 0) { // if selected service requires prepayment..then Email is mandatory
+                            if (checkInInfo.isPrePayment()) {  // check if selected service requires prepayment
+                                if (tvEmail.getText().toString() != null && tvEmail.getText().length() > 0) { // if selected service requires prepayment..then Email is mandatory
 
-                            if (checkInInfo.isConsumerNoteMandatory()) { // check if notes is mandatory for selected service
+                                    if (checkInInfo.isConsumerNoteMandatory()) { // check if notes is mandatory for selected service
 
-                                if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
+                                        if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
+
+                                            if (isUser) {
+                                                ApiCheckin(userMessage, userId);
+                                            } else {
+                                                ApiCheckin(userMessage, providerId);
+                                            }
+                                        } else {
+                                            DynamicToast.make(CheckInActivity.this, "Please provide " + checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                                            CheckInActivity.this, R.drawable.icon_info),
+                                                    ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } else {
+
+                                        if (isUser) {
+                                            ApiCheckin(userMessage, userId);
+                                        } else {
+                                            ApiCheckin(userMessage, providerId);
+                                        }
+                                    }
+                                } else {
+
+                                    DynamicToast.make(CheckInActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
+                                                    CheckInActivity.this, R.drawable.icon_info),
+                                            ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+
+                                }
+                            } else {
+
+                                if (checkInInfo.isConsumerNoteMandatory()) {
+
+                                    if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
+
+                                        if (isUser) {
+                                            ApiCheckin(userMessage, userId);
+                                        } else {
+                                            ApiCheckin(userMessage, providerId);
+                                        }
+                                    } else {
+
+                                        DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                                        CheckInActivity.this, R.drawable.icon_info),
+                                                ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } else {
 
                                     if (isUser) {
                                         ApiCheckin(userMessage, userId);
                                     } else {
                                         ApiCheckin(userMessage, providerId);
                                     }
-                                } else {
-                                    DynamicToast.make(CheckInActivity.this, "Please provide " + checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                                    CheckInActivity.this, R.drawable.icon_info),
-                                            ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
-
-                            } else {
-
-                                if (isUser) {
-                                    ApiCheckin(userMessage, userId);
-                                } else {
-                                    ApiCheckin(userMessage, providerId);
-                                }
-                            }
-                        } else {
-
-                            DynamicToast.make(CheckInActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
-                                            CheckInActivity.this, R.drawable.icon_info),
-                                    ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-
-                        }
-                    } else {
-
-                        if (checkInInfo.isConsumerNoteMandatory()) {
-
-                            if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
-
-                                if (isUser) {
-                                    ApiCheckin(userMessage, userId);
-                                } else {
-                                    ApiCheckin(userMessage, providerId);
-                                }
-                            } else {
-
-                                DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                                CheckInActivity.this, R.drawable.icon_info),
-                                        ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-                            }
-
-                        } else {
-
-                            if (isUser) {
-                                ApiCheckin(userMessage, userId);
-                            } else {
-                                ApiCheckin(userMessage, providerId);
                             }
                         }
                     }
+                } else {
+                    DynamicToast.make(CheckInActivity.this, "Please select a Date and Time window", AppCompatResources.getDrawable(
+                                    CheckInActivity.this, R.drawable.ic_info_black),
+                            ContextCompat.getColor(CheckInActivity.this, R.color.black), ContextCompat.getColor(CheckInActivity.this, R.color.white), Toast.LENGTH_SHORT).show();
 
                 }
-            }
-        });
-
-
-        tvApplyCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                tvApplyCode.setVisibility(View.GONE);
-                rlCoupon.setVisibility(View.VISIBLE);
             }
         });
 
@@ -740,8 +716,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                     } else {
                         Toast.makeText(CheckInActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
                 cpns(couponArraylist);
             }
@@ -1061,11 +1035,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
-        final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerID);
 
         call.enqueue(new Callback<ProfileModel>() {
             @Override
@@ -1081,11 +1053,18 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                     if (response.code() == 200) {
                         profileDetails = response.body();
                         if (profileDetails != null) {
-                            tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
+                            String fName = profileDetails.getUserprofile().getFirstName();
+                            String lName = profileDetails.getUserprofile().getLastName();
+                            if (fName != null && !fName.trim().isEmpty()) {
+                                icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+                            } else if (lName != null && !lName.trim().isEmpty()) {
+                                icon_text.setText(String.valueOf(lName.trim().charAt(0)));
+                            }
+                            tvConsumerName.setText(fName + " " + lName);
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
                             tvNumber.setText(countryCode + " " + phoneNumber);
-                            //  et_countryCode.setText(countryCode);
+                            //et_countryCode.setText(countryCode);
                             String cCode = countryCode.replace("+", "");
                             virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
@@ -1097,17 +1076,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                             } else {
                                 tvEmail.setHint("Enter your Mail Id");
                             }
-                            /*if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
-
-                                customerInformationDialog = new CustomerInformationDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, sector);
-                                customerInformationDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                                customerInformationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                customerInformationDialog.show();
-                                DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                customerInformationDialog.setCancelable(false);
-                                customerInformationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }*/
                         }
                     }
                 } catch (Exception e) {
@@ -1163,10 +1131,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                 s3couponList = new Gson().fromJson(s3Coupons, new TypeToken<ArrayList<CoupnResponse>>() {
                 }.getType());
                 if (s3couponList.size() != 0 || (providerCouponList != null && providerCouponList.size() != 0)) {
-                    tvApplyCode.setVisibility(View.VISIBLE);
                     llCoupons.setVisibility(View.VISIBLE);
                 } else {
-                    tvApplyCode.setVisibility(View.GONE);
                     llCoupons.setVisibility(View.GONE);
                 }
             }
@@ -1185,10 +1151,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                 }.getType());
 
                 if (s3couponList != null && s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                    tvApplyCode.setVisibility(View.VISIBLE);
                     llCoupons.setVisibility(View.VISIBLE);
                 } else {
-                    tvApplyCode.setVisibility(View.GONE);
                     llCoupons.setVisibility(View.GONE);
                 }
 
@@ -1311,10 +1275,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         mDialog.show();
         String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
-        //String virtual_code = virtual_NmbrCCPicker.getSelectedCountryCode();
         String countryVirtualCode = "";
-        /*if (!virtual_code.equalsIgnoreCase("")) {
-            countryVirtualCode = virtual_code.substring(1);*/
         if (virtual_NmbrCCPicker.getSelectedCountryCode() != null) {
             countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
         } else {
@@ -1527,6 +1488,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                         Questionnaire questionnaire = response.body();
 
                         BookingModel model = new BookingModel();
+                        model.setProviderUniqueId(uniqueId);
+                        model.setProviderResponse(providerResponse);
                         model.setJsonObject(queueobj.toString());
                         model.setImagePathList(imagePathList);
                         model.setMessage(txt_addnote);
@@ -1540,7 +1503,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                         model.setProviderName(providerName);
                         model.setAccountBusinessName(accountBusinessName);
                         model.setLocationName(locationName);
-                        model.setDate(tvCheckInDate.getText().toString());
+                        model.setDate(time);
                         model.setHint(tvHint.getText().toString());
                         model.setPeopleWaiting(tvPeopleInLine.getText().toString());
                         model.setToken(isToken);
@@ -1552,6 +1515,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                         model.setTotalServicePay(totalServicePay);
                         model.setWhtsappCountryCode(mWhtsappCountryCode);
                         model.setWhtsappPhoneNumber(mWhatsappNumber);
+                        if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
+                            model.setProviderLogo(providerLogoUrl);
+                        }
                         String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
                         String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
                         if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
@@ -1625,7 +1591,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                                 String startDate = convertDate(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate());
                                 String queueTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
                                 tvCheckInDate.setVisibility(View.VISIBLE);
-                                tvCheckInDate.setTextSize(20);
+                                //tvCheckInDate.setTextSize(20);
                                 tvCheckInDate.setText(startDate + "," + "\n" + queueTime);
 
                             } else {
@@ -1709,13 +1675,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String type = null;
+        String type = "today";
         if (date2 != null && date1.compareTo(date2) < 0) {
             type = "future";
         }
         if (nextAvailableTime != null) {
             firstWord = "Next Available Time ";
-            if (type != null) {
+            if (type.equalsIgnoreCase("future")) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = null;
                 try {
@@ -1729,9 +1695,25 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             } else {
                 secondWord = "Today, " + nextAvailableTime;
             }
+            time = secondWord;
         } else {
             firstWord = "Estimated wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
+
+            if (type.equalsIgnoreCase("future")) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = format.parse(nextAvailableDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String day = (String) DateFormat.format("dd", date);
+                String monthString = (String) DateFormat.format("MMM", date);
+                time = monthString + " " + day + ", " + nextAvailableTime;
+            } else {
+                time = "<font color=#2F3032>Today, </font> <font color=#FC6464><br>" + firstWord + " " + secondWord + "</font>";
+            }
         }
 
         return firstWord + "-" + secondWord;
@@ -1760,6 +1742,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     public static void refreshName(String name, int memID) {
         Config.logV("NAme----------" + name);
         if (name != null && !name.equalsIgnoreCase("")) {
+            if (name != null && !name.trim().isEmpty()) {
+                icon_text.setText(String.valueOf(name.trim().charAt(0)));
+            }
             tvConsumerName.setText(name);
             familyMEmID = memID;
         }
@@ -1769,37 +1754,43 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     public void sendSelectedQueueInfo(String displayTime, int id, QueueTimeSlotModel queueDetails, String selectedDate) {
 
         try {
-            if (checkInInfo.getCheckInServiceAvailability().getCalculationMode() != null && !checkInInfo.getCheckInServiceAvailability().getCalculationMode().equalsIgnoreCase("NoCalc")) {
-
-                String time = getWaitingTime(selectedDate, queueDetails.getServiceTime(), String.valueOf(queueDetails.getQueueWaitingTime()));
-                tvCheckInDate.setVisibility(View.VISIBLE);
-                tvCheckInDate.setTextSize(30);
-                tvHint.setVisibility(View.VISIBLE);
-                tvCheckInDate.setText(time.split("-")[1]);
-                tvHint.setText(time.split("-")[0]);
+            if (queueDetails == null) {
+                llCheckIn.setVisibility(View.GONE);
+                queueId = null;
             } else {
-                tvCheckInDate.setVisibility(View.VISIBLE); // else condition to show Queue time and date if calculation mode is NoCalc
-                tvHint.setVisibility(View.GONE);
-                String startDate = convertDate(queueDetails.getEffectiveSchedule().getStartDate());
-                String queueTime = queueDetails.getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queueDetails.getQueueSchedule().getTimeSlots().get(0).geteTime();
-                tvCheckInDate.setTextSize(20);
-                tvCheckInDate.setText(startDate + "," + "\n" + queueTime);
+                llCheckIn.setVisibility(View.VISIBLE);
+                llAppointment.setVisibility(View.GONE);
+                if (checkInInfo.getCheckInServiceAvailability().getCalculationMode() != null && !checkInInfo.getCheckInServiceAvailability().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+
+                    String time = getWaitingTime(selectedDate, queueDetails.getServiceTime(), String.valueOf(queueDetails.getQueueWaitingTime()));
+                    tvCheckInDate.setVisibility(View.VISIBLE);
+                    //tvCheckInDate.setTextSize(30);
+                    tvHint.setVisibility(View.VISIBLE);
+                    tvCheckInDate.setText(time.split("-")[1]);
+                    tvHint.setText(time.split("-")[0]);
+                } else {
+                    tvCheckInDate.setVisibility(View.VISIBLE); // else condition to show Queue time and date if calculation mode is NoCalc
+                    tvHint.setVisibility(View.GONE);
+                    String startDate = convertDate(queueDetails.getEffectiveSchedule().getStartDate());
+                    String queueTime = queueDetails.getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queueDetails.getQueueSchedule().getTimeSlots().get(0).geteTime();
+                    //tvCheckInDate.setTextSize(20);
+                    tvCheckInDate.setText(startDate + "," + "\n" + queueTime);
+                }
+                queueId = id;
+                apiDate = selectedDate;
+                if (queueDetails.getQueueSize() >= 0) {
+
+                    String changedtext = "People waiting in line : " + "<b>" + queueDetails.getQueueSize() + "</b> ";
+                    tvPeopleInLine.setText(Html.fromHtml(changedtext));
+
+                }
+
+                if (isUser) {
+                    getAdvancePaymentDetails(userMessage, userId);
+                } else {
+                    getAdvancePaymentDetails(userMessage, providerId);
+                }
             }
-            queueId = id;
-            apiDate = selectedDate;
-            if (queueDetails.getQueueSize() >= 0) {
-
-                String changedtext = "People waiting in line : " + "<b>" + queueDetails.getQueueSize() + "</b> ";
-                tvPeopleInLine.setText(Html.fromHtml(changedtext));
-
-            }
-
-            if (isUser) {
-                getAdvancePaymentDetails(userMessage, userId);
-            } else {
-                getAdvancePaymentDetails(userMessage, providerId);
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1940,7 +1931,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                             //Log.d(TAG, "onActivityResult: " + e.toString());
                         }
                         String orgFilePath = photoFile.getAbsolutePath();
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
@@ -2004,7 +1995,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                                 //Log.d(TAG, "onActivityResult: " + e.toString());
                             }
                             String orgFilePath = photoFile.getAbsolutePath();
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                                 if (orgFilePath == null) {
                                     orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
@@ -2115,11 +2106,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     }
 
     @Override
-    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode, String whtsappCountryCode, String whatsappNumber, String telegramCountryCode, String telegramNumber, String age, JSONArray preferredLanguages, JSONObject bookingLocation, String gender) {
+    public void sendFamilyMemberDetails(int fmemId, String firstName, String lastName, String phone, String email, String conCode, String whtsappCountryCode, String whatsappNumber, String telegramCountryCode, String telegramNumber, String age, JSONArray preferredLanguages, JSONObject bookingLocation, String gender) {
         mFirstName = firstName;
         mLastName = lastName;
         phoneNumber = phone;
-        familyMEmID = consumerId;
+        familyMEmID = fmemId;
         emailId = email;
         countryCode = conCode;
         mWhtsappCountryCode = whtsappCountryCode;
@@ -2131,6 +2122,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         mBookingLocation = bookingLocation;
         mGender = gender;
         tvNumber.setText(countryCode + " " + phoneNumber);
+        if (isUser) {
+            ApiGetOneTimeQNR(familyMEmID, consumerID, userId, null);
+        } else {
+            ApiGetOneTimeQNR(familyMEmID, consumerID, providerId, null);
+        }
         if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
             String cCode = whtsappCountryCode.replace("+", "");
             virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
@@ -2148,26 +2144,45 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         } else {
             tvEmail.setText("");
         }
+        if (mFirstName != null && !mFirstName.trim().isEmpty()) {
+            icon_text.setText(String.valueOf(mFirstName.trim().charAt(0)));
+        } else if (mLastName != null && !mLastName.trim().isEmpty()) {
+            icon_text.setText(String.valueOf(mLastName.trim().charAt(0)));
+        }
+        if (mFirstName != null && !mFirstName.trim().isEmpty()) {
+            icon_text.setText(String.valueOf(mFirstName.trim().charAt(0)));
+        } else if (mLastName != null && !mLastName.trim().isEmpty()) {
+            icon_text.setText(String.valueOf(mLastName.trim().charAt(0)));
+        }
         tvConsumerName.setText(mFirstName + " " + mLastName);
     }
 
     @Override
-    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
+    public void sendFamilyMemberDetails(int fmemId, String firstName, String lastName, String phone, String email, String conCode) {
         mFirstName = firstName;
         mLastName = lastName;
         phoneNumber = phone;
-        familyMEmID = consumerId;
+        familyMEmID = fmemId;
         emailId = email;
         countryCode = conCode;
         tvNumber.setText(countryCode + " " + phoneNumber);
         String cCode = countryCode.replace("+", "");
         virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
         // et_countryCode.setText(countryCode);
-
+        if (isUser) {
+            ApiGetOneTimeQNR(familyMEmID, consumerID, userId, null);
+        } else {
+            ApiGetOneTimeQNR(familyMEmID, consumerID, providerId, null);
+        }
         if (!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
         } else {
             tvEmail.setText("");
+        }
+        if (mFirstName != null && !mFirstName.trim().isEmpty()) {
+            icon_text.setText(String.valueOf(mFirstName.trim().charAt(0)));
+        } else if (mLastName != null && !mLastName.trim().isEmpty()) {
+            icon_text.setText(String.valueOf(mLastName.trim().charAt(0)));
         }
         tvConsumerName.setText(mFirstName + " " + mLastName);
     }
@@ -2198,7 +2213,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         couponArraylist = mcouponArraylist;
         //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
         if (userMessage != null) {
-
 
             if (isUser) {
                 getAdvancePaymentDetails(userMessage, userId);
@@ -2249,5 +2263,74 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
         imagePathList.get(position).setCaption(caption);
         imagePreviewAdapter.notifyDataSetChanged();
+    }
+
+    Questionnaire questionnaire = new Questionnaire();
+    OneTimeQuestionnaire oneTimeQuestionnaire = new OneTimeQuestionnaire();
+    boolean isOneTimeQnrAvailable = false;
+
+    private void ApiGetOneTimeQNR(int fMemId, int consumerId, int providerId, String isFrom) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<Questionnaire> call = apiService.getOneTimeQnr(fMemId, consumerId, providerId);
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+        call.enqueue(new Callback<Questionnaire>() {
+            @Override
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+
+                try {
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        questionnaire = response.body();
+                        if (questionnaire != null && questionnaire.getQuestionsList() != null && questionnaire.getQuestionsList().size() > 0) {
+                            for (Questions qns : questionnaire.getQuestionsList()) {
+                                if (qns.getGetQuestions() != null && qns.getGetQuestions().size() > 0) {
+                                    isOneTimeQnrAvailable = true;
+                                }
+                            }
+                        }
+                        if (isOneTimeQnrAvailable) {
+                            ll_onetime_qnr_Layout.setVisibility(View.VISIBLE);
+                            oneTimeQuestionnaire = new OneTimeQuestionnaire();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("requestFor", Constants.APPOINTMENT);
+                            bundle.putString("requestFrom", "");
+                            bundle.putInt("consumerId", consumerId);
+                            bundle.putInt("providerId", providerId);
+                            bundle.putInt("familyMemId", fMemId);
+
+                            oneTimeQuestionnaire.setArguments(bundle);
+                            final FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.rl_onetime_qnr, oneTimeQuestionnaire)
+                                    .commit();
+                        } else {
+                            ll_onetime_qnr_Layout.setVisibility(View.GONE);
+                        }
+
+                    } else {
+
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+
+                        Config.logV("Error" + response.errorBody().string());
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+            }
+        });
     }
 }

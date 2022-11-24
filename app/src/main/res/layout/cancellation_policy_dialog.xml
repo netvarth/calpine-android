@@ -4,16 +4,16 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/padding5"
+    android:layout_marginLeft="@dimen/dimen_10dp"
     android:layout_marginTop="@dimen/default_padding"
-    android:layout_marginRight="@dimen/padding5"
+    android:layout_marginRight="@dimen/dimen_10dp"
     android:layout_marginBottom="@dimen/default_padding"
     app:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_10dp"
+        android:layout_margin="@dimen/dimen_15dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -23,12 +23,13 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0.3"
+                android:fontFamily="@font/font_medium"
                 android:justificationMode="inter_word"
                 android:text="Note: Jaldee is not responsible for the transactions between Consumer and Provider."
                 android:textColor="@color/gray_444444"
@@ -54,13 +55,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/setup_intro_bullet_first_text" />
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+            <TextView
                 android:id="@+id/setup_intro_bullet_first_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0.3"
+                android:fontFamily="@font/font_regular"
                 android:justificationMode="inter_word"
                 android:text="Consumers can cancel the booking anytime"
                 android:textColor="@color/gray_444444"
@@ -86,13 +88,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/setup_intro_bullet_second_text" />
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+            <TextView
                 android:id="@+id/setup_intro_bullet_second_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0.3"
+                android:fontFamily="@font/font_regular"
                 android:justificationMode="inter_word"
                 android:text="If the consumer cancels the service, 3% will be deducted from the amount(which includes Jaldee service charges and Online Gateway fees)."
                 android:textColor="@color/gray_444444"
@@ -118,13 +121,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/setup_intro_bullet_third_text" />
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+            <TextView
                 android:id="@+id/setup_intro_bullet_third_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0.3"
+                android:fontFamily="@font/font_regular"
                 android:justificationMode="inter_word"
                 android:text="Refund will be received directly to the consumer’s bank account after he/she cancels the future bookings."
                 android:textColor="@color/gray_444444"
@@ -150,13 +154,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/setup_intro_bullet_fourth_text" />
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+            <TextView
                 android:id="@+id/setup_intro_bullet_fourth_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0.3"
+                android:fontFamily="@font/font_regular"
                 android:justificationMode="inter_word"
                 android:text="If the booking is cancelled on the date of booking, refund will not be processed automatically(i.e Consumer must inform the provider to initiate the refund)"
                 android:textColor="@color/gray_444444"
@@ -181,14 +186,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_40dp"
                 android:layout_weight="0.5"
-                app:cardBackgroundColor="@color/cb_blue_button"
+                app:cardBackgroundColor="@color/blue5"
                 app:cardCornerRadius="@dimen/dimen_15dp"
                 app:cardElevation="@dimen/dimen_0dp">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="@font/font_regular"
                     android:text="Close"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

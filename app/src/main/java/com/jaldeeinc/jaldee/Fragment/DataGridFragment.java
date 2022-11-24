@@ -73,7 +73,6 @@ public class DataGridFragment extends Fragment {
 
     private int GALLERY = 3, CAMERA = 4;
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
 
     private GetQuestion mQuestion = new GetQuestion();
     private DataGrid mAnswer = new DataGrid();
@@ -85,7 +84,6 @@ public class DataGridFragment extends Fragment {
     File f;
     File file;
     String singleFilePath = "";
-    Bitmap bitmap;
 
 
     public DataGridFragment() {
@@ -552,23 +550,6 @@ public class DataGridFragment extends Fragment {
                         if (orgFilePath == null) {
                             orgFilePath = Config.getFilePathFromURI(getActivity(), uri, extension);
                         }
-                        /*Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, getActivity());
-                        String filepath = "";//default fileName
-
-                        String mimeType = getActivity().getContentResolver().getType(uri);
-                        String uriString = uri.toString();
-                        String extension = "";
-                        if (uriString.contains(".")) {
-                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-                        }
-
-                        if (mimeType != null) {
-                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-                        }
-                        if (orgFilePath == null) {
-                            orgFilePath = getFilePathFromURI(getContext(), uri, extension);
-                        }*/
 
                         View fileUploadView = viewsList.get(qLabelName);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
@@ -664,10 +645,6 @@ public class DataGridFragment extends Fragment {
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 

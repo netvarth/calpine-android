@@ -19,9 +19,6 @@ import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-
-import androidx.core.content.ContextCompat;
-
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,21 +28,22 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+import androidx.core.content.ContextCompat;
+
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.response.LoginResponse;
 import com.jaldeeinc.jaldee.utils.LogUtil;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +55,7 @@ import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,6 +66,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -723,6 +723,12 @@ public class Config {
         mContext.startActivity(browserIntent);
     }
 
+    public static void openOnlineDoc(Context mContext, String filePath) {
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
+        mContext.startActivity(browserIntent);
+    }
+
     public static String getMimeType(String path) {
         String extension = path.substring(path.lastIndexOf("."));
         String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
@@ -750,4 +756,40 @@ public class Config {
         }
         return map;
     }
+
+    public static MediaTypeAndExtention getFileType(String path) {
+        MediaTypeAndExtention type = new MediaTypeAndExtention();
+        String extension = "";
+
+        if (path.contains(" ")) {
+            path = path.replaceAll(" ", "%20");
+        }
+        if (path.contains(".")) {
+            extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Arrays.stream(Constants.imgExtFormats).anyMatch(extension::contains)) {
+                type.setMediaType(MediaType.parse("image/*"));
+                type.setMediaTypeWithExtention(MediaType.parse("image/" + extension));
+            } else if (Arrays.stream(Constants.docExtFormats).anyMatch(extension::contains)) {
+                type.setMediaType(MediaType.parse("application/*"));
+                type.setMediaTypeWithExtention(MediaType.parse("application/" + extension));
+            } else if (Arrays.stream(Constants.audioExtFormats).anyMatch(extension::contains)) {
+                type.setMediaType(MediaType.parse("audio/*"));
+                type.setMediaTypeWithExtention(MediaType.parse("audio/" + extension));
+            } else if (Arrays.stream(Constants.videoExtFormats).anyMatch(extension::contains)) {
+                type.setMediaType(MediaType.parse("video/*"));
+                type.setMediaTypeWithExtention(MediaType.parse("video/" + extension));
+            } else if (Arrays.stream(Constants.textExtFormats).anyMatch(extension::contains)) {
+                type.setMediaType(MediaType.parse("text/*"));
+                type.setMediaTypeWithExtention(MediaType.parse("text/" + extension));
+            } else {
+                type.setMediaType(MediaType.parse("image/*"));
+                type.setMediaTypeWithExtention(MediaType.parse("image/" + extension));
+            }
+        }
+        return type;
+    }
+
 }

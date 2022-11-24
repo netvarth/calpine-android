@@ -121,20 +121,20 @@
                 android:layout_marginRight="@dimen/dimen_20dp"
                 android:orientation="horizontal">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                <TextView
                     android:id="@+id/tv_history"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_consumerName"
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="@dimen/padding5"
+                    android:fontFamily="@font/font_medium"
                     android:text="History"
                     android:textAllCaps="false"
                     android:textColor="@color/grey6"
-                    android:textSize="@dimen/txtsize_10">
+                    android:textSize="@dimen/txtsize_10" />
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
                 <ImageView
                     android:layout_width="match_parent"

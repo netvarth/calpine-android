@@ -23,19 +23,6 @@ import android.os.Looper;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-
-import androidx.annotation.RequiresApi;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -58,6 +45,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
@@ -246,7 +243,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
     private IMailSubmit iMailSubmit;
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     ArrayList<String> imagePathList = new ArrayList<>();
     ArrayList<String> imagePathLists = new ArrayList<>();
     private Uri mImageUri;
@@ -3525,7 +3521,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                         if (activeAppointment != null) {
 
-                            Intent checkin = new Intent(CheckIn.this, CheckInConfirmation.class);
+                            Intent checkin = new Intent(CheckIn.this, BookingConfirmation.class);
                             checkin.putExtra("BookingDetails", activeAppointment);
                             checkin.putExtra("terminology", mSearchTerminology.getProvider());
                             startActivity(checkin);
@@ -3749,7 +3745,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = getFilePathFromURI(mContext, uri, extension);
                             }

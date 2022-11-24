@@ -8,19 +8,20 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.webkit.MimeTypeMap;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
@@ -31,7 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PrescriptionDialog extends Dialog {
-    private Context mContext;
+    private static Context mContext;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
     CustomTextViewMedium tv_download, tv_share;
@@ -40,7 +41,7 @@ public class PrescriptionDialog extends Dialog {
     private String type = "";
     private String url = "";
     private String longUrl = "";
-
+    WebView webView;
 
     public PrescriptionDialog(@NonNull Context context, boolean isActive, Bookings bookings) {
         super(context);
@@ -72,6 +73,7 @@ public class PrescriptionDialog extends Dialog {
 
         tv_download = findViewById(R.id.presc_download);
         tv_share = findViewById(R.id.presc_share);
+        webView = findViewById(R.id.webview);
 
         if (bookings.getCheckInInfo() != null) {
             if (bookings.getCheckInInfo().getPrescShortUrl() != null) {
@@ -108,9 +110,9 @@ public class PrescriptionDialog extends Dialog {
             public void onClick(View view) {
 
                 if (url != null && !url.equalsIgnoreCase("")) {
-                    sharePrescription(url, view);
+                    sharePrescription(url, longUrl, view);
                 } else if (longUrl != null && !longUrl.equalsIgnoreCase("")) {
-                    sharePrescription(longUrl, view);
+                    sharePrescription(longUrl, longUrl, view);
                 }
             }
         });
@@ -127,10 +129,17 @@ public class PrescriptionDialog extends Dialog {
         });
     }
 
-    public static void sharePrescription(String sUrl, View view) {
+    public static void sharePrescription(String url, String longUrl, View view) {
+        String link = "";
+        if (url.startsWith("/")) {
+            String s = url.replaceFirst("(?:/)+", "");
+            link = Constants.URL + s;
+        } else {
+            link = Constants.URL + url;
+        }
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
-        String shareBody = sUrl;
+        String shareBody = link;
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Prescription details");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         view.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
@@ -142,42 +151,36 @@ public class PrescriptionDialog extends Dialog {
             // this will request for permission when permission is not true
         } else {
             // Download code here
-            URL url1 = null;
-            try {
-                url1 = new URL(url);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+            /**/
+            String link = "";
+            MediaTypeAndExtention type = Config.getFileType(url);
+            if (type.getMediaTypeWithExtention() != null) {  // check the url is valid, if not valid go to longurl
+                link = url;
+            } else {
+                type = Config.getFileType(longUrl);
+                if (type.getMediaTypeWithExtention() != null) {
+                    link = longUrl;
+                }
             }
-            String filname= FilenameUtils.getName(url1.getPath());
+            if (link != null && !link.trim().isEmpty()) {
 
-            File file = new File(Uri.parse(url).toString());
-            Uri uri = Uri.parse(url);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setDescription(file.getName());
-            request.setTitle(filname);
-            request.setMimeType(getMimeType(longUrl));
-//                        request.setMimeType("application/pdf");
-//                        request.setMimeType("image/jpeg");
-            // in order for this if to run, you must use the android 3.2 to compile your app
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
+                if (type.getMediaType().equals(Constants.docType) || type.getMediaType().equals(Constants.audioType)
+                        || type.getMediaType().equals(Constants.videoType) || type.getMediaType().equals(Constants.txtType)
+                        || type.getMediaType().equals(Constants.imgType)) {
+                    if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                        Config.openOnlinePdf(mContext, link);
+                    } else {
+                        Config.openOnlineDoc(mContext, link);
+                    }
+                }
+            } else {
 
-// get download service and enqueue file
-            DownloadManager manager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
-            if (manager != null) {
-                manager.enqueue(request);
+                //DynamicToast.make(mContext, "Link Expired", ContextCompat.getColor(mContext, R.color.black), ContextCompat.getColor(mContext, R.color.white), Toast.LENGTH_SHORT).show();
+
             }
-        }
-    }
 
-    public static String getMimeType(String url) {
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+
         }
-        return type;
     }
 
     private static Activity unwrap(Context context) {
@@ -185,5 +188,34 @@ public class PrescriptionDialog extends Dialog {
             context = ((ContextWrapper) context).getBaseContext();
         }
         return (Activity) context;
+    }
+
+    private static void downlaodPrescripion(String url, String longUrl) {
+        URL url1 = null;
+        try {
+            url1 = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        String filname = FilenameUtils.getName(url1.getPath());
+        MediaTypeAndExtention type = Config.getFileType(longUrl);
+        File file = new File(Uri.parse(url).toString());
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setDescription(file.getName());
+        request.setTitle(filname);
+        request.setMimeType(type.getMediaTypeWithExtention().toString());
+//                        request.setMimeType("application/pdf");
+//                        request.setMimeType("image/jpeg");
+        // in order for this if to run, you must use the android 3.2 to compile your app
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
+
+// get download service and enqueue file
+        DownloadManager manager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+        if (manager != null) {
+            manager.enqueue(request);
+        }
     }
 }

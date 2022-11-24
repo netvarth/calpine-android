@@ -1,29 +1,21 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,11 +24,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.Fragment.DeptFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -46,22 +40,14 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
-import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
-import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
-import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.JdnResponse;
-import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,9 +61,6 @@ import java.util.TimeZone;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class DeptListAdapter extends RecyclerView.Adapter {
     List<DepartmentUserSearchModel> searchList;
@@ -1056,7 +1039,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             myViewHolder.btnappointment.setTypeface(tyface_confm);
             myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v) {/*
                     Intent iAppointment = new Intent(v.getContext(), Appointment.class);
                     iAppointment.putExtra("serviceId", searchdetailList.getLocation().getId());
                     iAppointment.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
@@ -1078,7 +1061,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
                     v.getContext().startActivity(iAppointment);
-                }
+               */ }
             });
             if (searchdetailList.getParentSearchViewDetail().isOnlinePresence()) {
                 if (searchdetailList.getScheduleList().getAvailableSchedule() != null &&

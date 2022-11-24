@@ -1,14 +1,10 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +12,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -34,14 +22,12 @@ import com.google.android.material.tabs.TabLayout;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.MyPaymentsActivity;
 import com.jaldeeinc.jaldee.activities.OrdersHistoryActivity;
 import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-
-import java.util.ArrayList;
 
 public class MyJaldee extends RootFragment {
 
@@ -55,7 +41,6 @@ public class MyJaldee extends RootFragment {
     Activity mActivity;
     private CustomTextViewMedium tvConsumerName;
     String mFirstName, mLastName;
-    private CustomTextViewSemiBold tvHistory;
     private LinearLayout ll_history;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -110,7 +95,6 @@ public class MyJaldee extends RootFragment {
         tvConsumerName = view.findViewById(R.id.tv_consumerName);
         slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
         slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
-        tvHistory = view.findViewById(R.id.tv_history);
         ll_history = view.findViewById(R.id.ll_history);
 
         if (message != null) {
@@ -148,7 +132,7 @@ public class MyJaldee extends RootFragment {
 
 
         tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
-        tabLayout.addTab(tabLayout.newTab().setText("My Payments"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Requests"));
         tabLayout.addTab(tabLayout.newTab().setText("My Orders"));
         tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tabLayout.setTextDirection(View.TEXT_ALIGNMENT_TEXT_START);
@@ -192,6 +176,9 @@ public class MyJaldee extends RootFragment {
 
             LinearLayout llBHistory = (LinearLayout) bottomSheetDialog.findViewById(R.id.ll_bHistory);
             LinearLayout llOHistory = (LinearLayout) bottomSheetDialog.findViewById(R.id.ll_oHistory);
+            LinearLayout ll_mypayments = (LinearLayout) bottomSheetDialog.findViewById(R.id.ll_mypayments);
+
+
             ImageView ivClose = bottomSheetDialog.findViewById(R.id.iv_close);
 
             ivClose.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +205,17 @@ public class MyJaldee extends RootFragment {
 
                     Intent ordersHistoryIntent = new Intent(getContext(), OrdersHistoryActivity.class);
                     startActivity(ordersHistoryIntent);
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+
+            ll_mypayments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent myPaymentIntent = new Intent(getContext(), MyPaymentsActivity.class);
+                    startActivity(myPaymentIntent);
                     bottomSheetDialog.dismiss();
 
                 }

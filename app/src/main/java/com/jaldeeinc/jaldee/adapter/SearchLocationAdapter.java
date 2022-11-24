@@ -6,10 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
@@ -25,8 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
@@ -36,7 +34,6 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
 import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
-
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -449,7 +446,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });
         myViewHolder.btn_appointments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
                 iAppointment.putExtra("serviceId", searchLoclist.getId());
                 iAppointment.putExtra("uniqueID", mUniqueID);
@@ -466,7 +463,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 }
                 iAppointment.putExtra("virtualservices", virtualServices);
                 mContext.startActivity(iAppointment);
-            }
+            */}
         });
 
         myViewHolder.btn_donations.setOnClickListener(new View.OnClickListener() {

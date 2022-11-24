@@ -39,6 +39,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ImageActivity;
 import com.jaldeeinc.jaldee.activities.VideoActivity;
 import com.jaldeeinc.jaldee.common.Config;
@@ -89,7 +90,6 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
     private Context context;
     private KeyPairBoolData fileObject = new KeyPairBoolData();
     private IFilesInterface iFilesInterface;
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
     private int GALLERY = 3, CAMERA = 4;
     private Uri mImageUri;
@@ -650,7 +650,7 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
 
                 if (singleFile.getType().equalsIgnoreCase(".pdf")) {
 
-                    ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+                    ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
                 } else {
 
                     Glide.with(context).load(singleFile.getFilePath()).into(ivSingleFile);
@@ -658,13 +658,13 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
             } else {
                 if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("pdf")) {
 
-                    ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+                    ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
 
                 } else if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("mp3")) {
 
                     ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.audio_icon));
 
-                } else if (Arrays.asList(videoFormats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
+                } else if (Arrays.asList(Constants.videoExtFormats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
 
                     ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
 
@@ -749,7 +749,7 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
 
                         Config.openPdf(context.getApplicationContext(), imagePath);
 
-                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+                    } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                         Intent intent = new Intent(context, VideoActivity.class);
                         intent.putExtra("urlOrPath", imagePath);
@@ -1174,10 +1174,6 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -1241,23 +1237,6 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
                         if (orgFilePath == null) {
                             orgFilePath = Config.getFilePathFromURI(context, uri, extension);
                         }
-                        /*Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
-
-                        String mimeType = this.mContext.getContentResolver().getType(uri);
-                        String uriString = uri.toString();
-                        String extension = "";
-                        if (uriString.contains(".")) {
-                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-                        }
-
-                        if (mimeType != null) {
-                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-                        }
-                        if (orgFilePath == null) {
-                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
-                        }*/
 
 
                         singleFilePath = orgFilePath;
@@ -1273,9 +1252,9 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
 
                             if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                                ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+                                ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
 
-                            } else if (Arrays.asList(videoFormats).contains(extension)) {
+                            } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                                 ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
 
@@ -1349,9 +1328,9 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
                             if (tvSupportedTypes.getText().toString().contains(extension)) {
 
                                 if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
-                                    ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+                                    ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf));
 
-                                } else if (Arrays.asList(videoFormats).contains(extension)) {
+                                } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                                     ivSingleFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
 
@@ -1391,10 +1370,6 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 

@@ -8,14 +8,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.model.FileAttachment;
@@ -32,11 +31,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
     ArrayList<String> mGalleryAttachments = new ArrayList<>();
 
 
-
-    public ImageAdapter(List<FileAttachment> inboxList,Context mContext) {
+    public ImageAdapter(List<FileAttachment> inboxList, Context mContext) {
         this.inboxList = inboxList;
         this.mContext = mContext;
     }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
@@ -54,21 +53,18 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
                 .inflate(R.layout.imagelayout, parent, false);
 
 
-
         return new ImageAdapter.MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ImageAdapter.MyViewHolder myViewHolder, final int position) {
 
-        if(inboxList.get(position).getThumbPath()!= null && inboxList.get(position).getS3path().contains("pdf")){
+        if (inboxList.get(position).getThumbPath() != null && inboxList.get(position).getS3path().contains("pdf")) {
 
-            myViewHolder.imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdfs));
+            myViewHolder.imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdf));
 
 
-
-        }
-         else {
+        } else {
 
             Picasso.Builder builder = new Picasso.Builder(myViewHolder.imageView.getContext());
             builder.listener(new Picasso.Listener() {
@@ -86,11 +82,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 //            PdfRenderer renderer = new PdfRenderer(myViewHolder.imageView.getContext());
 //            renderer.Page(inboxList.get(position).getS3path()).fit().into(myViewHolder.imageView);
 
-            mGalleryAttachments.add(inboxList.get(position).getS3path());
+        mGalleryAttachments.add(inboxList.get(position).getS3path());
 
-            myViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        myViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryAttachments, mContext);
 //                    if (mValue) {
 //
@@ -99,38 +95,34 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 //                        myViewHolder.imageView.getContext()
 //                                .startActivity(intent);
 //                    }
-                    if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                        // this will request for permission when permission is not true
-                    }else{
-                        // Download code here
-                        String url = inboxList.get(position).getS3path() ;
-                        File file  = new File(Uri.parse(url).toString());
-                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-                        request.setDescription(file.getName());
-                        request.setTitle(file.getName());
-                       // request.setMimeType(".jpg");
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                    // this will request for permission when permission is not true
+                } else {
+                    // Download code here
+                    String url = inboxList.get(position).getS3path();
+                    File file = new File(Uri.parse(url).toString());
+                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                    request.setDescription(file.getName());
+                    request.setTitle(file.getName());
+                    // request.setMimeType(".jpg");
 // in order for this if to run, you must use the android 3.2 to compile your app
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                            request.allowScanningByMediaScanner();
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                        }
-                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    }
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
 
 // get download service and enqueue file
-                        DownloadManager manager = (DownloadManager) mContext.getSystemService(mContext.DOWNLOAD_SERVICE);
-                        manager.enqueue(request);
+                    DownloadManager manager = (DownloadManager) mContext.getSystemService(mContext.DOWNLOAD_SERVICE);
+                    manager.enqueue(request);
 
-                    }
-                    }
-
-
+                }
+            }
 
 
-            });
+        });
 //            myViewHolder.imageView.setImageURI(Uri.parse(inboxList.get(position).getS3path()));
-
-
 
 
 //            myViewHolder.imageView.setImageBitmap(BitmapFactory.decodeFile(inboxList.get(position).getS3path()));
@@ -139,7 +131,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
 //            myViewHolder.imageView.getLayoutParams().height = 100;
 //            myViewHolder.imageView.getLayoutParams().width = 100;
-        }
+    }
 
 
     @Override

@@ -18,7 +18,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.appcompat.app.AlertDialog;
@@ -182,8 +184,8 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     TextView mtxtTermsandCondition;
     TextView mtxtDele;
     TextView mtermsAndConditionDetail;
-    String maxDonationAmount,minDonationAmount;
-    int selectedService,multiples;
+    String maxDonationAmount, minDonationAmount;
+    int selectedService, multiples;
     String selectedServiceType;
     String serviceInstructions;
     int selectedDepartment;
@@ -217,7 +219,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     RecyclerView recycle_image_attachment;
 
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     File f;
@@ -430,7 +431,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                     } else {
                         APIPayment(modifyAccountID);
                         ApiDonation(txt_message);
-                 }
+                    }
                 }
             }
         });
@@ -473,7 +474,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                 maxDonationAmount = ((SearchDonation) mSpinnerService.getSelectedItem()).getMaxDonationAmount();
                 minDonationAmount = ((SearchDonation) mSpinnerService.getSelectedItem()).getMinDonationAmount();
                 multiples = ((SearchDonation) mSpinnerService.getSelectedItem()).getMultiples();
-                tv_don_instr.setText("Amount must be in range between " + " ₹" + String.valueOf(minDonationAmount) +" and ₹" + String.valueOf(maxDonationAmount) + " (multiples of ₹" + String.valueOf(multiples) +")");
+                tv_don_instr.setText("Amount must be in range between " + " ₹" + String.valueOf(minDonationAmount) + " and ₹" + String.valueOf(maxDonationAmount) + " (multiples of ₹" + String.valueOf(multiples) + ")");
 
                 String firstWord = Word_Change;
                 String secondWord = ((SearchDonation) mSpinnerService.getSelectedItem()).getName();
@@ -563,9 +564,9 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         Bundle extrasnew = getIntent().getExtras();
         if (extrasnew != null) {
             uniqueID = extras.getString("uniqueID");
-           // ApiJaldeegetS3Coupons(uniqueID);
+            // ApiJaldeegetS3Coupons(uniqueID);
         }
-   }
+    }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
         //copy file and send new file path
@@ -610,23 +611,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         }
     }
 
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
+
 
 
     public String saveImage(Bitmap myBitmap) {
@@ -740,7 +725,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         String fileName = pathArray[pathArray.length - 1];
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
-
 
 
     public void setCouponList(ArrayList couponArraylistNew) {
@@ -897,12 +881,12 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                         checkin_sector = response.body();
                         maxPartysize = 0;
                         if (checkin_sector.isPartySize() && !checkin_sector.isPartySizeForCalculation()) {
-                          //  layout_party.setVisibility(View.VISIBLE);
+                            //  layout_party.setVisibility(View.VISIBLE);
                             enableparty = true;
                             maxPartysize = checkin_sector.getMaxPartySize();
 
                         } else {
-                         //   layout_party.setVisibility(View.GONE);
+                            //   layout_party.setVisibility(View.GONE);
                             enableparty = false;
                         }
                         if (checkin_sector.isPartySizeForCalculation()) {
@@ -977,10 +961,10 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                         }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
-                        //   LservicePrepay.setVisibility(View.VISIBLE);
+                            //   LservicePrepay.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                         //   txtprepay.setTypeface(tyface);
+                            //   txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Donation Amount: ";
                             String secondWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString()));
@@ -1084,9 +1068,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                             if (mQueueTimeSlotList.get(i).getId() != 0) {
                                 queueId = mQueueTimeSlotList.get(i).getId();
                             }
-
-
-
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
@@ -1867,10 +1848,9 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                                                     isPrepayment = LServicesList.get(0).isPrePayment();
                                                     Config.logV("Payment------------" + isPrepayment);
 
-                                                        APIPayment(modifyAccountID);
+                                                    APIPayment(modifyAccountID);
 
-                                                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
-
+                                                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
 
                                                 }
@@ -1914,7 +1894,8 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                         }
 
 
-                    }  } catch (Exception e) {
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -1988,9 +1969,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                             if (schedResponse.get(i).getId() != 0) {
                                 id = String.valueOf(schedResponse.get(i).getId());
                             }
-
-
-
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
@@ -2186,10 +2164,10 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                                 }
                             }
 
-                            if (timeslots.size()>0) {
-                               // earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
-                            }else {
-                               // earliestAvailable.setText("Timeslots not available");
+                            if (timeslots.size() > 0) {
+                                // earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                            } else {
+                                // earliestAvailable.setText("Timeslots not available");
                             }
 
 
@@ -2373,12 +2351,11 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         //  mDialog.show();
 
-        if (tv_name.getText().toString().trim().equalsIgnoreCase("")){
+        if (tv_name.getText().toString().trim().equalsIgnoreCase("")) {
 
             tvDonorError.setVisibility(View.VISIBLE);
             return;
-        }
-        else {
+        } else {
 
             tvDonorError.setVisibility(View.GONE);
         }
@@ -2396,7 +2373,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         }
 
 
-
         JSONObject queueobj = new JSONObject();
         JSONObject service = new JSONObject();
         JSONObject donor = new JSONObject();
@@ -2405,19 +2381,16 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         JSONObject location = new JSONObject();
 
 
-
         try {
 
             //   qjsonObj.put("id", queueId);
 
-                queueobj.put("date", formattedDate);
-                queueobj.put("donationAmount", tv_don_amount.getText().toString());
-                service.put("id", selectedService);
-                location.put("id", serviceId);
+            queueobj.put("date", formattedDate);
+            queueobj.put("donationAmount", tv_don_amount.getText().toString());
+            service.put("id", selectedService);
+            location.put("id", serviceId);
 
             // service.putOpt("serviceType",mServiceType);
-
-
 
 
             if (MultiplefamilyList.size() > 0) {
@@ -2430,10 +2403,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                     donor.put("firstName", tv_name.getText().toString());
 
 
-
-
-
-
                 }
             } else {
 
@@ -2442,9 +2411,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                 donor.put("firstName", tv_name.getText().toString());
 
 
-
             }
-
 
 
             queueobj.putOpt("service", service);
@@ -2455,7 +2422,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
 
             // queueobj.putOpt("queue", qjsonObj);
-
 
 
             // queueobj.putOpt("service",selectedServiceType);
@@ -2505,70 +2471,69 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
 
-                            if (!showPaytmWallet && !showPayU) {
+                        if (!showPaytmWallet && !showPayU) {
 
-                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-                            } else {
-                                try {
-                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-                                    dialog.setContentView(R.layout.prepayment);
-                                    dialog.show();
+                            //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                        } else {
+                            try {
+                                final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                                dialog.setContentView(R.layout.prepayment);
+                                dialog.show();
 
 
-                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-                                    if (showPaytmWallet) {
-                                        btn_paytm.setVisibility(View.VISIBLE);
-                                    } else {
-                                        btn_paytm.setVisibility(View.GONE);
-                                    }
-                                    if (showPayU) {
-                                        btn_payu.setVisibility(View.VISIBLE);
-                                    } else {
-                                        btn_payu.setVisibility(View.GONE);
-                                    }
-                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                                Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                                Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                if (showPaytmWallet) {
+                                    btn_paytm.setVisibility(View.VISIBLE);
+                                } else {
+                                    btn_paytm.setVisibility(View.GONE);
+                                }
+                                if (showPayU) {
+                                    btn_payu.setVisibility(View.VISIBLE);
+                                } else {
+                                    btn_payu.setVisibility(View.GONE);
+                                }
+                                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
 
-                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+                                TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
-                                    txtprepayment.setText("Donation Amount ");
+                                txtprepayment.setText("Donation Amount ");
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString())));
-                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    txtamt.setTypeface(tyface1);
-                                    btn_payu.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            //ApiGenerateHash(value, sAmountPay, accountID);
-                                            // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+                                txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString())));
+                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                        "fonts/Montserrat_Bold.otf");
+                                txtamt.setTypeface(tyface1);
+                                btn_payu.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //ApiGenerateHash(value, sAmountPay, accountID);
+                                        // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
-                                            Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, "checkin",familyMEmID,Constants.SOURCE_PAYMENT);
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                        Config.logV("Account ID --------------" + modifyAccountID);
+                                        new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                        dialog.dismiss();
+                                    }
+                                });
 
-                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                                btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
 
 
-                                            Config.logV("Account ID --------Paytm------" + modifyAccountID);
-                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "",familyMEmID,"");
-                                            //payment.generateCheckSum(sAmountPay);
-                                            dialog.dismiss();
-                                            //ApiGenerateHash(value, sAmountPay, accountID);
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                        Config.logV("Account ID --------Paytm------" + modifyAccountID);
+                                        PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+                                        payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "", familyMEmID, "");
+                                        //payment.generateCheckSum(sAmountPay);
+                                        dialog.dismiss();
+                                        //ApiGenerateHash(value, sAmountPay, accountID);
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
+                        }
 
 
                         //    ApiCommunicateAppointment(value, String.valueOf(accountID), messageappt, dialog);
@@ -2735,73 +2700,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
         }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                try {
-//                    if (data.getData() != null) {
-//                        Uri uri = data.getData();
-//                        String orgFilePath = getRealPathFromURI(uri, this);
-//                        String filepath = "";//default fileName
-//
-//                        String mimeType = this.mContext.getContentResolver().getType(uri);
-//                        String uriString = uri.toString();
-//                        String extension = "";
-//                        if (uriString.contains(".")) {
-//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-//                        }
-//
-//
-//                        if (mimeType != null) {
-//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-//                        }
-//                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
-//                            if (orgFilePath == null) {
-//                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
-//                            }
-//                        } else {
-//                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//
-////
-//                        imagePathList.add(orgFilePath);
-////
-//
-//                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
-//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//                        mDetailFileAdapter.notifyDataSetChanged();
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        } else if (requestCode == CAMERA) {
-//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            //      imageview.setImageBitmap(bitmap);
-//            path = saveImage(bitmap);
-//            // imagePathList.add(bitmap.toString());
-//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-////            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-//            if (path != null) {
-//                mImageUri = Uri.parse(path);
-//                imagePathList.add(mImageUri.toString());
-//            }
-//            try {
-//                bytes.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//            recycle_image_attachment.setLayoutManager(mLayoutManager);
-//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//            mDetailFileAdapter.notifyDataSetChanged();
-//
-//        }
     }
 
 
@@ -2973,17 +2871,19 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
             }
         });
     }
+
     public void paymentFinished() {
         finish();
     }
+
     @Override
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
-        Log.i("mani","here");
+        Log.i("mani", "here");
         try {
 //            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             //new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-                Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
             paymentFinished();
 
         } catch (Exception e) {
@@ -3015,174 +2915,9 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     public void setPaymentRequestId(String paymentRequestId) {
 
     }
-    //
-//    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-//
-//
-//        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-//        MediaType type = MediaType.parse("*/*");
-//        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-//        mBuilder.setType(MultipartBody.FORM);
-//        mBuilder.addFormDataPart("message", message);
-//        for (int i = 0; i < imagePathList.size(); i++) {
-//
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (bitmap != null) {
-//                path = saveImage(bitmap);
-//                file = new File(path);
-//            }
-////            else{
-////                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-////            }
-//            else {
-//                file = new File(imagePathList.get(i));
-//            }
-//            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-//        }
-//        RequestBody requestBody = mBuilder.build();
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        JSONObject jsonObj = new JSONObject();
-//        try {
-//            jsonObj.put("message", message);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-//
-//        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, "77992", requestBody);
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
-//                        imagePathList.clear();
-//                        dialog.dismiss();
-//
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//            }
-//        });
-//
-//    }
 }
 
 
-//    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-//
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//        MediaType type = MediaType.parse("*/*");
-//        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-//        mBuilder.setType(MultipartBody.FORM);
-//        mBuilder.addFormDataPart("message", message);
-//        for (int i = 0; i < imagePathList.size(); i++) {
-////            if(imagePathList.contains("content://")) {
-////                Uri imageUri = Uri.parse(imagePathList.get(i));
-////                File file = new File(String.valueOf(imageUri));
-////                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-////            }
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.parse(imagePathList.get(i)));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (bitmap != null) {
-//                path = saveImage(bitmap);
-//            }
-////            else{
-////                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-////            }
-//
-//            File file = new File(imagePathList.get(i));
-//            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-//        }
-//        RequestBody requestBody = mBuilder.build();
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        JSONObject jsonObj = new JSONObject();
-//        try {
-//            jsonObj.put("communicationMessage", message);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-//
-//        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(CheckIn.this, mDialog);
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
-//                        imagePathList.clear();
-//                        dialog.dismiss();
-//
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog( CheckIn.this, mDialog);
-//
-//            }
-//        });
-//    }
 
 
 

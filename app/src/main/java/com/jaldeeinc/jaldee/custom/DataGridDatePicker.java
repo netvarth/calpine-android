@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.jaldeeinc.jaldee.R;
+
 import java.util.Calendar;
 
 public class DataGridDatePicker extends DialogFragment {
@@ -18,7 +20,7 @@ public class DataGridDatePicker extends DialogFragment {
         int year = mCalender.get(Calendar.YEAR);
         int month = mCalender.get(Calendar.MONTH);
         int dayOfMonth = mCalender.get(Calendar.DAY_OF_MONTH);
-        return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener)
+        return new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, (DatePickerDialog.OnDateSetListener)
                 getActivity(), year, month, dayOfMonth);
     }
 }

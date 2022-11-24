@@ -1,21 +1,13 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -36,6 +28,7 @@ public class AboutUsFragment extends RootFragment {
     Activity mActivity;
     String webabout, webterm, webprivacy;
     private Dialog progressBar;float fontSize;
+    //Button button;
 
 
 
@@ -55,6 +48,9 @@ public class AboutUsFragment extends RootFragment {
         mLterms = (LinearLayout)row. findViewById(R.id.Lterms);
         termsWeb = (WebView) row.findViewById(R.id.termsWeb);
 
+       /* button = (Button) row.findViewById(R.id.button);
+
+        button.setVisibility(View.GONE);*/
 
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -82,8 +78,19 @@ public class AboutUsFragment extends RootFragment {
                 "</body>" +
                 "</html>";
 
+/*
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //termsWeb.loadUrl("https://www.jaldee.com/terms");
+                *//*Intent intent = mActivity.getIntent();
+                mActivity.finish();
+                startActivity(intent);*//*
+                startActivity(new Intent(this, this.class));
 
 
+            }
+        });*/
         mLaboutus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,6 +237,15 @@ public class AboutUsFragment extends RootFragment {
                                 progressBar.dismiss();
                             }
                         }
+                       /* public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                            //place you error code here
+                            button.setVisibility(View.VISIBLE);
+                            termsWeb.setVisibility(View.GONE);
+                            int j = 0;
+                            j = j+1;
+                            int s = j;
+                        }*/
+
                     });
                 } else {
                     termsWeb.setVisibility(View.GONE);

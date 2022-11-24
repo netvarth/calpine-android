@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 public class MeetingInfo extends Dialog {

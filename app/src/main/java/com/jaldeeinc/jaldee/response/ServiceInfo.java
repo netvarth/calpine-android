@@ -4,77 +4,74 @@ import java.io.Serializable;
 
 public class ServiceInfo implements Serializable {
 
-    private int serviceId;
-    private String serviceName;
+    String serviceName;
     String description;
     String virtualServiceType;
     String callingMode;
     String minPrePaymentAmount;
     String isPrePayment;
     String serviceType;
-    int multiples;
     String livetrack;
-    boolean preInfoEnabled;
     String preInfoTitle;
     String preInfoText;
-    boolean postInfoEnabled;
     String postInfoTitle;
     String postInfoText;
     String consumerNoteTitle;
     String availableDate;
     String time;
-    int peopleWaitingInLine;
     String waitingTime;
     String type;
-    boolean isToken;
-    int scheduleId;
     String virtualCallingValue;
     String calculationMode;
+    String totalAmount;
+    String serviceBookingType;
+
+    int maxBookingsAllowed;
+    int peopleWaitingInLine;
+    int scheduleId;
+    int multiples;
+    int serviceId;
+
+    boolean showOnlyAvailableSlots;
+    boolean isDate;
+    boolean isDateTime;
+    boolean isNoDateTime;
     boolean isUser;
     boolean noteManidtory;
-    String totalAmount;
-    int maxBookingsAllowed;
-    boolean showOnlyAvailableSlots;
+    boolean isToken;
+    boolean postInfoEnabled;
+    boolean preInfoEnabled;
+
+
+    public ServiceInfo(){}
+
+    public String getServiceBookingType() { return serviceBookingType; }
+
+    public void setServiceBookingType(String serviceBookingType) { this.serviceBookingType = serviceBookingType; }
+
+    public boolean isDate() { return isDate; }
+
+    public void setIsDate(boolean isDate) { this.isDate = isDate; }
+
+    public boolean isDateTime() { return isDateTime; }
+
+    public void setIsDateTime(boolean isDateTime) { this.isDateTime = isDateTime; }
+
+    public boolean isNoDateTime() { return isNoDateTime; }
+
+    public void setIsNoDateTime(boolean isNoDateTime) { this.isNoDateTime = isNoDateTime; }
 
     public boolean isShowOnlyAvailableSlots() {
         return showOnlyAvailableSlots;
     }
 
-    public void setShowOnlyAvailableSlots(boolean showOnlyAvailableSlots) {
-        this.showOnlyAvailableSlots = showOnlyAvailableSlots;
-    }
+    public void setShowOnlyAvailableSlots(boolean showOnlyAvailableSlots) { this.showOnlyAvailableSlots = showOnlyAvailableSlots; }
 
     public int getMaxBookingsAllowed() {
         return maxBookingsAllowed;
     }
 
-    public void setMaxBookingsAllowed(int maxBookingsAllowed) {
-        this.maxBookingsAllowed = maxBookingsAllowed;
-    }
-
-    public ServiceInfo(){
-
-    }
-
-    public ServiceInfo(int serviceId, String serviceName, String description, String virtualServiceType, String minPrePaymentAmount, String isPrePayment, String serviceType, int multiples, String livetrack, boolean preInfoEnabled, String preInfoTitle, String preInfoText, boolean postInfoEnabled, String postInfoTitle, String postInfoText, String consumerNoteTitle, String totalAmount) {
-        this.serviceId = serviceId;
-        this.serviceName = serviceName;
-        this.description = description;
-        this.virtualServiceType = virtualServiceType;
-        this.minPrePaymentAmount = minPrePaymentAmount;
-        this.isPrePayment = isPrePayment;
-        this.serviceType = serviceType;
-        this.multiples = multiples;
-        this.livetrack = livetrack;
-        this.preInfoEnabled = preInfoEnabled;
-        this.preInfoTitle = preInfoTitle;
-        this.preInfoText = preInfoText;
-        this.postInfoEnabled = postInfoEnabled;
-        this.postInfoTitle = postInfoTitle;
-        this.postInfoText = postInfoText;
-        this.consumerNoteTitle = consumerNoteTitle;
-        this.totalAmount = totalAmount;
-    }
+    public void setMaxBookingsAllowed(int maxBookingsAllowed) { this.maxBookingsAllowed = maxBookingsAllowed; }
 
     public int getServiceId() {
         return serviceId;
@@ -104,17 +101,13 @@ public class ServiceInfo implements Serializable {
         return virtualServiceType;
     }
 
-    public void setVirtualServiceType(String virtualServiceType) {
-        this.virtualServiceType = virtualServiceType;
-    }
+    public void setVirtualServiceType(String virtualServiceType) { this.virtualServiceType = virtualServiceType; }
 
     public String getMinPrePaymentAmount() {
         return minPrePaymentAmount;
     }
 
-    public void setMinPrePaymentAmount(String minPrePaymentAmount) {
-        this.minPrePaymentAmount = minPrePaymentAmount;
-    }
+    public void setMinPrePaymentAmount(String minPrePaymentAmount) { this.minPrePaymentAmount = minPrePaymentAmount; }
 
     public String getIsPrePayment() {
         return isPrePayment;
@@ -176,9 +169,7 @@ public class ServiceInfo implements Serializable {
         return postInfoEnabled;
     }
 
-    public void setPostInfoEnabled(boolean postInfoEnabled) {
-        this.postInfoEnabled = postInfoEnabled;
-    }
+    public void setPostInfoEnabled(boolean postInfoEnabled) { this.postInfoEnabled = postInfoEnabled; }
 
     public String getPostInfoTitle() {
         return postInfoTitle;
@@ -200,9 +191,7 @@ public class ServiceInfo implements Serializable {
         return consumerNoteTitle;
     }
 
-    public void setConsumerNoteTitle(String consumerNoteTitle) {
-        this.consumerNoteTitle = consumerNoteTitle;
-    }
+    public void setConsumerNoteTitle(String consumerNoteTitle) { this.consumerNoteTitle = consumerNoteTitle; }
 
     public String getCallingMode() {
         return callingMode;
@@ -232,9 +221,7 @@ public class ServiceInfo implements Serializable {
         return peopleWaitingInLine;
     }
 
-    public void setPeopleWaitingInLine(int peopleWaitingInLine) {
-        this.peopleWaitingInLine = peopleWaitingInLine;
-    }
+    public void setPeopleWaitingInLine(int peopleWaitingInLine) { this.peopleWaitingInLine = peopleWaitingInLine; }
 
     public String getWaitingTime() {
         return waitingTime;
@@ -272,17 +259,13 @@ public class ServiceInfo implements Serializable {
         return virtualCallingValue;
     }
 
-    public void setVirtualCallingValue(String virtualCallingValue) {
-        this.virtualCallingValue = virtualCallingValue;
-    }
+    public void setVirtualCallingValue(String virtualCallingValue) { this.virtualCallingValue = virtualCallingValue; }
 
     public String getCalculationMode() {
         return calculationMode;
     }
 
-    public void setCalculationMode(String calculationMode) {
-        this.calculationMode = calculationMode;
-    }
+    public void setCalculationMode(String calculationMode) { this.calculationMode = calculationMode; }
 
     public boolean isUser() {
         return isUser;

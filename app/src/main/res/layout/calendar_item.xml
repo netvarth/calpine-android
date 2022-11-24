@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_calendar_item"
+    android:layout_width="67dp"
+    android:layout_height="76dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:background="@drawable/calendar_item_background"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_date_calendar_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/font_regular"
+        android:gravity="center"
+        android:textColor="@color/black7"
+        android:textSize="@dimen/dimen_22dp" />
+
+    <TextView
+        android:id="@+id/tv_day_calendar_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_6dp"
+        android:fontFamily="@font/font_regular"
+        android:textAllCaps="true"
+        android:textColor="@color/black7"
+        android:textSize="10dp" />
+
+</LinearLayout>

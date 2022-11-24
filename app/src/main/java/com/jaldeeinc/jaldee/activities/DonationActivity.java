@@ -1,13 +1,8 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,7 +19,6 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +27,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IConsumerNameSubmit;
@@ -44,13 +41,10 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ConsumerNameDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
-import com.jaldeeinc.jaldee.model.RazorpayModel;
-import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
@@ -58,8 +52,6 @@ import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.razorpay.PaymentData;
-import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -646,6 +638,7 @@ public class DonationActivity extends AppCompatActivity implements IMailSubmit, 
                         Questionnaire questionnaire = response.body();
 
                         BookingModel model = new BookingModel();
+                        model.setProviderUniqueId(uniqueId);
                         model.setJsonObject(queueobj.toString());
                         model.setAccountId(accountId);
                         model.setDonationServiceInfo(serviceInfo);
@@ -672,11 +665,13 @@ public class DonationActivity extends AppCompatActivity implements IMailSubmit, 
                             } else {
                                 Intent intent = new Intent(DonationActivity.this, ReconfirmationActivity.class);
                                 intent.putExtra("data", model);
+                                intent.putExtra("from", Constants.DONATION);
                                 startActivity(intent);
                             }
                         } else {
                             Intent intent = new Intent(DonationActivity.this, ReconfirmationActivity.class);
                             intent.putExtra("data", model);
+                            intent.putExtra("from", Constants.DONATION);
                             startActivity(intent);
                         }
                     }

@@ -15,40 +15,41 @@
         android:orientation="horizontal"
         android:weightSum="2">
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-            android:textColor="@color/black"
-            android:letterSpacing="0.03"
-            android:textStyle="bold"
-            android:justificationMode="inter_word"
-            android:lineSpacingExtra="@dimen/padding3"
+        <TextView
             android:id="@+id/txtsendmsg"
-            android:layout_marginStart="@dimen/padding5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding5"
             android:layout_marginTop="@dimen/default_padding"
+            android:layout_weight="1.5"
+            android:fontFamily="@font/font_semibold"
+            android:justificationMode="inter_word"
+            android:letterSpacing="0.03"
+            android:lineSpacingExtra="@dimen/padding3"
             android:text="Attachments"
+            android:textColor="@color/black"
             android:textSize="@dimen/txtsize_hint"
-            android:layout_weight="1.5"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_weight="0.25"
             android:layout_marginLeft="@dimen/dimen_2dp"
+            android:layout_weight="0.25"
             android:drawableBottom="@drawable/icon_attach"
             android:visibility="gone" />
 
         <TextView
+            android:id="@+id/camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/camera"
             android:layout_gravity="left"
-            android:drawableBottom="@drawable/camera_icon"
-            android:visibility="gone"
             android:layout_marginLeft="@dimen/dimen_2dp"
-            android:layout_weight="0.25"/>
+            android:layout_weight="0.25"
+            android:drawableBottom="@drawable/camera_icon"
+            android:visibility="gone" />
     </LinearLayout>
 
 
@@ -56,8 +57,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/padding5"
         android:layout_marginStart="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding5"
         android:background="@color/app_background"
         android:orientation="horizontal">
 
@@ -66,33 +67,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal"
-            android:nestedScrollingEnabled="false"/>
+            android:nestedScrollingEnabled="true"/>
 
     </LinearLayout>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+    <TextView
         android:id="@+id/tv_errorMessage"
+        android:fontFamily="@font/font_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding5"
         android:layout_marginStart="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding5"
         android:text="Attach atleast one file to save"
         android:textColor="@color/red"
-        android:visibility="gone"
-        android:textSize="@dimen/txtsize_12">
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+    </TextView>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/app_background"
         android:layout_marginStart="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding5"
         android:layout_marginEnd="@dimen/padding5"
         android:layout_marginBottom="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding5"
+        android:background="@color/app_background"
         android:orientation="horizontal">
 
         <Button

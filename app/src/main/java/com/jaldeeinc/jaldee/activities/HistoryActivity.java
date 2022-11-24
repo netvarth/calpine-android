@@ -1,15 +1,15 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
@@ -201,6 +201,12 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
                                             bookingInfo.setCallingType(activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode());
                                         }
                                     }
+                                    /** booking Type "booking"/"request" **/
+                                    //bookingInfo.setServiceBookingType(appointmentServiceInfo.getServiceBookingType());
+                                    bookingInfo.setIsDate(activeAppointment.getService().isDate());
+                                    bookingInfo.setIsDateTime(activeAppointment.getService().isDateTime());
+                                    bookingInfo.setIsNoDateTime(activeAppointment.getService().isNoDateTime());
+                                    /** booking Type "booking"/"request" **/
                                 }
 
                                 bookings.add(bookingInfo);

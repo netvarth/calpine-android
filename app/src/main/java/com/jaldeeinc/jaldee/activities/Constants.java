@@ -2,11 +2,10 @@ package com.jaldeeinc.jaldee.activities;
 
 import android.os.Build;
 
-import com.jaldeeinc.jaldee.R;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.MediaType;
 
 public class Constants {
 
@@ -40,12 +39,52 @@ public class Constants {
     public static final String PURPOSE_DONATIONPAYMENT = "donation";
     public static final String SOURCE_PAYMENT = "Android";
 
+    public static final String[] fileExtFormats = new String[]{"mpeg", "jpg", "jpeg", "png", "pdf", "mp3", "wmv", "mp4", "webm", "flw", "mov", "avi", "doc",
+            "msword", "xls", "ms-excel", "vnd.ms-excel", "odt", "ods", "odp", "odg", "presentation", "vnd.oasis.opendocument.presentation", "vnd.oasis.opendocument.text", "txt",
+            "plain", "vnd.oasis.opendocument.spreadsheet", "spreadsheet", "document", "vnd.openxmlformats-officedocument.wordprocessingml.document", "ogg", "opus", "wav", "weba",
+            "vnd.openxmlformats-officedocument.spreadsheetml.sheet", "sheet", "aac", "3gp", "3gpp", "3g2", "3gpp2", "x-msvideo", "ogv", "rtf", "text", "vnd.ms-powerpoint",
+            "ms-powerpoint"};
+    public static final String[] videoExtFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov",
+            ".avi", "x-msvideo", "mpeg", "ogv", "ogg", "3gpp" };
+    public static final String[] imgExtFormats = new String[]{"jpg", "jpeg", "png"};
+    public static final String[] docExtFormats = new String[]{"pdf", "txt", "sheet", "document", "doc", "presentation", "msword", "ms-excel", "vnd.ms-excel",
+            "odt", "ods", "odp", "odg", "spreadsheet", "xls", "vnd.oasis.opendocument.presentation", "vnd.oasis.opendocument.text", "text",
+            "vnd.oasis.opendocument.spreadsheet", "vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "vnd.openxmlformats-officedocument.spreadsheetml.sheet", "rtf", "vnd.ms-powerpoint", "ms-powerpoint"};
+    public static final String[] audioExtFormats = new String[]{"mp3", "aac", "oga", "opus", "wav", "weba", "3gp", "3gpp", "mpeg", "ogg", "opus",  "3g2", "3gpp2"};
+    public static final String[] textExtFormats = new String[]{"plain", "txt", "xml", "css", "csv", "htm", "html", "ics", "js", "mjs"};
+
+
+
+    public static final MediaType docType = MediaType.parse("application/*");
+    public static final MediaType pdfType = MediaType.parse("application/pdf");
+    public static final MediaType imgType = MediaType.parse("image/*");
+    public static final MediaType audioType = MediaType.parse("audio/*");
+    public static final MediaType videoType = MediaType.parse("video/*");
+    public static final MediaType txtType = MediaType.parse("text/*");
+
+
+
+
+
+
+
     public static final String APPOINTMENT = "Appointments";
     public static final String CHECKIN = "CheckIns";
     public static final String TOKEN = "Tokens";
     public static final String DONATION = "Donation";
     public static final String PROVIDER = "Provider";
     public static final String ORDERS = "Orders";
+    public static final String REQUEST = "request";
+    public static final String RESCHEDULE = "Reschedule";
+    public static final String MULTIPLE_APPOINTMENT = "Multiple_Appointments";
+    public static final String SINGLE_APPOINTMENT = "Single_Appointments";
+
+    public static final String SERVICE_BOOKING_TYPE_BOOKING = "booking";
+    public static final String SERVICE_BOOKING_TYPE_REQUEST = "request";
+
+
+
 
     public static final String BOOKING_CHECKIN = "bCheckIn";
 
@@ -57,6 +96,9 @@ public class Constants {
     public static final String COMPLETED = "Completed";
     public static final String CANCELLED = "cancelled";
     public static final String CHECKEDIN = "Checkedin";
+    public static final String REQUESTREJECTED = "RequestRejected";
+    public static final String REQUESTED = "Requested";
+
     public static final String DONE = "done";
     public static final String CHAT = "ChatSection";
     public static final String COUNTRY_CODE = "countryCode";

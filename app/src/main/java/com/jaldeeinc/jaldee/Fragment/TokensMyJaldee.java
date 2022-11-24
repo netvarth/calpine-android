@@ -57,7 +57,6 @@ import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
-import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
@@ -113,7 +112,6 @@ import retrofit2.Response;
  */
 public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallback, ActiveAdapterOnCallback {
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
     public TokensMyJaldee() {
         // Required empty public constructor
@@ -541,7 +539,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = getFilePathFromURI(mContext, uri, extension);
                             }
@@ -577,7 +575,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                                 if (orgFilePath == null) {
                                     orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
                                 }
@@ -878,12 +876,8 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                         dialog.setContentView(R.layout.rating);
                         dialog.setCancelable(true);
                         dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
 

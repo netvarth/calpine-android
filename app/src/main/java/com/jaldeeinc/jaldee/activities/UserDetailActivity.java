@@ -1,25 +1,25 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedProviderService;
@@ -37,22 +37,27 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
+import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
+import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.ProfilePicture;
-import com.jaldeeinc.jaldee.response.Questionnaire;
-import com.jaldeeinc.jaldee.response.Questions;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
-import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.UserResponse;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,8 +75,6 @@ import io.reactivex.rxjava3.functions.Function;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class UserDetailActivity extends AppCompatActivity implements ISelectedProviderService, ISendMessage {
 
@@ -158,8 +161,19 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     private EnquiryDialog enquiryDialog;
     private UserResponse userResponse = new UserResponse();
     String sector;
-    int consumerId;
-
+    private Provider providerResponse = new Provider();
+    SearchTerminology mSearchTerminology;
+    String terminology;
+    String userTerminology;
+    ProfileModel profileDetails;
+    String consumerName;
+    String countryCode;
+    String phoneNumber;
+    String emailId;
+    String whatsappCountryCode;
+    String whatsappNumber;
+    String conmrFName;
+    String conmrLName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,7 +182,6 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
         mContext = UserDetailActivity.this;
         iSelectedService = this;
         iSendMessage = this;
-        consumerId = SharedPreference.getInstance(UserDetailActivity.this).getIntValue("consumerId", 0);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -212,7 +225,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
 
         getUserDetails(uniqueId, providerId, locationId);
-
+        ApiGetProfileDetail();
+        ApiGetProviderDetails(uniqueId);
 
         tvMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -533,116 +547,116 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) throws Exception {
-                    // Objects[] is an array of combined results of completed requests
-                    ArrayList<QueueList> queueList = (ArrayList<QueueList>) objects[0];
-                    ArrayList<ScheduleList> schedulesList = (ArrayList<ScheduleList>) objects[1];
-                    ArrayList<SearchService> checkInServList = (ArrayList<SearchService>) objects[2];
-                    ArrayList<SearchAppoinment> apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                        @Override
+                        public Object apply(Object[] objects) throws Exception {
+                            // Objects[] is an array of combined results of completed requests
+                            ArrayList<QueueList> queueList = (ArrayList<QueueList>) objects[0];
+                            ArrayList<ScheduleList> schedulesList = (ArrayList<ScheduleList>) objects[1];
+                            ArrayList<SearchService> checkInServList = (ArrayList<SearchService>) objects[2];
+                            ArrayList<SearchAppoinment> apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
 
-                    queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
+                            queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
 
-                    schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
+                            schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
 
-                    checkInServList = checkInServList == null ? new ArrayList<SearchService>() : checkInServList;
+                            checkInServList = checkInServList == null ? new ArrayList<SearchService>() : checkInServList;
 
-                    apptServicesList = apptServicesList == null ? new ArrayList<SearchAppoinment>() : apptServicesList;
+                            apptServicesList = apptServicesList == null ? new ArrayList<SearchAppoinment>() : apptServicesList;
 
-                    ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
+                            ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
 
-                    serviceInfoList.clear();
+                            serviceInfoList.clear();
 
-                    if (queueList.get(0).isWaitlistEnabled()) {
-                        for (SearchService checkInService : checkInServList) {
+                            if (queueList.get(0).isWaitlistEnabled()) {
+                                for (SearchService checkInService : checkInServList) {
 
-                            if (checkInService.getProvider() != null) {// adding only Sp level services
+                                    if (checkInService.getProvider() != null) {// adding only Sp level services
 
-                                if (checkInService.getCheckInServiceAvailability() != null) {
-
-                                    if (checkInService.getProvider().getId() == provid) { // add only particular provider services
-
-                                        DepServiceInfo serviceInfo = new DepServiceInfo();
-                                        serviceInfo.setDepartmentId(0);
-                                        serviceInfo.setDepartmentName("");
-                                        serviceInfo.setId(checkInService.getId());
-                                        serviceInfo.setName(checkInService.getName());
-                                        serviceInfo.setType(Constants.CHECKIN);
-                                        serviceInfo.setToken(isToken);
-                                        serviceInfo.setOnline(onlinePresence);
                                         if (checkInService.getCheckInServiceAvailability() != null) {
-                                            serviceInfo.setAvailability(true);
-                                            if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                                serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
-                                            }
-                                            if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
-                                                serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                            }
-                                            serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                            serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                            if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                                serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+
+                                            if (checkInService.getProvider().getId() == provid) { // add only particular provider services
+
+                                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                                serviceInfo.setDepartmentId(0);
+                                                serviceInfo.setDepartmentName("");
+                                                serviceInfo.setId(checkInService.getId());
+                                                serviceInfo.setName(checkInService.getName());
+                                                serviceInfo.setType(Constants.CHECKIN);
+                                                serviceInfo.setToken(isToken);
+                                                serviceInfo.setOnline(onlinePresence);
+                                                if (checkInService.getCheckInServiceAvailability() != null) {
+                                                    serviceInfo.setAvailability(true);
+                                                    if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                                        serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                                    }
+                                                    if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                                        serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                                    }
+                                                    serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                                    serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                                    if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                                        serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                                    }
+                                                }
+                                                serviceInfo.setServiceMode(checkInService.getServiceType());
+                                                if (checkInService.getVirtualCallingModes() != null) {
+                                                    serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                                    serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
+                                                }
+                                                // adding all the info
+                                                serviceInfo.setChecinServiceInfo(checkInService);
+                                                services.add(serviceInfo);
                                             }
                                         }
-                                        serviceInfo.setServiceMode(checkInService.getServiceType());
-                                        if (checkInService.getVirtualCallingModes() != null) {
-                                            serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                                            serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
-                                        }
-                                        // adding all the info
-                                        serviceInfo.setChecinServiceInfo(checkInService);
-                                        services.add(serviceInfo);
                                     }
                                 }
                             }
-                        }
-                    }
 
-                    if (schedulesList.get(0).isApptEnabled()) {
-                        for (SearchAppoinment appt : apptServicesList) {
+                            if (schedulesList.get(0).isApptEnabled()) {
+                                for (SearchAppoinment appt : apptServicesList) {
 
-                            if (appt.getProvider() != null) {  // adding only Sp level services
+                                    if (appt.getProvider() != null) {  // adding only Sp level services
 
-                                if (appt.getAppointServiceAvailability() != null) {
-
-                                    if (appt.getProvider().getId() == provid) {  // add only particular provider services
-
-                                        DepServiceInfo serviceInfo = new DepServiceInfo();
-                                        serviceInfo.setDepartmentId(0);
-                                        serviceInfo.setDepartmentName("");
-                                        serviceInfo.setId(appt.getId());
-                                        serviceInfo.setName(appt.getName());
-                                        serviceInfo.setType(Constants.APPOINTMENT);
-                                        serviceInfo.setEstTime("");
-                                        serviceInfo.setPeopleInLine(0);
-                                        serviceInfo.setOnline(onlinePresence);
-                                        serviceInfo.setCalculationMode("");
-                                        serviceInfo.setServiceMode(appt.getServiceType());
-                                        if (appt.getVirtualCallingModes() != null) {
-                                            serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                                            serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
-                                        }
                                         if (appt.getAppointServiceAvailability() != null) {
-                                            serviceInfo.setAvailability(true);
-                                            serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                            serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
 
+                                            if (appt.getProvider().getId() == provid) {  // add only particular provider services
+
+                                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                                serviceInfo.setDepartmentId(0);
+                                                serviceInfo.setDepartmentName("");
+                                                serviceInfo.setId(appt.getId());
+                                                serviceInfo.setName(appt.getName());
+                                                serviceInfo.setType(Constants.APPOINTMENT);
+                                                serviceInfo.setEstTime("");
+                                                serviceInfo.setPeopleInLine(0);
+                                                serviceInfo.setOnline(onlinePresence);
+                                                serviceInfo.setCalculationMode("");
+                                                serviceInfo.setServiceMode(appt.getServiceType());
+                                                if (appt.getVirtualCallingModes() != null) {
+                                                    serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                                    serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                                }
+                                                if (appt.getAppointServiceAvailability() != null) {
+                                                    serviceInfo.setAvailability(true);
+                                                    serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                                    serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+
+                                                }
+                                                // adding all the info
+                                                serviceInfo.setAppointmentServiceInfo(appt);
+                                                services.add(serviceInfo);
+                                            }
                                         }
-                                        // adding all the info
-                                        serviceInfo.setAppointmentServiceInfo(appt);
-                                        services.add(serviceInfo);
                                     }
+
                                 }
                             }
 
+                            serviceInfoList.addAll(services);
+                            //do something with those results and emit new event
+                            return serviceInfoList;
                         }
-                    }
-
-                    serviceInfoList.addAll(services);
-                    //do something with those results and emit new event
-                    return serviceInfoList;
-                }
-            })
+                    })
                     // After all requests had been performed the next observer will receive the Object, returned from Function
 
                     .subscribe(
@@ -713,230 +727,323 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     // service item click action
     @Override
     public void onCheckInSelected(SearchService checkinServiceInfo) {
-        Intent intent = new Intent();
+        Intent intent = null;
         if (checkinServiceInfo != null) {
             if (checkinServiceInfo.getServiceOptionIds() != null && checkinServiceInfo.getServiceOptionIds().size() > 0) {
-                intent = createCheckinIntent(checkinServiceInfo);
-                intent.setClass(UserDetailActivity.this, ServiceOptionActivity.class);
-                startActivity(intent);
+                intent = new Intent(UserDetailActivity.this, ServiceOptionActivity.class);
             } else {
-                ApiGetOneTimeQNR(Constants.CHECKIN, null, checkinServiceInfo, null);  // for get providerconsumer id then check is OnetimeQNR is available/not
+                intent = new Intent(UserDetailActivity.this, CheckInActivity.class);
             }
+            intent.putExtra("uniqueID", uniqueId);
+            intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
+            intent.putExtra("providerId", providerId);
+            intent.putExtra("locationId", locationId);
+            intent.putExtra("checkInInfo", checkinServiceInfo);
+            intent.putExtra("userId", userId);
+            intent.putExtra("fromUser", true);
+            intent.putExtra("sector", sector);
+            if (providerInfo.getProfilePicture() != null && providerInfo.getProfilePicture().getUrl() != null && !providerInfo.getProfilePicture().getUrl().trim().isEmpty()) {
+                String url = providerInfo.getProfilePicture().getUrl();
+                url = url.replaceAll(" ", "%20");
+                String finalUrl = url;
+
+                intent.putExtra("providerLogo", finalUrl);
+            }
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(checkinServiceInfo.getId());
+            serviceInfo.setServiceName(checkinServiceInfo.getName());
+            serviceInfo.setDescription(checkinServiceInfo.getDescription());
+            serviceInfo.setType(Constants.CHECKIN);
+
+            intent.putExtra("serviceInfo", serviceInfo);
+
+            startActivity(intent);
         }
     }
 
     @Override
     public void onAppointmentSelected(SearchAppoinment appointmentServiceInfo) {
-        Intent intent = new Intent();
+        Intent intent = null;
         if (appointmentServiceInfo != null) {
-            if (appointmentServiceInfo.getServiceOptionIds() != null && appointmentServiceInfo.getServiceOptionIds().size() > 0) {
-                intent = createAppointmentIntent(appointmentServiceInfo);
-                intent.setClass(UserDetailActivity.this, ServiceOptionActivity.class);
-                startActivity(intent);
-            } else {
-                ApiGetOneTimeQNR(Constants.APPOINTMENT, appointmentServiceInfo, null, null);  // for get providerconsumer id then check is OnetimeQNR is available/not
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(appointmentServiceInfo.getId());
+            serviceInfo.setServiceName(appointmentServiceInfo.getName());
+            serviceInfo.setDescription(appointmentServiceInfo.getDescription());
+            serviceInfo.setType(Constants.APPOINTMENT);
+            serviceInfo.setUser(true);
+            serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
+            if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
+                serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
             }
+            serviceInfo.setIsPrePayment(appointmentServiceInfo.getIsPrePayment());
+            serviceInfo.setLivetrack(appointmentServiceInfo.getLivetrack());
+            if (appointmentServiceInfo.getMinPrePaymentAmount() != null) {
+                serviceInfo.setMinPrePaymentAmount(appointmentServiceInfo.getMinPrePaymentAmount());
+            }
+            serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
+            if (appointmentServiceInfo.getPreInfoText() != null) {
+                serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
+            }
+            if (appointmentServiceInfo.getPreInfoTitle() != null) {
+                serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
+            }
+            if (appointmentServiceInfo.getServiceType() != null) {
+                serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
+            }
+            if (appointmentServiceInfo.getVirtualCallingModes() != null) {
+                serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
+                serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
+                serviceInfo.setVirtualServiceType(appointmentServiceInfo.getVirtualServiceType());
+            }
+            if (appointmentServiceInfo.getAppointServiceAvailability() != null) {
+                serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());
+                serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
+                serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
+            }
+
+            if (appointmentServiceInfo.getTotalAmount() != null) {
+                serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
+            }
+            if (appointmentServiceInfo.getMaxBookingsAllowed() > 0) {
+                serviceInfo.setMaxBookingsAllowed(appointmentServiceInfo.getMaxBookingsAllowed());
+            }
+            serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
+
+            /** booking Type "booking"/"request" **/
+            serviceInfo.setServiceBookingType(appointmentServiceInfo.getServiceBookingType());
+            serviceInfo.setIsDate(appointmentServiceInfo.isDate());
+            serviceInfo.setIsDateTime(appointmentServiceInfo.isDateTime());
+            serviceInfo.setIsNoDateTime(appointmentServiceInfo.isNoDateTime());
+            /** booking Type "booking"/"request" **/
+
+            if ((appointmentServiceInfo.getServiceBookingType().equalsIgnoreCase(Constants.SERVICE_BOOKING_TYPE_REQUEST) && appointmentServiceInfo.isNoDateTime())) {
+                JSONObject queueobj = createJsonObjectForBooking(serviceInfo);
+
+                BookingModel model = new BookingModel();
+                model.setAppointmentType(Constants.SINGLE_APPOINTMENT);
+                model.setProviderUniqueId(uniqueId);
+                model.setProviderResponse(providerResponse);
+                model.setJsonObject(queueobj.toString());
+                model.setAccountId(userId);  //
+                model.setServiceInfo(serviceInfo);
+                model.setmSearchTerminology(mSearchTerminology);
+                model.setFamilyEMIID(0);
+                model.setCountryCode(countryCode);
+                model.setPhoneNumber(phoneNumber);
+                model.setFrom(Constants.APPOINTMENT);
+                model.setProviderName(tvSpName.getText().toString());
+                model.setLocationName(locationName);
+                model.setCustomerName(consumerName);
+                model.setEmailId(emailId);
+                model.setWhtsappCountryCode(whatsappCountryCode);
+                model.setWhtsappPhoneNumber(whatsappNumber);
+                model.setAccountBusinessName(providerName);
+                if (serviceInfo.getServiceBookingType() != null && !serviceInfo.getServiceBookingType().isEmpty()
+                        && (serviceInfo.getServiceBookingType().equalsIgnoreCase(Constants.SERVICE_BOOKING_TYPE_BOOKING)
+                        || serviceInfo.getServiceBookingType().equalsIgnoreCase(Constants.SERVICE_BOOKING_TYPE_REQUEST))) {
+                    model.setServiceBookingType(serviceInfo.getServiceBookingType());
+                }
+                if (providerInfo.getProfilePicture() != null && providerInfo.getProfilePicture().getUrl() != null && !providerInfo.getProfilePicture().getUrl().trim().isEmpty()) {
+                    String providerLogoUrl = providerInfo.getProfilePicture().getUrl();
+                    providerLogoUrl = providerLogoUrl.replaceAll(" ", "%20");
+                    model.setProviderLogo(providerLogoUrl);
+                }
+                String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
+                String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
+                if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
+                    model.setProviderPhoneNumber(pCountryCode + " " + pPhNo);
+                }
+                intent = new Intent(UserDetailActivity.this, ReconfirmationActivity.class);
+                intent.putExtra("data", model);
+
+            } else {
+                if (appointmentServiceInfo.getServiceOptionIds() != null && appointmentServiceInfo.getServiceOptionIds().size() > 0) {
+                    intent = new Intent(UserDetailActivity.this, ServiceOptionActivity.class);
+                } else {
+                    intent = new Intent(UserDetailActivity.this, AppointmentActivity.class);
+                }
+                intent.putExtra("uniqueID", uniqueId);
+                intent.putExtra("providerName", tvSpName.getText().toString());
+                intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
+                intent.putExtra("locationName", tvLocationName.getText().toString());
+                intent.putExtra("locationId", locationId);
+                intent.putExtra("providerId", providerId);
+                intent.putExtra("userId", userId);
+                intent.putExtra("fromUser", true);
+                intent.putExtra("sector", sector);
+                //intent.putExtra("consumerId", consumerId);
+                intent.putExtra("familyMemId", 0);
+                intent.putExtra("requestFor", Constants.APPOINTMENT);
+                intent.putExtra("requestFrom", "");
+
+                if (providerInfo.getProfilePicture() != null && providerInfo.getProfilePicture().getUrl() != null && !providerInfo.getProfilePicture().getUrl().trim().isEmpty()) {
+                    String url = providerInfo.getProfilePicture().getUrl();
+                    url = url.replaceAll(" ", "%20");
+                    String finalUrl = url;
+
+                    intent.putExtra("providerLogo", finalUrl);
+                }
+
+                intent.putExtra("serviceInfo", serviceInfo);
+                intent.putExtra("sector", sector);
+            }
+
+
+
+            startActivity(intent);
         }
+
     }
 
-   /* private Intent createDonationIntent(SearchDonation donationServiceInfo) {
-        Intent intent = new Intent();
-        intent.putExtra("uniqueID", uniqueId);
-        intent.putExtra("locationId", locationId);
-        intent.putExtra("providerName", tvSpName.getText().toString());
-        intent.putExtra("providerId", providerId);
-        intent.putExtra("donationInfo", donationServiceInfo);
-        intent.putExtra("locationName", tvLocationName.getText().toString());
-        intent.putExtra("consumerId", consumerId);
-        intent.putExtra("familyMemId", 0);
-        intent.putExtra("requestFor", Constants.DONATION);
-        intent.putExtra("requestFrom", "");
-
-        String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
-        String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
-        if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
-            intent.putExtra("providerPhNumber", pCountryCode + " " + pPhNo);
-        }
-        return intent;
-    }*/
-    private Intent createCheckinIntent(SearchService checkinServiceInfo) {
-
-
-        Intent intent = new Intent();
-        intent.putExtra("uniqueID", uniqueId);
-        intent.putExtra("providerName", tvSpName.getText().toString());
-        intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
-        intent.putExtra("locationName", tvLocationName.getText().toString());
-        intent.putExtra("providerId", providerId);
-        intent.putExtra("locationId", locationId);
-        intent.putExtra("checkInInfo", checkinServiceInfo);
-        intent.putExtra("userId", userId);
-        intent.putExtra("fromUser", true);
-        intent.putExtra("sector", sector);
-        intent.putExtra("consumerId", consumerId);
-        intent.putExtra("familyMemId", 0);
-        intent.putExtra("requestFor", Constants.CHECKIN);
-        intent.putExtra("requestFrom", "");
-
-        ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setServiceId(checkinServiceInfo.getId());
-        serviceInfo.setServiceName(checkinServiceInfo.getName());
-        serviceInfo.setDescription(checkinServiceInfo.getDescription());
-        serviceInfo.setType(Constants.CHECKIN);
-
-        intent.putExtra("serviceInfo", serviceInfo);
-
-        return intent;
-    }
-
-    private Intent createAppointmentIntent(SearchAppoinment appointmentServiceInfo) {
-
-        Intent intent = new Intent();
-        intent.putExtra("uniqueID", uniqueId);
-        intent.putExtra("providerName", tvSpName.getText().toString());
-        intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
-        intent.putExtra("locationName", tvLocationName.getText().toString());
-        intent.putExtra("locationId", locationId);
-        intent.putExtra("providerId", providerId);
-        intent.putExtra("userId", userId);
-        intent.putExtra("fromUser", true);
-        intent.putExtra("sector", sector);
-        intent.putExtra("consumerId", consumerId);
-        intent.putExtra("familyMemId", 0);
-        intent.putExtra("requestFor", Constants.APPOINTMENT);
-        intent.putExtra("requestFrom", "");
-
-        ServiceInfo serviceInfo = new ServiceInfo();
-        serviceInfo.setServiceId(appointmentServiceInfo.getId());
-        serviceInfo.setServiceName(appointmentServiceInfo.getName());
-        serviceInfo.setDescription(appointmentServiceInfo.getDescription());
-        serviceInfo.setType(Constants.APPOINTMENT);
-        serviceInfo.setUser(false);
-        serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
-        if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
-            serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
-        }
-        serviceInfo.setIsPrePayment(appointmentServiceInfo.getIsPrePayment());
-        serviceInfo.setLivetrack(appointmentServiceInfo.getLivetrack());
-        if (appointmentServiceInfo.getMinPrePaymentAmount() != null) {
-            serviceInfo.setMinPrePaymentAmount(appointmentServiceInfo.getMinPrePaymentAmount());
-        }
-        serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
-        if (appointmentServiceInfo.getPreInfoText() != null) {
-            serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
-        }
-        if (appointmentServiceInfo.getPreInfoTitle() != null) {
-            serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
-        }
-        if (appointmentServiceInfo.getServiceType() != null) {
-            serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
-        }
-        if (appointmentServiceInfo.getVirtualCallingModes() != null) {
-            serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
-            serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
-            serviceInfo.setVirtualServiceType(appointmentServiceInfo.getVirtualServiceType());
-        }
-        if (appointmentServiceInfo.getAppointServiceAvailability() != null) {
-            serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());
-            serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
-            serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
-        }
-
-        if (appointmentServiceInfo.getTotalAmount() != null) {
-            serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
-        }
-        if (appointmentServiceInfo.getMaxBookingsAllowed() > 0) {
-            serviceInfo.setMaxBookingsAllowed(appointmentServiceInfo.getMaxBookingsAllowed());
-        }
-        serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
-        intent.putExtra("serviceInfo", serviceInfo);
-
-        return intent;
-    }
     @Override
     public void getMessage(String valueOf) {
         // do nothing
     }
-    private void ApiGetOneTimeQNR(String from, SearchAppoinment appointmentServiceInfo, SearchService checkinServiceInfo, SearchDonation donationServiceInfo) {
 
+    private void ApiGetProviderDetails(int uniqueId) {
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<Questionnaire> call = apiService.getOneTimeQnr(0, consumerId, userId);
-        //Call<Questionnaire> call = apiService.getOneTimeQuestionss(providerConsumerId,  consumerId, providerId);
-
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-        call.enqueue(new Callback<Questionnaire>() {
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<Provider> call = apiService.getProviderDetails(uniqueId);
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
-
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
                 try {
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
+                    if (mDialog.isShowing())
+                        Config.closeDialog(UserDetailActivity.this, mDialog);
+                    Config.logV("URL----VIRTUAL---8888--------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------VIRTUAL-------------------" + response.code());
                     if (response.code() == 200) {
-                        Questionnaire oneTimeQnr = response.body();
-                        boolean isOneTimeQnrAvailable = false;
-                        if (oneTimeQnr != null && oneTimeQnr.getQuestionsList() != null && oneTimeQnr.getQuestionsList().size() > 0) {
-                            for (Questions qns : oneTimeQnr.getQuestionsList()) {
-                                if (qns.getGetQuestions() != null && qns.getGetQuestions().size() > 0) {
-                                    isOneTimeQnrAvailable = true;
-                                }
-                            }
+                        providerResponse = response.body();
+                        if (providerResponse != null) {
+
+                            // apiVirtualFields(providerResponse.getVirtualFields());
+
+                            // ApiSearchViewLocation(providerResponse.getLocation(), providerResponse.getBusinessProfile(), providerResponse);
+
+                            apiSearchViewTerminology(providerResponse.getTerminologies());
+
                         }
-                        SharedPreference.getInstance(mContext).setValue("uniqueID", uniqueId);
-                        //SharedPreference.getInstance(mContext).setValue("locationId", locationId);
-
-                        Intent intent = new Intent();
-
-                        if (from == Constants.APPOINTMENT && appointmentServiceInfo != null) {
-                            intent = createAppointmentIntent(appointmentServiceInfo);
-                            if (isOneTimeQnrAvailable) {
-                                intent.setClass(UserDetailActivity.this, OneTimeQuestionnaire.class);
-                            } else {
-                                intent.setClass(UserDetailActivity.this, AppointmentActivity.class);
-                            }
-                        } else if (from == Constants.CHECKIN && checkinServiceInfo != null) {
-                            intent = createCheckinIntent(checkinServiceInfo);
-                            if (isOneTimeQnrAvailable) {
-                                intent.setClass(UserDetailActivity.this, OneTimeQuestionnaire.class);
-                            } else {
-                                intent.setClass(UserDetailActivity.this, CheckInActivity.class);
-                            }
-                        } /*else if (from == Constants.DONATION && donationServiceInfo != null) {
-                            intent = createDonationIntent(donationServiceInfo);
-                            if (isOneTimeQnrAvailable) {
-                                intent.setClass(UserDetailActivity.this, OneTimeQuestionnaire.class);
-                            } else {
-                                intent.setClass(UserDetailActivity.this, DonationActivity.class);
-                            }
-                        }*/
-
-                        startActivity(intent);
-
-                    } else {
-
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
-
-                        Config.logV("Error" + response.errorBody().string());
-
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
-            public void onFailure(Call<Questionnaire> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-
+                if (mDialog.isShowing())
+                    Config.closeDialog(UserDetailActivity.this, mDialog);
             }
         });
+    }
+
+    private void apiSearchViewTerminology(String termin) {
+        try {
+            mSearchTerminology = new Gson().fromJson(termin, SearchTerminology.class);
+            if (mSearchTerminology != null) {
+                terminology = mSearchTerminology.getWaitlist();
+                userTerminology = mSearchTerminology.getProvider();
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void ApiGetProfileDetail() {
+        int consumerID = SharedPreference.getInstance(UserDetailActivity.this).getIntValue("consumerId", 0);
+
+        ApiInterface apiService =
+                ApiClient.getClient(UserDetailActivity.this).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(UserDetailActivity.this, UserDetailActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerID);
+
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        profileDetails = response.body();
+                        if (profileDetails != null) {
+                            String conmrFName = profileDetails.getUserprofile().getFirstName();
+                            String conmrLName = profileDetails.getUserprofile().getLastName();
+                            consumerName = conmrFName + " " + conmrLName;
+                            countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
+                            phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
+                            if (profileDetails.getUserprofile().getEmail() != null) {
+                                emailId = profileDetails.getUserprofile().getEmail();
+                            }
+
+                            whatsappCountryCode = countryCode.replace("+", "");
+                            whatsappNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
+
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private JSONObject createJsonObjectForBooking(ServiceInfo serviceInfo) {
+        JSONObject queueobj = new JSONObject();
+        JSONObject waitobj = new JSONObject();
+
+        JSONObject sejsonobj = new JSONObject();
+        JSONArray waitlistArray = new JSONArray();
+        JSONObject sjsonobj = new JSONObject();
+
+        try {
+            waitobj.put("id", 0);
+            waitobj.put("firstName", conmrFName);
+            waitobj.put("lastName", conmrLName);
+            if (emailId != null && !emailId.equalsIgnoreCase("")) {
+                waitobj.put("email", emailId);
+            }
+            waitlistArray.put(waitobj);
+
+            sejsonobj.put("id", serviceInfo.getServiceId());
+            sejsonobj.put("serviceType", serviceInfo.getServiceType());
+
+            sjsonobj.put("id", serviceInfo.getScheduleId());
+
+            queueobj.put("phoneNumber", phoneNumber);
+            queueobj.put("countryCode", countryCode);
+
+            queueobj.putOpt("service", sejsonobj);
+            queueobj.putOpt("appmtFor", waitlistArray);
+            queueobj.putOpt("schedule", sjsonobj);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return queueobj;
     }
 }

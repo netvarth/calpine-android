@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class ActiveCheckIn implements Serializable {
 
-
     int token;
     String checkinEncId;
     String appointmentEncId;
@@ -46,6 +45,15 @@ public class ActiveCheckIn implements Serializable {
     private QuestionnaireResponse questionnaire;
     private QuestionnaireResponse serviceOption;
     String countryCode;
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public QuestionnaireResponse getServiceOption() {
         return serviceOption;

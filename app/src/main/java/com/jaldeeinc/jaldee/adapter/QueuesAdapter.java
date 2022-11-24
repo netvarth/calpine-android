@@ -10,12 +10,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
-import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 
 import java.util.ArrayList;
@@ -56,6 +53,7 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
         if (position == selectedPosition) {
             myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.selected_slot);
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.white));
+            iSelectedQueue.sendSelectedQueue(displayQueueTime, queue, queuesList.get(position).getId());
         } else {
             myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot);
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.gray));

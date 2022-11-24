@@ -1,23 +1,14 @@
 package com.jaldeeinc.jaldee.custom;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
@@ -28,8 +19,9 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
-import com.jaldeeinc.jaldee.response.SlotsData;
-import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+import com.jaldeeinc.jaldee.singlerowcalendar.DatePickerTimeline;
+import com.jaldeeinc.jaldee.singlerowcalendar.OnDateSelectedListener;
+import com.jaldeeinc.jaldee.utils.DateUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,38 +29,44 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
+public class CheckInSlotsDialog extends LinearLayout implements ISelectedQueue {
 
     private Context context;
-    private CustomTextViewBold tvDate;
-    private CustomTextViewBold tvTime, tvPeople, tvMinutes;
-    private CustomTextViewMedium tvPeopleHint, tvMinutesHint;
-    private CustomTextViewThin tvSlash;
-    private ImageView ivMinus, ivPlus, ivClose;
-    private static CustomTextViewSemiBold tvCalenderDate;
+    public String selectedCalanderDate;
+
+    private TextView tvDate;
+    private TextView tvTime, tvPeople, tvMinutes;
+    private TextView tvPeopleHint, tvMinutesHint;
+    private TextView tvSlash;
     private DiscreteScrollView rvQueues;
-    private CardView cvConfirm;
     private LinearLayout llNoSlots, llWaiting;
-    private NeomorphFrameLayout cvCalender;
     final Calendar myCalendar = Calendar.getInstance();
-    private int activeScheduleId, serviceId, locationId, providerId;
+    private int serviceId, locationId, providerId;
     private ISelectedQueue iSelectedQueue;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
-    ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
     QueuesAdapter qAdapter;
     private ISelectQ iSelectQ;
     private String defaultDate;
     private String displayTime = "", slotTime = "";
     private int queueId;
     private LinearLayout llEstTime;
-    private CustomTextViewMedium tvServiceTime;
+    private TextView tvServiceTime;
     private String selectedDate = "";
     private QueueTimeSlotModel queueDetails = new QueueTimeSlotModel();
+
+    TextView tvSelectedCalendarDate;
+    TextView tvSelectedCalendarDay;
+    Button btn_calendar;
+
+    Date sDate;
+    DatePickerTimeline datePickerTimeline;
+    Calendar calendarDate;
 
 
     public CheckInSlotsDialog(Context context, int serviceId, int locationId, ISelectQ iSelectQ, int providerId, String availableDate) {
@@ -79,20 +77,19 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
         this.iSelectQ = iSelectQ;
         this.providerId = providerId;
         this.defaultDate = availableDate;
-
+        initView();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.checkin_queue);
+    private void initView() {
+
+        inflate(context, R.layout.checkin_queue, this);
 
         initializations();
         this.iSelectedQueue = this;
 
         ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(providerId), defaultDate);
 
-        Date sDate = null;
+        sDate = null;
         String dtStart = defaultDate;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -101,22 +98,40 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
             e.printStackTrace();
         }
         Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorow = cal.getTime();
-        if (today.before(sDate)) {
-            Config.logV("Date Enabled---------------");
-            ivMinus.setEnabled(true);
-            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
 
-        } else {
-            Config.logV("Date Disabled---------------");
-            ivMinus.setEnabled(false);
-            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
+        datePickerTimeline = findViewById(R.id.main_single_row_calendar);
+        calendarDate = Calendar.getInstance();
+        datePickerTimeline.setInitialDate(calendarDate.get(Calendar.YEAR), calendarDate.get(Calendar.MONTH), calendarDate.get(Calendar.DAY_OF_MONTH));
+        calendarDate.setTime(sDate);
+        datePickerTimeline.setActiveDate(calendarDate);
+        datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(int year, int month, int day, int dayOfWeek) {
+                //Do Something
+                String Tag = "null";
+                Log.d(Tag, "onDateSelected: " + day);
+                Calendar mCal = Calendar.getInstance();
+                mCal.set(Calendar.YEAR, year);
+                mCal.set(Calendar.MONTH, month);
+                mCal.set(Calendar.DAY_OF_MONTH, day);
+                Date d = mCal.getTime();
 
+                String nameOfMonth = DateUtils.INSTANCE.getMonthName(d);
+                String yer = DateUtils.INSTANCE.getYear(d);
+
+                tvSelectedCalendarDate.setText(nameOfMonth + ", " + yer);
+
+                updateSelectedDate(mCal);
+
+            }
+
+            @Override
+            public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
+                //Log.d(TAG, "onDisabledDateSelected: " + day);
+            }
+        });
         // click-actions
-
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -126,111 +141,58 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                Date d = myCalendar.getTime();
 
-                updateSelectedDate(year, monthOfYear, dayOfMonth);
+                String nameOfMonth = DateUtils.INSTANCE.getMonthName(d);
+                String yer = DateUtils.INSTANCE.getYear(d);
+
+                tvSelectedCalendarDate.setText(nameOfMonth + ", " + yer);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                String apiFormat = "yyyy-MM-dd"; // your format
+                SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
+                String pickedDate = apiSdf.format(myCalendar.getTime());
+                try {
+                    selectedDate = getCustomDateString(pickedDate);
+                    Calendar calendarToday = Calendar.getInstance();
+                    String sd1 = sdf.format(calendarToday.getTime());
+                    Date d1 = sdf.parse(sd1);
+                    String sd2 = sdf.format(myCalendar.getTime());
+                    Date d2 = sdf.parse(sd2);
+                    long difference_In_Time
+                            = d2.getTime() - d1.getTime();
+                    long difference_In_Days
+                            = TimeUnit
+                            .MILLISECONDS
+                            .toDays(difference_In_Time)
+                            % 365;
+                    datePickerTimeline.setActiveDate(myCalendar);
+                    if (difference_In_Time < 0) {  /// for selected item shown center
+                        if (difference_In_Days >= 3) {
+                            datePickerTimeline.goPosition(difference_In_Days - 3);
+                        } else {
+                            datePickerTimeline.goPosition(difference_In_Days);
+                        }
+                    } else {
+                        datePickerTimeline.goPosition(difference_In_Days + 3);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                updateSelectedDate(myCalendar);
             }
         };
 
-        cvCalender.setOnClickListener(new View.OnClickListener() {
+        btn_calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                DatePickerDialog da = new DatePickerDialog(context, date, myCalendar
+                DatePickerDialog da = new DatePickerDialog(context, R.style.Base_Theme_AppCompat_Light_Dialog, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
 
                 da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 da.show();
-                da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
-                da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-            }
-        });
-
-
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dismiss();
-            }
-        });
-
-        cvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (queueId > 0) {
-                    iSelectQ.sendSelectedQueueInfo(displayTime, queueId, queueDetails, selectedDate);
-                    dismiss();
-                } else {
-
-                    DynamicToast.make(context, "Please select a queue", AppCompatResources.getDrawable(
-                            context, R.drawable.ic_info_black),
-                            ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.arrived_green), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-
-        ivPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-
-                    String dtStart = tvCalenderDate.getText().toString();
-                    Config.logV("Date----------------" + dtStart);
-                    Date date = null;
-                    SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                    try {
-                        date = format.parse(dtStart);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Date added_date = addDays(date, 1);
-                    DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                    //to convert Date to String, use format method of SimpleDateFormat class.
-                    String strDate = dateFormat.format(added_date);
-                    tvCalenderDate.setText(strDate);
-                    DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                    defaultDate = selecteddateParse.format(added_date);
-                    UpdateDAte(defaultDate);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        ivMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-
-                    String dtStart = tvCalenderDate.getText().toString();
-                    Config.logV("Date----------------" + dtStart);
-                    Date date = null;
-                    SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                    try {
-                        date = format.parse(dtStart);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    Date added_date = subtractDays(date, 1);
-                    DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                    //to convert Date to String, use format method of SimpleDateFormat class.
-                    String strDate = dateFormat.format(added_date);
-                    tvCalenderDate.setText(strDate);
-                    DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                    defaultDate = selecteddateParse.format(added_date);
-                    UpdateDAte(defaultDate);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
         });
 
@@ -239,15 +201,15 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
     private void ApiQueueTimeSlot(String locationId, String subSeriveID, String accountID, String mDate) {
         ApiInterface apiService =
                 ApiClient.getClient(context).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
+     /*   final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();*/
         Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(locationId, subSeriveID, mDate, accountID);
         call.enqueue(new Callback<ArrayList<QueueTimeSlotModel>>() {
             @Override
             public void onResponse(Call<ArrayList<QueueTimeSlotModel>> call, Response<ArrayList<QueueTimeSlotModel>> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getOwnerActivity(), mDialog);
+                     /*   if (mDialog.isShowing())
+                            Config.closeDialog(context, mDialog);*/
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
@@ -263,14 +225,12 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                 llWaiting.setVisibility(View.VISIBLE);
                                 tvDate.setVisibility(View.VISIBLE);
                                 tvTime.setVisibility(View.VISIBLE);
-                                cvConfirm.setVisibility(View.VISIBLE);
                                 queueId = mQueueTimeSlotList.get(0).getId();
                                 queueDetails = mQueueTimeSlotList.get(0);
                                 selectedDate = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                tvDate.setText(getCustomDateString(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate()));
                                 tvTime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
                                 displayTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
-                                tvCalenderDate.setText(getCalenderDateFormat(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate()));
+                                selectedCalanderDate = getCalenderDateFormat(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate());
 
                                 if (mQueueTimeSlotList.get(0).getQueueSize() >= 0) {
 
@@ -312,12 +272,6 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                     tvSlash.setVisibility(View.GONE);
                                 }
 
-                                RecyclerView.LayoutManager mLayoutManager = null;
-                                if(mQueueTimeSlotList.size() == 1){
-                                    mLayoutManager = new GridLayoutManager(context, 1);
-                                }else if(mQueueTimeSlotList.size() > 1){
-                                    mLayoutManager = new GridLayoutManager(context, 2);
-                                }
                                 qAdapter = new QueuesAdapter(context, mQueueTimeSlotList, iSelectedQueue);
                                 rvQueues.setAdapter(qAdapter);
                                 rvQueues.setItemTransformer(new ScaleTransformer.Builder()
@@ -341,8 +295,8 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
             public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getOwnerActivity(), mDialog);
+                /*if (mDialog.isShowing())
+                    Config.closeDialog(C, mDialog);*/
             }
         });
     }
@@ -354,51 +308,15 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
         llWaiting.setVisibility(View.GONE);
         tvDate.setVisibility(View.GONE);
         tvTime.setVisibility(View.GONE);
-        cvConfirm.setVisibility(View.GONE);
-    }
-
-    public String UpdateDAte(String sDate) {
-        Date selecteddate = null;
-        String dtStart = tvCalenderDate.getText().toString();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        try {
-            selecteddate = format.parse(dtStart);
-            //  System.out.println(selecteddate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(providerId), sDate);
-
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorow = cal.getTime();
-        if (today.before(selecteddate)) {
-            Config.logV("Date Enabled---------------");
-            ivMinus.setEnabled(true);
-            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
-
-        } else {
-            Config.logV("Date Disabled---------------");
-            ivMinus.setEnabled(false);
-            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
-
-        return "";
+        iSelectQ.sendSelectedQueueInfo(displayTime, queueId, null, selectedDate);
     }
 
     private void initializations() {
 
         tvDate = findViewById(R.id.tv_date);
         tvTime = findViewById(R.id.tv_time);
-        ivMinus = findViewById(R.id.iv_minus);
-        ivPlus = findViewById(R.id.iv_add);
-        cvCalender = findViewById(R.id.fl_calender);
-        tvCalenderDate = findViewById(R.id.tv_calenderDate);
         rvQueues = findViewById(R.id.rv_queues);
-        cvConfirm = findViewById(R.id.cv_submit);
         llNoSlots = findViewById(R.id.ll_noSlots);
-        ivClose = findViewById(R.id.iv_close);
         tvPeople = findViewById(R.id.tv_people);
         tvPeopleHint = findViewById(R.id.tv_peopleHint);
         tvMinutes = findViewById(R.id.tv_minutes);
@@ -408,36 +326,33 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
         tvSlash = findViewById(R.id.tv_slash);
         llWaiting = findViewById(R.id.ll_waiting);
 
-
+        tvSelectedCalendarDate = findViewById(R.id.tvSelectedCalendarDate);
+        tvSelectedCalendarDay = findViewById(R.id.tvSelectedCalendarDay);
+        btn_calendar = findViewById(R.id.btn_calendar);
     }
 
-    private void updateSelectedDate(int year, int monthOfYear, int dayOfMonth) {
+    private void updateSelectedDate(Calendar mCalendar) {
 
         try {
-
-
             SimpleDateFormat simpledateformat = new SimpleDateFormat("EEE");
-            Date date = new Date(year, monthOfYear, dayOfMonth - 1);
-            String dayOfWeek = simpledateformat.format(date);
-
+            String dayOfWeek = simpledateformat.format(mCalendar.getTime());
             String sMonth = "";
-            if (monthOfYear < 9) {
-                sMonth = "0" + String.valueOf(monthOfYear + 1);
+            if (mCalendar.get(Calendar.MONTH) < 9) {
+                sMonth = "0" + String.valueOf(mCalendar.get(Calendar.MONTH) + 1);
             } else {
-                sMonth = String.valueOf(monthOfYear + 1);
+                sMonth = String.valueOf(mCalendar.get(Calendar.MONTH) + 1);
             }
 
-            String mDate = dayOfWeek + ", " + dayOfMonth +
+            String mDate = dayOfWeek + ", " + mCalendar.get(Calendar.DAY_OF_MONTH) +
                     "/" + (sMonth) +
-                    "/" + year;
-            tvCalenderDate.setText(mDate);
+                    "/" + mCalendar.get(Calendar.YEAR);
+            selectedCalanderDate = mDate;
 
             String apiFormat = "yyyy-MM-dd"; // your format
             SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
-            String pickedDate = apiSdf.format(myCalendar.getTime());
-            tvDate.setText(getCustomDateString(pickedDate));
-            UpdateDAte(mDate);
+            String pickedDate = apiSdf.format(mCalendar.getTime());
             ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(providerId), pickedDate);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -542,7 +457,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                 tvMinutes.setVisibility(View.GONE);
                 tvSlash.setVisibility(View.GONE);
             }
-
+            iSelectQ.sendSelectedQueueInfo(displayTime, queueId, queueDetails, selectedDate);
         }
     }
 

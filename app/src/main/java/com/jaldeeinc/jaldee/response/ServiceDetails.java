@@ -24,6 +24,33 @@ public class ServiceDetails implements Serializable {
     String consumerNoteTitle;
     String name;
     String deptName;
+    boolean isDate;
+    boolean isDateTime;
+    boolean isNoDateTime;
+
+    public boolean isDate() {
+        return isDate;
+    }
+
+    public void setIsDate(boolean date) {
+        isDate = date;
+    }
+
+    public boolean isDateTime() {
+        return isDateTime;
+    }
+
+    public void setIsDateTime(boolean dateTime) {
+        isDateTime = dateTime;
+    }
+
+    public boolean isNoDateTime() {
+        return isNoDateTime;
+    }
+
+    public void setIsNoDateTime(boolean noDateTime) {
+        isNoDateTime = noDateTime;
+    }
 
     public boolean isShowOnlyAvailableSlots() {
         return showOnlyAvailableSlots;

@@ -8,24 +8,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/dimen_20dp"
         android:paddingEnd="@dimen/dimen_20dp"
         android:src="@drawable/close"
         android:visibility="gone">
 
     </ImageView>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
+    <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:gravity="center"
+        android:fontFamily="@font/font_regular"
+        android:letterSpacing="0.02"
         android:text="Check your status"
         android:textColor="@color/location_theme"
         android:textSize="@dimen/dimen_16dp">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
+    </TextView>
 
     <FrameLayout
         android:id="@+id/qr_code_container"
@@ -55,13 +56,16 @@
         <ImageView
             android:layout_width="@dimen/dimen_20dp"
             android:layout_height="@dimen/dimen_20dp"
+            android:layout_gravity="center"
             android:src="@drawable/download" />
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:gravity="center"
+            android:fontFamily="@font/font_regular"
+            android:letterSpacing="0.02"
             android:text="Save to Gallery"
             android:textColor="@color/grey1"
             android:textSize="@dimen/dimen_16dp" />

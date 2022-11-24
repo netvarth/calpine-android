@@ -1,11 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.Application;
 import android.app.Dialog;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,11 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
 import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
@@ -35,13 +29,10 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.AppRater;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.JCashInfo;
-import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -63,7 +54,7 @@ public class Home extends AppCompatActivity {
     String path;
     String message = null;
     String from = null;
-    String fromDonation = null;
+    String fromRequest = null;
     String isfrom = "";
 
     Intent mLiveTrackClient;
@@ -421,7 +412,7 @@ public class Home extends AppCompatActivity {
             }
 
             from = intent.getStringExtra("isOrder");   // to set orders tab by default after completion of placing order.
-            fromDonation = intent.getStringExtra("isDonation"); // to set payment tab by default after completion of Donation.
+            fromRequest = intent.getStringExtra("isRequest"); // to set payment tab by default after completion of Donation.
             String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
             Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
             if (!loginId.equalsIgnoreCase("")) {
@@ -429,14 +420,14 @@ public class Home extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("tab", "1");
 
-                if (fromDonation != null && !fromDonation.equalsIgnoreCase("")) {
-                    if (fromDonation.equalsIgnoreCase("DONATION")) {
+                if (fromRequest != null && !fromRequest.equalsIgnoreCase("")) {
+                    if (fromRequest.equalsIgnoreCase(Constants.REQUEST)) {
 
                         bundle.putInt("myJaldeeTab", 1);  // to set payment tab by default after completion of Donation.
                     }
                 }
                 if (from != null && !from.equalsIgnoreCase("")) {
-                    if (from.equalsIgnoreCase("ORDER")) {
+                    if (from.equalsIgnoreCase(Constants.ORDERS)) {
 
                         bundle.putInt("myJaldeeTab", 2);  // to set orders tab by default after completion of placing order.
                     }

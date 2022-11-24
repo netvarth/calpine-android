@@ -276,8 +276,7 @@
                     <ImageView
                         android:layout_width="@dimen/dimen_30dp"
                         android:layout_height="@dimen/dimen_30dp"
-                        android:src="@drawable/customer_notes"
-                        app:tint="@color/title_color">
+                        android:src="@drawable/customer_notes">
 
                     </ImageView>
 

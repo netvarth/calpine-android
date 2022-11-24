@@ -14,7 +14,7 @@
         android:id="@+id/ll_paymentMode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rctngle_bordergrey_roundededge_whitefilled"
+        android:background="@drawable/rctngle_bordergrey_roundededge15_whitefilled"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -29,7 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right">
+                android:gravity="right"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/ll_circle_shape"
@@ -50,38 +51,27 @@
                     android:id="@+id/iv_paymentMode"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:scaleType="fitCenter"></ImageView>
+                    android:scaleType="fitCenter"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewLight
-                    android:id="@+id/tv_tranferThrough"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="2"
-                    android:text="Transfer through"
-                    android:textColor="@color/dark_black"
-                    android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone" />
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                <TextView
                     android:id="@+id/tv_payMode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:maxLines="2"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:fontFamily="@font/font_regular"
                     android:text="UPI Payment"
-                    android:textColor="@color/dark_black"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textColor="@color/black6"
+                    android:textSize="@dimen/txtsize_10" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

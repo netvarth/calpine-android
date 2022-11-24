@@ -1,12 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -19,7 +12,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +20,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonObject;
@@ -38,7 +37,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.UserMessage;
 import com.jaldeeinc.jaldee.response.InboxList;
 import com.karumi.dexter.Dexter;
@@ -85,20 +83,16 @@ public class ChatActivity extends AppCompatActivity {
     private CustomTextViewBold tvTitle;
     ArrayList<String> imagePathList = new ArrayList<>();
     ArrayList<String> imagePathLists = new ArrayList<>();
-    Bitmap bitmap;
-    File f, file;
-    String path, from, from1 = "";
+    File file;
+    String from, from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
     private GifImageView ivNoSlots;
     BottomSheetDialog dialog;
-    CustomTextViewSemiBold tvErrorMessage;
+    TextView tvErrorMessage;
     TextView tv_attach, tv_camera;
     RecyclerView recycle_image_attachment;
     private int GALLERY = 1, CAMERA = 2;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
-    private static final String IMAGE_DIRECTORY = "/Jaldee" +
-            "";
     private Uri mImageUri;
     private boolean fromPushNotification = false;
 
@@ -460,7 +454,7 @@ public class ChatActivity extends AppCompatActivity {
                             //Log.d(TAG, "onActivityResult: " + e.toString());
                         }
                         String orgFilePath = photoFile.getAbsolutePath();
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
@@ -523,7 +517,7 @@ public class ChatActivity extends AppCompatActivity {
                                 //Log.d(TAG, "onActivityResult: " + e.toString());
                             }
                             String orgFilePath = photoFile.getAbsolutePath();
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                                 if (orgFilePath == null) {
                                     orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
@@ -612,17 +606,7 @@ public class ChatActivity extends AppCompatActivity {
         mBuilder.addFormDataPart("message", "blob", body);
 
         for (int i = 0; i < imagePathList.size(); i++) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }/*
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }*/
+
             file = new File(imagePathList.get(i));
 
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
@@ -692,17 +676,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            /*if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }*/
+
             file = new File(imagePathList.get(i));
 
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
@@ -771,17 +745,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            /*if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }*/
+
             file = new File(imagePathList.get(i));
 
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
@@ -854,17 +818,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            /*if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }*/
+
             file = new File(imagePathList.get(i));
 
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
@@ -933,17 +887,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            /*if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }*/
+
             file = new File(imagePathList.get(i));
 
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));

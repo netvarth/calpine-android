@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="9"
+        android:background="@drawable/rctngle_bordergrey_roundededge15_whitefilled"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginRight="@dimen/dimen_15dp"
+            android:background="@color/app_background"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_gravity="right"
+                android:src="@drawable/icon_circle_cloce" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_acountdelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/padding20"
+            android:layout_marginRight="@dimen/padding20"
+            android:background="@color/app_background"
+            android:orientation="vertical"
+            android:padding="@dimen/padding15"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_acountdelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:fontFamily="@font/font_medium"
+                android:gravity="center"
+                android:text="Delete Account"
+                android:textColor="@color/pink1"
+                android:textSize="@dimen/dimen_28dp" />
+
+            <TextView
+                android:id="@+id/txtsendmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:fontFamily="@font/font_regular"
+                android:gravity="center"
+                android:text="Are You Sure You Want to delete your Jaldee Consumer account?"
+                android:textColor="@color/grey27"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_10dp"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/ll_Cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rctngle_bordergrey_roundededge7_whitefilled"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:visibility="visible">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/font_regular"
+                        android:text="Cancel"
+                        android:textColor="@color/grey27"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="visible">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rctngle_bordergrey_roundededge7_pink1filled"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dimen_5dp"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/font_regular"
+                        android:text="Delete"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="visible">
+
+                    </TextView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_penguin"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_goodbye"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/padding20"
+            android:layout_marginRight="@dimen/padding20"
+            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:background="@color/app_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding15"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/font_medium"
+                android:gravity="center"
+                android:text="Goodbye!"
+                android:textColor="@color/black"
+                android:textSize="36dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:fontFamily="@font/font_regular"
+                android:gravity="center"
+                android:text="Your account has been deleted"
+                android:textColor="@color/grey27"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_penguin" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
@@ -149,7 +150,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.Base_Theme_AppCompat_Light_Dialog);
                 builder.setMessage("Do you really want to delete family member ?");
                 builder.setCancelable(true);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -167,6 +168,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
                     }
                 });
                 builder.show();
+
 
 
             }

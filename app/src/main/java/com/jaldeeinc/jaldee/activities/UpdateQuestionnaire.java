@@ -54,7 +54,6 @@ import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
@@ -81,7 +80,6 @@ import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.ListProperties;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
-import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
@@ -147,28 +145,14 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
     private static Context mContext;
     private IFilesInterface iFilesInterface;
     private KeyPairBoolData fileObject = new KeyPairBoolData();
-    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf", "mp3", "wmv", "mp4", "webm", "flw", "mov", "avi"};
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
-    String[] formats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
     private int GALLERY = 3, CAMERA = 4;
-
     private Uri mImageUri;
-    File f;
     File file;
     String singleFilePath = "";
-    Bitmap bitmap;
-
     ArrayList<LabelPath> labelPaths = new ArrayList<>();
-    ArrayList<String> bookingImagesList = new ArrayList<>();
-    ArrayList<Questions> updatedQuestionsList = new ArrayList<>();
-
-
     ArrayList<String> list = new ArrayList<>();
     private Questionnaire questionnaire = new Questionnaire();
-    private String userNotes;
-
     private HashMap<String, View> viewsList = new HashMap<>();
     private String qLabelName = "";
     private int accountId;
@@ -611,17 +595,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-           /* try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                String path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getPath());
-            }*/
             file = new File(imagePathList.get(i).getPath());
 
             mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
@@ -708,13 +681,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
 
             } else {
-                /*bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
-                if (bitmap != null) {
-                    String path = saveImage(bitmap);
-                    file = new File(path);
-                } else {
-                    file = new File(imagePathList.get(i).getPath());
-                }*/
+
                 file = new File(imagePathList.get(i).getPath());
 
             }
@@ -949,13 +916,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
 
             } else {
-                /*bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
-                if (bitmap != null) {
-                    String path = saveImage(bitmap);
-                    file = new File(path);
-                } else {
-                    file = new File(imagePathList.get(i).getPath());
-                }*/
+
                 file = new File(imagePathList.get(i).getPath());
 
                 mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
@@ -1494,12 +1455,12 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 if (singleFile.getType() != null && (singleFile.getType().equalsIgnoreCase(".pdf") || extension.equalsIgnoreCase("pdf"))) {
 
-                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
                 } else if (singleFile.getType() != null && singleFile.getType().contains("audio")) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.audio_icon));
 
-                } else if (Arrays.asList(videoFormats).contains(extension)) {
+                } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.video_icon));
 
@@ -1510,13 +1471,13 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             } else {
                 if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("pdf")) {
 
-                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
 
                 } else if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("mp3")) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.audio_icon));
 
-                } else if (Arrays.asList(formats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
+                } else if (Arrays.asList(Constants.fileExtFormats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.video_icon));
 
@@ -1589,7 +1550,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         Config.openOnlinePdf(mContext, singleFile.getFilePath());
 
-                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+                    } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                         Intent intent = new Intent(UpdateQuestionnaire.this, VideoActivity.class);
                         intent.putExtra("urlOrPath", imagePath);
@@ -1622,7 +1583,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         Config.openPdf(getApplicationContext(), imagePath);
 
-                    } else if (Arrays.asList(formats).contains(extension)) {
+                    } else if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                         Intent intent = new Intent(UpdateQuestionnaire.this, VideoActivity.class);
                         intent.putExtra("urlOrPath", imagePath);
@@ -2260,10 +2221,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -2342,9 +2299,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                                 if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
 
-                                } else if (Arrays.asList(videoFormats).contains(extension)) {
+                                } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                                     ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
 
@@ -2422,9 +2379,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                                     if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                                        ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                                        ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
 
-                                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+                                    } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                                         ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
 
@@ -2467,10 +2424,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 

@@ -1,20 +1,11 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,11 +16,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -44,8 +34,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -63,10 +61,6 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ChatHistory;
 import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomerNotes;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
@@ -75,6 +69,7 @@ import com.jaldeeinc.jaldee.custom.PrescriptionDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
@@ -110,17 +105,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -128,143 +120,122 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
-
 public class BookingDetails extends AppCompatActivity implements IDeleteImagesInterface, ISaveNotes {
 
-    @BindView(R.id.tv_providerName)
-    CustomTextViewMedium tvProviderName;
-
+    @BindView(R.id.tv_datehint)
+    TextView tv_datehint;
+    @BindView(R.id.ll_token)
+    LinearLayout ll_token;
+    @BindView(R.id.ll_tokenWaitTime)
+    LinearLayout ll_tokenWaitTime;
     @BindView(R.id.tv_doctorName)
-    CustomTextViewBold tvDoctorName;
-
-    @BindView(R.id.tv_serviceName)
-    CustomTextViewMedium tvServiceName;
-
+    TextView tvDoctorName;
+    @BindView(R.id.tv_doctorName1)
+    TextView tvDoctorName1;
+    @BindView(R.id.tv_locationName)
+    TextView tvLocationName;
     @BindView(R.id.iv_teleService)
     ImageView ivTeleService;
-
-    @BindView(R.id.tv_locationName)
-    CustomTextViewMedium tvLocationName;
-
-    @BindView(R.id.tv_confirmationNumber)
-    CustomTextViewBold tvConfirmationNumber;
-
-    @BindView(R.id.tv_status)
-    CustomTextViewBold tvStatus;
-
-    @BindView(R.id.tv_amount)
-    CustomTextViewBold tvAmount;
-
+    @BindView(R.id.tv_serviceName)
+    TextView tvServiceName;
     @BindView(R.id.tv_consumerName)
-    CustomTextViewBold tvConsumerName;
-
+    TextView tvConsumerName;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
+    @BindView(R.id.tv_phoneNumber)
+    TextView tvPhoneNumber;
     @BindView(R.id.tv_date)
-    CustomTextViewBold tvDate;
-
+    TextView tvDate;
+    @BindView(R.id.ll_date)
+    LinearLayout ll_date;
     @BindView(R.id.tv_time)
-    CustomTextViewBold tvTime;
-
-    @BindView(R.id.tv_batchNo)
-    CustomTextViewBold tvBatchNo;
-
+    TextView tvTime;
+    @BindView(R.id.ll_time)
+    LinearLayout ll_time;
+    @BindView(R.id.tv_providerName)
+    TextView tvProviderName;
+    @BindView(R.id.tv_providerName1)
+    TextView tvProviderName1;
+    @BindView(R.id.tv_confirmationNumber)
+    TextView tvConfirmationNumber;
+    @BindView(R.id.tv_amount)
+    TextView tvAmount;
     @BindView(R.id.tv_viewMore)
-    CustomTextViewSemiBold tvViewMore;
-
+    TextView tvViewMore;
     @BindView(R.id.tv_billText)
-    CustomTextViewSemiBold tvBillText;
-
+    TextView tvBillText;
     @BindView(R.id.tv_bill_receiptText)
-    CustomTextViewSemiBold tvBillReceiptText;
-
+    TextView tvBillReceiptText;
     @BindView(R.id.cv_back)
     CardView cvBack;
-
     @BindView(R.id.cv_share)
     CardView cvShare;
-
     @BindView(R.id.cv_bill)
     CardView cvBill;
-
     @BindView(R.id.cv_enquiry)
     CardView cvEnquiry;
-
     @BindView(R.id.ll_payment)
     LinearLayout llPayment;
-
     @BindView(R.id.ll_cancel)
     LinearLayout llCancel;
-
     @BindView(R.id.ll_moreDetails)
-    NeomorphFrameLayout llMoreDetails;
-
+    CardView llMoreDetails;
     @BindView(R.id.ll_message)
     LinearLayout llMessage;
-
     @BindView(R.id.ll_reschedule)
     LinearLayout llReschedule;
-
-    @BindView(R.id.ll_batch)
-    LinearLayout llBatch;
-
     @BindView(R.id.ll_location)
     LinearLayout llLocation;
-
-    @BindView(R.id.ll_rating)
-    LinearLayout llRating;
-
-    @BindView(R.id.ll_customerNotes)
-    LinearLayout llCustomerNotes;
-
-    @BindView(R.id.tv_customerNotes)
-    CustomTextViewMedium tvCustomerNotes;
-
-    @BindView(R.id.ll_instructions)
-    LinearLayout llInstructions;
-
     @BindView(R.id.iv_ltIcon)
     ImageView ivLtIcon;
-
     @BindView(R.id.tv_trackingText)
-    CustomTextViewMedium tvTrackingText;
-
+    TextView tvTrackingText;
+    @BindView(R.id.ll_rating)
+    LinearLayout llRating;
+    @BindView(R.id.ll_customerNotes)
+    LinearLayout llCustomerNotes;
+    @BindView(R.id.tv_customerNotes)
+    TextView tvCustomerNotes;
+    @BindView(R.id.ll_instructions)
+    LinearLayout llInstructions;
     @BindView(R.id.tv_amountToPay)
-    CustomTextViewRegularItalic tvAmountToPay;
-
+    TextView tvAmountToPay;
     @BindView(R.id.cv_meetingDetails)
-    NeomorphFrameLayout cvMeetingDetails;
-
+    CardView cvMeetingDetails;
     @BindView(R.id.iv_meetingIcon)
     ImageView ivMeetingIcon;
-
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
     @BindView(R.id.iv_Qr)
     ImageView ivQR;
-
     @BindView(R.id.ll_prescription)
     LinearLayout llPrescription;
-
-    @BindView(R.id.tv_phoneNumber)
-    CustomTextViewBold tvPhoneNumber;
-
-    @BindView(R.id.ll_phoneNumber)
-    LinearLayout llPhoneNumber;
-
     @BindView(R.id.ll_sendAttachments)
     LinearLayout llSendAttachments;
-
     @BindView(R.id.ll_viewAttachments)
     LinearLayout llViewAttachments;
-
     @BindView(R.id.ll_questionnaire)
     LinearLayout llQuestionnaire;
-
     @BindView(R.id.ll_service_option_qnr)
     LinearLayout ll_service_option_qnr;
-
     @BindView(R.id.scrollView)
     ScrollView scrollView;
-    //@BindView(R.id.ll_calender)
-    //LinearLayout ll_calender;
+    @BindView(R.id.tv_cnsmrDetails_Heading)
+    TextView tv_cnsmrDetails_Heading;
+    @BindView(R.id.icon_text)
+    TextView icon_text;
+    @BindView(R.id.iv_location_icon)
+    ImageView iv_location_icon;
+    @BindView(R.id.iv_prvdr_phone_icon)
+    ImageView iv_prvdr_phone_icon;
+    @BindView(R.id.iv_prvdr_email_icon)
+    ImageView iv_prvdr_email_icon;
+
+    @BindView(R.id.ll_batch)
+    LinearLayout ll_batch;
+    @BindView(R.id.tv_batchNo)
+    TextView tvBatchNo;
+
     boolean firstTimeRating = false;
     boolean isTvViewMore = false;
 
@@ -289,17 +260,15 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
     int id;
 
     // files related
-    Bitmap bitmap;
     File f, file;
     String path, from, from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
     TextView tv_attach, tv_camera;
     private BottomSheetDialog bDialog;
-    CustomTextViewSemiBold tvErrorMessage;
+    TextView tvErrorMessage;
     RecyclerView recycle_image_attachment;
     private int GALLERY = 1, CAMERA = 2;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private Uri mImageUri;
     ImagePreviewAdapter imagePreviewAdapter;
@@ -317,9 +286,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
         iDeleteImagesInterface = (IDeleteImagesInterface) this;
         iSaveNotes = (ISaveNotes) this;
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-
         Intent i = getIntent();
         if (i != null) {
             //bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
@@ -331,36 +297,15 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
             click_action = i.getStringExtra("click_action");
         }
-        /*ll_calender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_INSERT);
-                intent.setData(CalendarContract.Events.CONTENT_URI);
-                intent.putExtra(CalendarContract.Events.TITLE, "jaldee booking - " + apptInfo.getAppointmentEncId());
-                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, apptInfo.getLocation().getPlace());
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, "Service provider : " + apptInfo.getBusinessName() + "\u2028Location : " + apptInfo.getLocation().getPlace());
-                intent.putExtra(CalendarContract.Events.DTSTART, apptInfo.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
-                intent.putExtra(CalendarContract.Events.DTEND, apptInfo.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
 
-                //intent.putExtra(Intent.EXTRA_EMAIL, "test@yahoo.com, test2@yahoo.com, test3@yahoo.com");
-                if(intent.resolveActivity(getPackageManager()) != null){
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(BookingDetails.this, "There is no app that support this action", Toast.LENGTH_SHORT).show();
-                }
-                *//*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+        tv_datehint.setText("Date");
+        ll_token.setVisibility(View.GONE);
+        ll_tokenWaitTime.setVisibility(View.GONE);
+        tv_cnsmrDetails_Heading.setText("Booking For");
+        Glide.with(mContext).load(R.drawable.location_icon_1).into(iv_location_icon);
+        Glide.with(mContext).load(R.drawable.phone_icon_1).into(iv_prvdr_phone_icon);
+        Glide.with(mContext).load(R.drawable.email_icon_1).into(iv_prvdr_email_icon);
 
-                    requestPermissions(new String[]{Manifest.permission.READ_CALENDAR}, CAMERA);
-
-                } else if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-
-                    requestPermissions(new String[]{Manifest.permission.WRITE_CALENDAR}, CAMERA);
-
-                }else {
-                    getContentResolver().insert(uri, values);
-                }*//*
-            }
-        });*/
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -373,9 +318,9 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onClick(View view) {
 
                 Intent intent = new Intent(BookingDetails.this, RescheduleActivity.class);
+                intent.putExtra("uniqueId", apptInfo.getProviderAccount().getUniqueId());
                 intent.putExtra("providerId", apptInfo.getProviderAccount().getId());
                 intent.putExtra("ynwuuid", apptInfo.getUid());
-                intent.putExtra("uniqueId", apptInfo.getProviderAccount().getUniqueId());
                 startActivity(intent);
             }
         });
@@ -422,8 +367,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 
@@ -596,8 +539,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[]{
-                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+                                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
 
                                     return;
                                 } else {
@@ -630,8 +572,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
-                                    requestPermissions(new String[]{
-                                            Manifest.permission.CAMERA}, CAMERA);
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA);
 
                                     return;
                                 } else {
@@ -666,11 +607,8 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onClick(View view) {
 
                 if (apptInfo != null) {
-
                     getAppointmentImages(apptInfo.getUid(), apptInfo.getProviderAccount().getId());
-
                 }
-
             }
         });
         ll_service_option_qnr.setOnClickListener(new View.OnClickListener() {
@@ -740,31 +678,32 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
     @Override
     protected void onResume() {
+        try {
+            // Api call
+            if (uid != null) {
+                getAppointmentDetails(uid, id);
+            } else {
 
-        // Api call
-        if (uid != null) {
-            getAppointmentDetails(uid, id);
-        } else {
-
-            // this gets called when activity is launched from push notification
-            if (ynwUUid != null) {
-                if (click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
-                    ViewMoreActions();
-                    scrollView.scrollTo(0, scrollView.getBottom());
+                // this gets called when activity is launched from push notification
+                if (ynwUUid != null) {
+                    if (click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
+                        ViewMoreActions();
+                        scrollView.scrollTo(0, scrollView.getBottom());
+                    }
+                    getAppointmentDetails(ynwUUid, Integer.parseInt(accountId));
                 }
-                getAppointmentDetails(ynwUUid, Integer.parseInt(accountId));
             }
+
+            updateImages();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
-
-        updateImages();
-
         super.onResume();
     }
 
 
     public void getAppointmentDetails(String uid, int id) {
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(BookingDetails.this, BookingDetails.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(uid, String.valueOf(id));
@@ -772,40 +711,39 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             @Override
             public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                    if (mDialog.isShowing()) Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         apptInfo = response.body();
 
                         if (apptInfo != null) {
-
                             if (!apptInfo.getApptStatus().equalsIgnoreCase("Cancelled") && (!apptInfo.getApptStatus().equalsIgnoreCase("done") || !apptInfo.getApptStatus().equalsIgnoreCase("Completed"))) {
 
                                 try {
+
                                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                    Date strDate = sdf.parse(apptInfo.getAppmtDate());
-                                    Date date = null;
-                                    date = getCurrentDate();
-                                    if (date.compareTo(strDate) == 0) {
-                                        isActive = true;
-                                    } else if (date.compareTo(strDate) == 1) {
-                                        isActive = false;
-                                    } else if (date.compareTo(strDate) == -1) {
-                                        isActive = true;
+                                    if (apptInfo.getAppmtDate() != null && !apptInfo.getAppmtDate().trim().isEmpty()) {
+                                        Date strDate = sdf.parse(apptInfo.getAppmtDate());
+                                        Date date = null;
+                                        date = getCurrentDate();
+                                        if (date.compareTo(strDate) == 0) {
+                                            isActive = true;
+                                        } else if (date.compareTo(strDate) == 1) {
+                                            isActive = false;
+                                        } else if (date.compareTo(strDate) == -1) {
+                                            isActive = true;
+                                        }
                                     }
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-
                             } else {
                                 isActive = false;
                             }
                             if (apptInfo.getReleasedQnr() != null) {
-                                List<RlsdQnr> fReleasedQNR = apptInfo.getReleasedQnr().stream()
-                                        .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                                List<RlsdQnr> fReleasedQNR = apptInfo.getReleasedQnr().stream().filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
                                 apptInfo.getReleasedQnr().clear();
                                 apptInfo.setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr with remove "unReleased" status
                             }
@@ -819,12 +757,10 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
             @Override
             public void onFailure(Call<ActiveAppointment> call, Throwable t) {
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(getParent(), mDialog);
             }
         });
     }
-
 
     private void updateUI(ActiveAppointment appointmentInfo) {
 
@@ -835,10 +771,18 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
                     if (appointmentInfo.getProvider().getBusinessName() != null && !appointmentInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
                         tvDoctorName.setText(appointmentInfo.getProvider().getBusinessName());
+                        tvDoctorName.setVisibility(View.VISIBLE);
+                        tvDoctorName1.setText(appointmentInfo.getProvider().getBusinessName());
+                        tvDoctorName1.setVisibility(View.VISIBLE);
                     } else {
                         String name = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
                         tvDoctorName.setText(name);
+                        tvDoctorName.setVisibility(View.VISIBLE);
+                        tvDoctorName1.setText(name);
+                        tvDoctorName1.setVisibility(View.VISIBLE);
                     }
+                    tvProviderName1.setText(appointmentInfo.getProviderAccount().getBusinessName());
+                    tvProviderName1.setVisibility(View.VISIBLE);
                     tvProviderName.setVisibility(View.VISIBLE);
                     tvProviderName.setText(appointmentInfo.getProviderAccount().getBusinessName());
                     tvProviderName.setOnClickListener(new View.OnClickListener() {
@@ -856,9 +800,13 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         }
                     });
                 } else {
-                    tvProviderName.setVisibility(View.INVISIBLE);
+                    tvProviderName.setVisibility(View.GONE);
+                    tvProviderName1.setVisibility(View.GONE);
+                    tvDoctorName1.setVisibility(View.VISIBLE);
+                    tvDoctorName1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    tvDoctorName1.setText(appointmentInfo.getProviderAccount().getBusinessName());
+                    tvDoctorName.setVisibility(View.VISIBLE);
                     tvDoctorName.setText(appointmentInfo.getProviderAccount().getBusinessName());
-
                     tvDoctorName.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -873,19 +821,14 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                             }
                         }
                     });
-
                 }
 
                 if (appointmentInfo.getAppointmentEncId() != null) {
                     //Encode with a QR Code image
                     String statusUrl = Constants.URL + "status/" + appointmentInfo.getAppointmentEncId();
-                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl,
-                            null,
-                            Contents.Type.TEXT,
-                            BarcodeFormat.QR_CODE.toString(), 175);
+                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), 175);
                     try {
                         Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                        ivQR.setImageBitmap(bitmap);
 
                         ivQR.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -941,7 +884,10 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         tvServiceName.setText(appointmentInfo.getService().getName());
                     }
 
-                    if (appointmentInfo.getService().getServiceType() != null && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                    if (appointmentInfo.getService().getServiceType() != null
+                            && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")
+                            && !appointmentInfo.getApptStatus().equalsIgnoreCase(Constants.REQUESTED)
+                            && !appointmentInfo.getApptStatus().equalsIgnoreCase(Constants.REQUESTREJECTED)) {
 
                         if (isActive) {
                             if (appointmentInfo.getApptStatus() != null && (appointmentInfo.getApptStatus().equalsIgnoreCase("done") || (appointmentInfo.getApptStatus().equalsIgnoreCase("Completed")))) {
@@ -991,11 +937,11 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 }
                 // to set Phone number
                 if (appointmentInfo.getPhoneNumber() != null && !appointmentInfo.getPhoneNumber().isEmpty()) {
-                    llPhoneNumber.setVisibility(View.VISIBLE);
+                    tvPhoneNumber.setVisibility(View.VISIBLE);
                     countryCode = appointmentInfo.getCountryCode();
                     tvPhoneNumber.setText(countryCode + "\u00a0" + appointmentInfo.getPhoneNumber());
                 } else {
-                    hideView(llPhoneNumber);
+                    hideView(tvPhoneNumber);
                 }
                 // to set status
                 if (appointmentInfo.getApptStatus() != null) {
@@ -1009,6 +955,18 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
                         tvStatus.setText(convertToTitleForm(appointmentInfo.getApptStatus()));
 
+                    } else if (appointmentInfo.getApptStatus().equalsIgnoreCase("Completed")) {
+                        tvStatus.setText("Completed");
+                        tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
+
+                    } else if (appointmentInfo.getApptStatus().equalsIgnoreCase(Constants.REQUESTED)) {
+                        tvStatus.setTextColor(mContext.getResources().getColor(R.color.orange));
+                        tvStatus.setText(appointmentInfo.getApptStatus());
+
+                    } else if (appointmentInfo.getApptStatus().equalsIgnoreCase(Constants.REQUESTREJECTED)) {
+                        tvStatus.setTextColor(mContext.getResources().getColor(R.color.cb_errorRed));
+                        tvStatus.setText("Request Rejected");
+
                     } else {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
                         tvStatus.setText(convertToTitleForm(appointmentInfo.getApptStatus()));
@@ -1021,7 +979,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 // to set paid info
                 if (appointmentInfo.getAmountPaid() != null && !appointmentInfo.getAmountPaid().equalsIgnoreCase("0.0")) {
                     llPayment.setVisibility(View.VISIBLE);
-                    tvAmount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(appointmentInfo.getAmountPaid())) + " " + "PAID");
+                    tvAmount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(appointmentInfo.getAmountPaid())));
                 } else {
 
                     llPayment.setVisibility(View.GONE);
@@ -1029,30 +987,45 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
                 // to set consumer name
                 if (appointmentInfo.getAppmtFor() != null) {
-
                     if (appointmentInfo.getAppmtFor().get(0).getUserName() != null) {
+                        String fName = appointmentInfo.getAppmtFor().get(0).getUserName();
+                        if (fName != null && !fName.trim().isEmpty()) {
+                            icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+                        }
                         tvConsumerName.setText(appointmentInfo.getAppmtFor().get(0).getUserName());
                     } else {
+                        String fName = appointmentInfo.getAppmtFor().get(0).getFirstName();
+                        String lName = appointmentInfo.getAppmtFor().get(0).getLastName();
+                        tvConsumerName.setText(fName + " " + lName);
+                        if (fName != null && !fName.trim().isEmpty()) {
+                            icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+                        } else if (lName != null && !lName.trim().isEmpty()) {
+                            icon_text.setText(String.valueOf(lName.trim().charAt(0)));
+                        }
                         tvConsumerName.setText(appointmentInfo.getAppmtFor().get(0).getFirstName() + " " + appointmentInfo.getAppmtFor().get(0).getLastName());
                     }
                 }
 
                 // to set appointment date
-                if (appointmentInfo.getAppmtDate() != null) {
-                    tvDate.setText(getCustomDateString(appointmentInfo.getAppmtDate()));
+                if (appointmentInfo.getAppmtDate() != null && !appointmentInfo.getAppmtDate().trim().isEmpty()) {
+                    tvDate.setText(Config.getCustomDateString(appointmentInfo.getAppmtDate()));
+                } else {
+                    ll_date.setVisibility(View.GONE);
                 }
 
                 // to set slot time
-                if (appointmentInfo.getAppmtTime() != null) {
+                if (appointmentInfo.getAppmtTime() != null && !appointmentInfo.getAppmtTime().trim().isEmpty()) {
 
                     tvTime.setText(convertTime(appointmentInfo.getAppmtTime().split("-")[0]));
+                } else {
+                    ll_time.setVisibility(View.GONE);
                 }
 
                 if (appointmentInfo.getBatchId() != null) {
-                    llBatch.setVisibility(View.VISIBLE);
+                    ll_batch.setVisibility(View.VISIBLE);
                     tvBatchNo.setText(appointmentInfo.getBatchId());
                 } else {
-                    llBatch.setVisibility(View.GONE);
+                    ll_batch.setVisibility(View.GONE);
                 }
 
                 // to set location
@@ -1120,7 +1093,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                     if (appointmentInfo.getQuestionnaire() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
 //                  } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getReleasedQnr().size() > 0) {
-                    } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getQuestionnaire() != null  && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getReleasedQnr().size() > 0) {
+                    } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getQuestionnaire() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getReleasedQnr().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
                     } else {
                         hideView(llQuestionnaire);
@@ -1143,7 +1116,9 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 }
 
                 // hide instructions link when there are no post instructions
-                if (appointmentInfo.getService() != null && appointmentInfo.getService().isPostInfoEnabled()) {
+                if (appointmentInfo.getService() != null && appointmentInfo.getService().isPostInfoEnabled()
+                        && ((appointmentInfo.getService().getPostInfoText() != null && !appointmentInfo.getService().getPostInfoText().trim().isEmpty())
+                        || (appointmentInfo.getService().getPostInfoTitle() != null && !appointmentInfo.getService().getPostInfoTitle().trim().isEmpty()))) {
                     if (isActive) {
                         llInstructions.setVisibility(View.VISIBLE);
                     }
@@ -1299,8 +1274,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
     private void apiGetMeetingDetails(String uuid, String mode, int accountID, ActiveAppointment info) {
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
         Call<TeleServiceCheckIn> call = apiService.getMeetingDetailsAppointment(uuid, mode, accountID);
 
@@ -1336,8 +1310,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                             }
                         }
                     }
-                } catch (
-                        Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1381,8 +1354,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
 
     private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ResponseBody> call = apiService.deleteAppointment(ynwuuid, String.valueOf(accountID));
@@ -1390,15 +1362,12 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
+                    if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            DynamicToast.make(context, "Appointment cancelled successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.ic_info_black),
-                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                            DynamicToast.make(context, "Appointment cancelled successfully", AppCompatResources.getDrawable(context, R.drawable.ic_info_black), ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
                             isActive = false;
@@ -1419,8 +1388,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
             }
         });
     }
@@ -1446,8 +1414,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
     String comment = "";
 
     private void ApiRating(final String accountID, final String UUID) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Map<String, String> query = new HashMap<>();
@@ -1459,8 +1426,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             @Override
             public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
+                    if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
                     Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
                     if (response.code() == 200) {
@@ -1470,12 +1436,8 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         dialog.setContentView(R.layout.rating);
                         dialog.setCancelable(true);
                         dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
@@ -1557,15 +1519,13 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onFailure(Call<ArrayList<RatingResponse>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
             }
         });
     }
 
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1590,15 +1550,12 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
-                    if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
+                    if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
                     dialog.dismiss();
                     Config.logV("Put Rating#########################" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.icon_tickmark),
-                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                            DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(context, R.drawable.icon_tickmark), ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
@@ -1610,8 +1567,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
             }
         });
     }
@@ -1633,30 +1589,16 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type;
+        MediaTypeAndExtention type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            String extension = "";
-
-            if (imagePathList.get(i).getImagePath().contains(".")) {
-                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
-            }
-
-            if (extension.equalsIgnoreCase("pdf")) {
-                type = MediaType.parse("application/pdf");
-            } else if (extension.equalsIgnoreCase("png")) {
-                type = MediaType.parse("image/png");
-            } else if (extension.equalsIgnoreCase("jpeg")) {
-                type = MediaType.parse("image/jpeg");
-            } else {
-                type = MediaType.parse("image/*");
-            }
+            type = Config.getFileType(imagePathList.get(i).getImagePath());
 
             file = new File(imagePathList.get(i).getImagePath());
 
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type.getMediaTypeWithExtention(), file));
         }
 
         Map<String, String> query = new HashMap<>();
@@ -1677,15 +1619,13 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
+                    if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
 
                     if (response.code() == 200) {
 
                         if (response.body() != null) {
 
-                            DynamicToast.make(mContext, "Attachments sent successfully",
-                                    ContextCompat.getColor(mContext, R.color.white), ContextCompat.getColor(mContext, R.color.green), Toast.LENGTH_SHORT).show();
+                            DynamicToast.make(mContext, "Attachments sent successfully", ContextCompat.getColor(mContext, R.color.white), ContextCompat.getColor(mContext, R.color.green), Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -1694,8 +1634,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
                     }
 
-                } catch (
-                        Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1704,8 +1643,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
             }
         });
 
@@ -1766,16 +1704,14 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
     private void getAppointmentImages(String uid, int id) {
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ArrayList<ShoppingList>> call = apiService.getAppointmentAttachments(uid, id);
         call.enqueue(new Callback<ArrayList<ShoppingList>>() {
             @Override
             public void onResponse(Call<ArrayList<ShoppingList>> call, Response<ArrayList<ShoppingList>> response) {
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
                 try {
 
                     if (response.code() == 200) {
@@ -1792,8 +1728,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         }
 
                     }
-                } catch (
-                        Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1802,8 +1737,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onFailure(Call<ArrayList<ShoppingList>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                if (mDialog.isShowing()) Config.closeDialog(BookingDetails.this, mDialog);
             }
         });
 
@@ -1830,8 +1764,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
         else if (date.endsWith("3") && !date.endsWith("13"))
             format = new SimpleDateFormat("d'rd' MMM, yyyy");
 
-        else
-            format = new SimpleDateFormat("d'th' MMM, yyyy");
+        else format = new SimpleDateFormat("d'th' MMM, yyyy");
 
         String yourDate = format.format(date1);
 
@@ -1905,40 +1838,32 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
     }
 
     private void requestMultiplePermissions() {
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
+        Dexter.withActivity(this).withPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE).withListener(new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                // check if all permissions are granted
+                if (report.areAllPermissionsGranted()) {
 //                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-                        }
+                }
 
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();fc
-                            Toast.makeText(mContext, "You Denied the Permission", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                // check for permanent denial of any permission
+                if (report.isAnyPermissionPermanentlyDenied()) {
+                    // show alert dialog navigating to Settings
+                    //openSettingsDialog();fc
+                    Toast.makeText(mContext, "You Denied the Permission", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .onSameThread()
-                .check();
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                token.continuePermissionRequest();
+            }
+        }).withErrorListener(new PermissionRequestErrorListener() {
+            @Override
+            public void onError(DexterError error) {
+                Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
+            }
+        }).onSameThread().check();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1986,7 +1911,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                             //Log.d(TAG, "onActivityResult: " + e.toString());
                         }
                         String orgFilePath = photoFile.getAbsolutePath();
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
                                 orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
@@ -2051,7 +1976,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                                 //Log.d(TAG, "onActivityResult: " + e.toString());
                             }
                             String orgFilePath = photoFile.getAbsolutePath();
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
 
                                 if (orgFilePath == null) {
                                     orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);

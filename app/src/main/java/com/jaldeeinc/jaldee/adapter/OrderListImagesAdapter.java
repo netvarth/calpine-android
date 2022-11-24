@@ -1,13 +1,18 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.PowerManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,11 +20,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,21 +37,43 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.WebViewActivity;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.model.ShoppingListModel;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.response.ShoppingList;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImagesAdapter.MyViewHolder> {
 
     public ArrayList<ShoppingList> itemList;
     private CustomNotes customNotes;
-    Context mContext;
+    static Context mContext;
     private boolean isEdit = false;
 
 
@@ -78,64 +109,38 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
     @Override
     public void onBindViewHolder(final OrderListImagesAdapter.MyViewHolder myViewHolder, final int position) {
         String imagePath = itemList.get(position).getS3path();
-        if (imagePath != null && imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
+        MediaTypeAndExtention type;
+        type = Config.getFileType(imagePath);
+        if (!((Activity) mContext).isFinishing()) {
+
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
-        } else {
-            myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
 
-            if (itemList.get(position).getType() != null && (itemList.get(position).getType().equalsIgnoreCase("application/pdf") || itemList.get(position).getType().equalsIgnoreCase("pdf"))) {
+            if (type.getMediaType().equals(Constants.docType)) {
 
-                if (!((Activity) mContext).isFinishing()) {
-
-                    Glide.with(mContext)
-                            .load(itemList.get(position).getThumbPath())
-                            .apply(new RequestOptions().error(R.drawable.icon_noimage))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    //on load failed
-                                    myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    //on load success
-                                    return false;
-                                }
-                            })
-                            .into(myViewHolder.iv_file_attach);
-
+                if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                    Glide.with(mContext).load(itemList.get(position).getThumbPath()).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
+                } else {
+                    Glide.with(mContext).load(R.drawable.icon_document).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
                 }
+
+            } else if (type.getMediaType().equals(Constants.audioType)) {
+                Glide.with(mContext).load(R.drawable.audio_icon).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
+
+            } else if (type.getMediaType().equals(Constants.videoType)) {
+                Glide.with(mContext).load(R.drawable.video_icon).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
+
+            } else if (type.getMediaType().equals(Constants.txtType)) {
+                Glide.with(mContext).load(R.drawable.icon_text).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
+
+            } else if (Arrays.asList(Constants.imgExtFormats).contains(itemList.get(position).getType())) {
+                Glide.with(mContext).load(itemList.get(position).getS3path()).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
 
             } else {
-
-                if (!((Activity) mContext).isFinishing()) {
-
-                    Glide.with(mContext)
-                            .load(itemList.get(position).getS3path())
-                            .apply(new RequestOptions().error(R.drawable.icon_noimage))
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    //on load failed
-                                    myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    //on load success
-                                    return false;
-                                }
-                            })
-                            .into(myViewHolder.iv_file_attach);
-
-                }
+                Glide.with(mContext).load(itemList.get(position).getS3path()).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
 
             }
-
         }
+
 
         if (!isEdit) {
             myViewHolder.ivAddNote.setVisibility(View.GONE);
@@ -149,13 +154,16 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
         myViewHolder.iv_file_attach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MediaTypeAndExtention type = Config.getFileType(itemList.get(position).getS3path());
 
-                if (itemList.get(position).getType().equalsIgnoreCase("application/pdf") || itemList.get(position).getType().equalsIgnoreCase("pdf")) {
-
-                    openOnlinePdf(mContext, itemList.get(position).getS3path());
-
-                } else {
-
+                if (type.getMediaType().equals(Constants.docType) || type.getMediaType().equals(Constants.audioType)
+                        || type.getMediaType().equals(Constants.videoType) || type.getMediaType().equals(Constants.txtType)) {
+                    if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                        Config.openOnlinePdf(mContext, itemList.get(position).getS3path());
+                    } else {
+                        Config.openOnlineDoc(mContext, itemList.get(position).getS3path());
+                    }
+                } else {  // else its a image
                     showFullImage(position);
                 }
 
@@ -185,7 +193,7 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
             dialog.getWindow().setGravity(Gravity.BOTTOM);
             dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
             TouchImageView tImage = dialog.findViewById(R.id.iv_image);
-            CustomTextViewMedium tvCaption = dialog.findViewById(R.id.tv_caption);
+            TextView tvCaption = dialog.findViewById(R.id.tv_caption);
             ImageView ivClose = dialog.findViewById(R.id.iv_close);
             tvCaption.setMovementMethod(new ScrollingMovementMethod());
 
@@ -239,13 +247,5 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
         }
 
     }
-
-
-    private void openOnlinePdf(Context mContext, String filePath) {
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
-        mContext.startActivity(browserIntent);
-    }
-
 }
 

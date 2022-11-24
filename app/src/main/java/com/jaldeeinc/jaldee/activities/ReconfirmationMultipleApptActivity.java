@@ -8,13 +8,18 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,12 +37,15 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
@@ -78,92 +86,119 @@ import retrofit2.Response;
 
 public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
+
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
+    @BindView(R.id.toolbartitle)
+    TextView toolbartitle;
+    @BindView(R.id.tv_providerPhoneNumber)
+    TextView tv_providerPhoneNumber;
+    @BindView(R.id.tv_providerEmail)
+    TextView tv_providerEmail;
     @BindView(R.id.ll_providerPhoneNumber)
     LinearLayout ll_providerPhoneNumber;
-    @BindView(R.id.tv_providerPhoneNumber)
-    CustomTextViewMedium tv_providerPhoneNumber;
+    @BindView(R.id.tv_locationName)
+    TextView tvLocationName;
     @BindView(R.id.ll_providerEmail)
     LinearLayout ll_providerEmail;
-    @BindView(R.id.tv_providerEmail)
-    CustomTextViewMedium tv_providerEmail;
-    @BindView(R.id.tv_customerName)
-    CustomTextViewBold tvCustomerName;
-    @BindView(R.id.tv_locationName)
-    CustomTextViewMedium tvLocationName;
     @BindView(R.id.tv_providerName)
-    CustomTextViewBold tvProviderName;
-    @BindView(R.id.tv_phoneNumber)
-    CustomTextViewMedium tvPhoneNumber;
+    TextView tvProviderName;
     @BindView(R.id.tv_serviceName)
-    CustomTextViewBold tvServiceName;
-    @BindView(R.id.tv_vitual_service_number)
-    CustomTextViewBold tv_vitual_service_number;
+    TextView tvServiceName;
     @BindView(R.id.iv_serviceIcon)
     ImageView ivServiceIcon;
-    @BindView(R.id.tv_waitingInLine)
-    CustomTextViewLight tvWaitingInLine;
-    @BindView(R.id.tv_bookingAt)
-    CustomTextViewMedium tv_bookingAt;
+    @BindView(R.id.iv_teleService)
+    ImageView iv_teleService;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
     @BindView(R.id.tv_cnsmrDetails_Heading)
-    CustomTextViewMedium tv_cnsmrDetails_Heading;
+    TextView tv_cnsmrDetails_Heading;
+    @BindView(R.id.tv_customerName)
+    TextView tvCustomerName;
+    @BindView(R.id.tv_phoneNumber)
+    TextView tvPhoneNumber;
+    @BindView(R.id.tv_email)
+    TextView tvEmail;
+    @BindView(R.id.ll_preinfo)
+    LinearLayout ll_preinfo;
+    @BindView(R.id.tv_preInfoTitle)
+    TextView tv_preInfoTitle;
+    @BindView(R.id.tv_preInfo)
+    TextView tv_preInfo;
+    @BindView(R.id.gridLayout_booking)
+    GridLayout gridLayout_booking;
     @BindView(R.id.ll_donationAmount)
     LinearLayout ll_donationAmount;
     @BindView(R.id.tv_donationAmount)
-    CustomTextViewBold tv_donationAmount;
-    @BindView(R.id.ll_bookingAt)
-    LinearLayout ll_bookingAt;
+    TextView tv_donationAmount;
     @BindView(R.id.tv_date)
-    CustomTextViewBold tvDate;
+    TextView tvDate;
+    @BindView(R.id.ll_date)
+    LinearLayout ll_date;
     @BindView(R.id.tv_time)
-    CustomTextViewBold tvTime;
-    @BindView(R.id.tv_email)
-    CustomTextViewMedium tvEmail;
-    @BindView(R.id.txtprepayamount)
-    CustomTextViewBold txtprepayamount;
+    TextView tvTime;
+    @BindView(R.id.ll_time)
+    LinearLayout ll_time;
     @BindView(R.id.txtserviceamount)
-    CustomTextViewBold txtserviceamount;
-    @BindView(R.id.cv_servicePrepay)
-    CardView cv_servicePrepay;
+    TextView txtserviceamount;
+    @BindView(R.id.txtprepayamount)
+    TextView txtprepayamount;
+    @BindView(R.id.ll_prepay)
+    LinearLayout ll_prepay;
+    @BindView(R.id.ll_serviceamount)
+    LinearLayout ll_serviceamount;
+    @BindView(R.id.ll_fullfees_payd_advance)
+    LinearLayout ll_fullfees_payd_advance;
+    @BindView(R.id.ll_servicePrepay)
+    LinearLayout ll_servicePrepay;
+    @BindView(R.id.ll_payment_mode)
+    LinearLayout ll_payment_mode;
+    @BindView(R.id.ll_jCash)
+    LinearLayout llJCash;
+    @BindView(R.id.cb_jCash)
+    CheckBox cbJCash;
+    @BindView(R.id.tv_jCashHint)
+    TextView tvJCashHint;
+    @BindView(R.id.gv_payment_modes)
+    GridView gv_payment_modes;
+    @BindView(R.id.tv_buttonName)
+    TextView tvButtonName;
     @BindView(R.id.ll_cancellation_policy)
     LinearLayout ll_cancellation_policy;
     @BindView(R.id.cv_cancellation_policy)
     CardView cv_cancellation_policy;
-    @BindView(R.id.tv_buttonName)
-    CustomTextViewSemiBold tvButtonName;
     @BindView(R.id.tv_payment_link)
-    CustomTextViewBold tv_payment_link;
-    @BindView(R.id.cb_jCash)
-    CheckBox cbJCash;
-    @BindView(R.id.ll_jCash)
-    LinearLayout llJCash;
-    @BindView(R.id.tv_jCashHint)
-    CustomTextViewMedium tvJCashHint;
-    @BindView(R.id.cv_back)
-    CardView cvBack;
+    TextView tv_payment_link;
     @BindView(R.id.cv_submit)
     CardView cvSubmit;
-    @BindView(R.id.gv_payment_modes)
-    GridView gv_payment_modes;
-    @BindView(R.id.iv_image1)
-    ImageView iv_image1;
-    @BindView(R.id.iv_cnsmr_phone_icon)
-    ImageView iv_cnsmr_phone_icon;
-    @BindView(R.id.iv_cnsmr_email_icon)
-    ImageView iv_cnsmr_email_icon;
     @BindView(R.id.iv_location_icon)
     ImageView iv_location_icon;
     @BindView(R.id.iv_prvdr_phone_icon)
     ImageView iv_prvdr_phone_icon;
     @BindView(R.id.iv_prvdr_email_icon)
     ImageView iv_prvdr_email_icon;
-    @BindView(R.id.ll_fullfees_payd_advance)
-    LinearLayout ll_fullfees_payd_advance;
-    @BindView(R.id.ll_serviceamount)
-    LinearLayout ll_serviceamount;
-    @BindView(R.id.ll_prepay)
-    LinearLayout ll_prepay;
-    @BindView(R.id.ll_payment_mode)
-    LinearLayout ll_payment_mode;
+    @BindView(R.id.icon_text)
+    TextView icon_text;
+    @BindView(R.id.ll_coupon)
+    LinearLayout ll_coupon;
+    @BindView(R.id.ll_coupons)
+    LinearLayout llCoupons;
+    @BindView(R.id.cb_coupon)
+    CheckBox cb_coupon;
+    @BindView(R.id.rl_coupon)
+    RelativeLayout rlCoupon;
+    @BindView(R.id.tv_apply)
+    TextView tvApply;
+    @BindView(R.id.et_code)
+    EditText etCode;
+
+
+    /*@BindView(R.id.tv_bookingAt)
+    CustomTextViewMedium tv_bookingAt;*/
+    @BindView(R.id.tv_vitual_service_number)
+    CustomTextViewBold tv_vitual_service_number;
+    @BindView(R.id.tv_waitingInLine)
+    CustomTextViewLight tvWaitingInLine;
 
     public Context mContext;
     public int familyMEmID;
@@ -181,17 +216,23 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
     JSONArray familyArrayModelProviderConsumer = new JSONArray();
     Integer providerConsumerId;
     int consumerId;
+    String providerLogoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reconfirmation_mutiple_appt);
+        //setContentView(R.layout.activity_reconfirmation_mutiple_appt);
+        setContentView(R.layout.activity_reconfirmation);
+
         ButterKnife.bind(ReconfirmationMultipleApptActivity.this);
         mContext = ReconfirmationMultipleApptActivity.this;
 
         Intent intent = getIntent();
         bookingModels = (ArrayList<BookingModel>) intent.getSerializableExtra("datas");
         consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
+
+        toolbartitle.setText("Confirm & pay");
+        getQuestionnaireImages();
 
         String time = bookingModels
                 .stream()
@@ -200,16 +241,21 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
         String convertedTime = time.replaceAll("am", "AM").replaceAll("pm", "PM");
 
         if (convertedTime != null && !convertedTime.equalsIgnoreCase("")) {
+            ll_time.setVisibility(View.VISIBLE);
             tvTime.setVisibility(View.VISIBLE);
             tvTime.setText(convertedTime);
         } else {
+            ll_time.setVisibility(View.GONE);
             tvTime.setVisibility(View.GONE);
         }
-        getQuestionnaireImages();
 
         bookingModel = bookingModels.get(bookingModels.size() - 1);
 
         if (bookingModel != null) {
+            providerLogoUrl = bookingModel.getProviderLogo();
+            if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
+                PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(ivServiceIcon);
+            }
             try {
                 jsonObject = new JSONObject(bookingModel.getJsonObject());
             } catch (JSONException e) {
@@ -241,9 +287,11 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
 
             if (bookingModel.getDate() != null) {
+                ll_date.setVisibility(View.VISIBLE);
                 tvDate.setVisibility(View.VISIBLE);
-                tvDate.setText(bookingModel.getDate());
+                tvDate.setText(Html.fromHtml(bookingModel.getDate()));
             } else {
+                ll_date.setVisibility(View.GONE);
                 tvDate.setVisibility(View.GONE);
             }
 
@@ -298,7 +346,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                 });
             }
         });
-        cvBack.setOnClickListener(new View.OnClickListener() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -368,18 +416,22 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
         getAttachedImages();
         serviceId = bookingModel.getServiceInfo().getServiceId();
         tvWaitingInLine.setVisibility(View.GONE);
-        ll_bookingAt.setVisibility(View.VISIBLE);
+        gridLayout_booking.setVisibility(View.VISIBLE);
         ll_donationAmount.setVisibility(View.GONE);
-        tv_bookingAt.setText("APPOINTMENT AT : ");
-        tv_cnsmrDetails_Heading.setText("CONSULTATION FOR :");
+        //tv_bookingAt.setText("APPOINTMENT AT : ");
+        tv_cnsmrDetails_Heading.setText("Booking For");
         if (bookingModel.getCustomerName() != null && !bookingModel.getCustomerName().trim().equalsIgnoreCase("")) {
+            String fName = bookingModel.getCustomerName();
+            if (fName != null && !fName.trim().isEmpty()) {
+                icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+            }
             tvCustomerName.setText(bookingModel.getCustomerName());
         }
         updateUI();
 
         if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
-            txtprepayamount.setText(Config.getAmountNoOrTwoDecimalPoints(getFloatAsDouble(bookingModel.getAmountRequiredNow())));
-            txtserviceamount.setText(Config.getAmountNoOrTwoDecimalPoints(getFloatAsDouble(bookingModel.getNetTotal())));
+            txtprepayamount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(getFloatAsDouble(bookingModel.getAmountRequiredNow())));
+            txtserviceamount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(getFloatAsDouble(bookingModel.getNetTotal())));
             ll_serviceamount.setVisibility(View.VISIBLE);
             if (bookingModel.getAmountRequiredNow() == bookingModel.getNetTotal()) {
                 ll_fullfees_payd_advance.setVisibility(View.VISIBLE);
@@ -404,16 +456,13 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
     }
 
     public void updateUI() {
-        Glide.with(mContext).load(R.drawable.appoinment_icon_time).into(iv_image1);
         Glide.with(mContext).load(R.drawable.location_icon_1).into(iv_location_icon);
         Glide.with(mContext).load(R.drawable.phone_icon_1).into(iv_prvdr_phone_icon);
         Glide.with(mContext).load(R.drawable.email_icon_1).into(iv_prvdr_email_icon);
         if (bookingModel.getEmailId() != null && !bookingModel.getEmailId().equalsIgnoreCase("")) {
-            Glide.with(mContext).load(R.drawable.email_icon_2).into(iv_cnsmr_email_icon);
             tvEmail.setText(bookingModel.getEmailId());
         }
         if (bookingModel.getPhoneNumber() != null && bookingModel.getCountryCode() != null) {
-            Glide.with(mContext).load(R.drawable.phone_icon_2).into(iv_cnsmr_phone_icon);
             tvPhoneNumber.setText(bookingModel.getCountryCode() + " " + bookingModel.getPhoneNumber());
         }
         if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT)) {
@@ -423,9 +472,10 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
             tv_payment_link.setVisibility(View.GONE);
             gv_payment_modes.setVisibility(View.GONE);
             ll_payment_mode.setVisibility(View.GONE);
-            cv_servicePrepay.setVisibility(View.GONE);
+            ll_servicePrepay.setVisibility(View.GONE);
             txtprepayamount.setText("0");
             tvButtonName.setText("Confirm");
+            toolbartitle.setText("Confirm");
 
             cbJCash.setChecked(false);
 
@@ -439,7 +489,6 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
     public void ApiBooking(ArrayList<BookingModel> bookingModels, int accountId) {
         final Dialog mDialog = Config.getProgressDialog(ReconfirmationMultipleApptActivity.this, ReconfirmationMultipleApptActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), bookingModels.get(0).getJsonObject().toString());
         ApiInterface apiService = ApiClient.getClient(ReconfirmationMultipleApptActivity.this).create(ApiInterface.class);
         Call<ResponseBody> call = null;
@@ -496,42 +545,18 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
     private void ApiCommunicate(String id, String accountID, String message) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type;
+        MediaTypeAndExtention type;
         JSONObject captions = new JSONObject();
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < attachedImagePathList.size(); i++) {
 
-            String extension = "";
+            type = Config.getFileType(attachedImagePathList.get(i).getImagePath());
 
-            if (attachedImagePathList.get(i).getImagePath().contains(".")) {
-                extension = attachedImagePathList.get(i).getImagePath().substring(attachedImagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
-            }
-            if (extension.equalsIgnoreCase("pdf")) {
-                type = MediaType.parse("application/pdf");
-            } else if (extension.equalsIgnoreCase("png")) {
-                type = MediaType.parse("image/png");
-            } else if (extension.equalsIgnoreCase("jpeg")) {
-                type = MediaType.parse("image/jpeg");
-            } else {
-                type = MediaType.parse("image/*");
-            }
-
-            /*try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(attachedImagePathList.get(i).getImagePath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(attachedImagePathList.get(i).getImagePath());
-            }*/
             file = new File(attachedImagePathList.get(i).getImagePath());//////////
 
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type.getMediaTypeWithExtention(), file));
             try {
                 captions.put(String.valueOf(i), attachedImagePathList.get(i).getCaption());
             } catch (JSONException e) {
@@ -804,13 +829,41 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-                        Bundle b = new Bundle();
+
+                       /* Bundle b = new Bundle();
                         b.putStringArrayList("uids", (ArrayList<String>) uids);
                         b.putString("accountID", String.valueOf(bookingModel.getAccountId()));
                         Intent intent = new Intent(ReconfirmationMultipleApptActivity.this, MultipleAppointmentConfirmation.class);
                         intent.putExtras(b);
-                        startActivity(intent);
+                        startActivity(intent);*/
 
+                        String serviceDescription = "";
+                        if (bookingModel.getServiceInfo().getDescription() != null && !bookingModel.getServiceInfo().getDescription().trim().isEmpty()) {
+                            serviceDescription = bookingModel.getServiceInfo().getDescription();
+                        }
+                        //encId = activeAppointment.getAppointmentEncId();
+
+                        Intent checkin = new Intent(ReconfirmationMultipleApptActivity.this, MultipleAppointmentConfirmation.class);
+                        if (bookingModel.getEmailId() != null && !bookingModel.getEmailId().equalsIgnoreCase("")) {
+                            checkin.putExtra("email", bookingModel.getEmailId());
+                        }
+                        checkin.putExtra("serviceDescription", serviceDescription);
+                        //checkin.putExtra("terminology", mSearchTerminology.getProvider());
+                        checkin.putExtra("from", "");
+                        checkin.putExtra("typeOfService", Constants.APPOINTMENT);
+                        checkin.putExtra("waitlistPhonenumberCountryCode", bookingModel.getCountryCode());
+                        checkin.putExtra("waitlistPhonenumber", bookingModel.getPhoneNumber());
+                        checkin.putExtra("accountID", String.valueOf(bookingModel.getAccountId()));
+                        if (bookingModel.getServiceInfo().getLivetrack() != null && bookingModel.getServiceInfo().getLivetrack().equalsIgnoreCase("true")) {
+                            checkin.putExtra("livetrack", true);
+                        } else {
+                            checkin.putExtra("livetrack", false);
+                        }
+                        checkin.putExtra("uids", (ArrayList<String>) uids);
+                        checkin.putExtra("providerLogoUrl", providerLogoUrl);
+
+
+                        startActivity(checkin);
 
                     } else {
                         if (response.code() == 422) {
@@ -864,13 +917,41 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                                 SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
 
                                 if (activeAppointment != null) {
-                                    //encId = activeAppointment.getAppointmentEncId();
+                                    /*//encId = activeAppointment.getAppointmentEncId();
                                     Bundle b = new Bundle();
                                     b.putStringArrayList("uids", (ArrayList<String>) uids);
                                     b.putString("accountID", String.valueOf(bookingModel.getAccountId()));
                                     Intent intent = new Intent(ReconfirmationMultipleApptActivity.this, MultipleAppointmentConfirmation.class);
                                     intent.putExtras(b);
-                                    startActivity(intent);
+                                    startActivity(intent);*/
+
+                                    String serviceDescription = "";
+                                    if (bookingModel.getServiceInfo().getDescription() != null && !bookingModel.getServiceInfo().getDescription().trim().isEmpty()) {
+                                        serviceDescription = bookingModel.getServiceInfo().getDescription();
+                                    }
+                                    //encId = activeAppointment.getAppointmentEncId();
+
+                                    Intent checkin = new Intent(ReconfirmationMultipleApptActivity.this, MultipleAppointmentConfirmation.class);
+                                    if (bookingModel.getEmailId() != null && !bookingModel.getEmailId().equalsIgnoreCase("")) {
+                                        checkin.putExtra("email", bookingModel.getEmailId());
+                                    }
+                                    checkin.putExtra("serviceDescription", serviceDescription);
+                                    //checkin.putExtra("terminology", mSearchTerminology.getProvider());
+                                    checkin.putExtra("from", "");
+                                    checkin.putExtra("typeOfService", Constants.APPOINTMENT);
+                                    checkin.putExtra("waitlistPhonenumberCountryCode", bookingModel.getCountryCode());
+                                    checkin.putExtra("waitlistPhonenumber", bookingModel.getPhoneNumber());
+                                    checkin.putExtra("accountID", String.valueOf(bookingModel.getAccountId()));
+                                    if (bookingModel.getServiceInfo().getLivetrack() != null && bookingModel.getServiceInfo().getLivetrack().equalsIgnoreCase("true")) {
+                                        checkin.putExtra("livetrack", true);
+                                    } else {
+                                        checkin.putExtra("livetrack", false);
+                                    }
+                                    checkin.putExtra("uids", (ArrayList<String>) uids);
+                                    checkin.putExtra("providerLogoUrl", providerLogoUrl);
+
+
+                                    startActivity(checkin);
 
                                 }
 

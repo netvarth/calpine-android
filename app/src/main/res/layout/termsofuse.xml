@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/spinnerbg"
-    >
+    android:background="@color/spinnerbg">
 
     <LinearLayout
         android:id="@+id/layout_toolbar"
@@ -37,8 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/padding5"
-            android:background="@color/app_background"
-           ></WebView>
+            android:background="@color/app_background">
+
+        </WebView>
+
+
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

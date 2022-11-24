@@ -11,7 +11,8 @@
         android:layout_marginTop="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_15dp">
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <TextView
+            android:fontFamily="@font/font_regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Preview"
@@ -20,7 +21,7 @@
             android:layout_centerVertical="true"
             android:textSize="@dimen/dimen_18dp">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        </TextView>
 
 
         <ImageView
@@ -46,7 +47,8 @@
         android:layout_marginBottom="@dimen/dimen_10dp" />
 
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+    <TextView
+        android:fontFamily="@font/font_regular"
         android:id="@+id/tv_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,7 +66,7 @@
         android:scrollbars="vertical"
         android:textColor="@color/title_color">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+    </TextView>
 
 
 </LinearLayout>

@@ -30,16 +30,52 @@ public class SearchAppoinment implements Serializable {
     String postInfoText;
     String consumerNoteTitle;
     String paymentDescription;
+    String serviceBookingType;
     boolean consumerNoteMandatory;
     boolean postInfoEnabled;
     boolean preInfoEnabled;
     boolean serviceDurationEnabled;
     boolean showOnlyAvailableSlots;
+    boolean date;
+    boolean dateTime;
+    boolean noDateTime;
     int serviceDuration;
     int id;
     int multiples;
     int department;
     int maxBookingsAllowed;
+
+    public String getServiceBookingType() {
+        return serviceBookingType;
+    }
+
+    public void setServiceBookingType(String serviceBookingType) {
+        this.serviceBookingType = serviceBookingType;
+    }
+
+    public boolean isDate() {
+        return date;
+    }
+
+    public void setDate(boolean date) {
+        this.date = date;
+    }
+
+    public boolean isDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(boolean dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public boolean isNoDateTime() {
+        return noDateTime;
+    }
+
+    public void setNoDateTime(boolean noDateTime) {
+        this.noDateTime = noDateTime;
+    }
 
     @SerializedName("provider")
     private SearchAppoinment provider;

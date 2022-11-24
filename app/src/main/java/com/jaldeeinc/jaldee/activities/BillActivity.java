@@ -7,15 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IPaymentGateway;
@@ -72,7 +70,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -1812,7 +1809,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     private void redirectToOrderTab() {
         Intent homeIntent = new Intent(BillActivity.this, Home.class);
-        homeIntent.putExtra("isOrder", "ORDER");
+        homeIntent.putExtra("isOrder", Constants.ORDERS);
         startActivity(homeIntent);
     }
 

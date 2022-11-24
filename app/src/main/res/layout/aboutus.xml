@@ -27,140 +27,145 @@
          android:background="@drawable/app_bg_gradient_home"
          android:layout_marginTop="@dimen/default_padding"
          android:orientation="vertical">-->
-   <!-- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >-->
+    <!-- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent" >-->
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView">
 
-    <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/Laboutus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/app_background"
-            android:orientation="horizontal">
-
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/about"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".8"
-                android:padding="@dimen/default_padding"
-                android:text="@string/aboutus"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_hint" />
-
-            <ImageView
-                android:id="@+id/collapseabt"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/Laboutus"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight=".2"
-                android:src="@drawable/icon_down_light" />
-
-        </LinearLayout>
-
-        <com.jaldeeinc.jaldee.widgets.TouchWebView
-            android:id="@+id/aboutWeb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_padding"
-            android:background="#6c757d"
-            android:visibility="gone">
-        </com.jaldeeinc.jaldee.widgets.TouchWebView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/view_border" />
-
-        <LinearLayout
-            android:id="@+id/Lterms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/app_background"
-            android:orientation="horizontal">
-
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/terms"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".8"
                 android:background="@color/app_background"
-                android:padding="@dimen/default_padding"
-                android:text="@string/termofuse"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_hint" />
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/collapseterm"
-                android:layout_width="0dp"
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/about"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".8"
+                    android:padding="@dimen/default_padding"
+                    android:text="@string/aboutus"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <ImageView
+                    android:id="@+id/collapseabt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight=".2"
+                    android:src="@drawable/icon_down_light" />
+
+            </LinearLayout>
+
+            <com.jaldeeinc.jaldee.widgets.TouchWebView
+                android:id="@+id/aboutWeb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:background="#6c757d"
+                android:visibility="gone">
+            </com.jaldeeinc.jaldee.widgets.TouchWebView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_border" />
+
+            <LinearLayout
+                android:id="@+id/Lterms"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight=".2"
-                android:src="@drawable/icon_down_light" />
-
-        </LinearLayout>
-
-        <com.jaldeeinc.jaldee.widgets.TouchWebView
-            android:id="@+id/termsWeb"
-            android:layout_width="wrap_content"
-            android:layout_height="350dp"
-            android:padding="@dimen/default_padding"
-            android:visibility="gone"></com.jaldeeinc.jaldee.widgets.TouchWebView>
-
-
-        <LinearLayout
-            android:id="@+id/Lprivacy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:background="@color/app_background"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/privacy"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.8"
                 android:background="@color/app_background"
-                android:padding="@dimen/default_padding"
-                android:text="@string/privacypolicy"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_hint" />
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/collapseprivacy"
-                android:layout_width="0dp"
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/terms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".8"
+                    android:background="@color/app_background"
+                    android:padding="@dimen/default_padding"
+                    android:text="@string/termofuse"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <ImageView
+                    android:id="@+id/collapseterm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight=".2"
+                    android:src="@drawable/icon_down_light" />
+
+            </LinearLayout>
+
+            <com.jaldeeinc.jaldee.widgets.TouchWebView
+                android:id="@+id/termsWeb"
+                android:layout_width="wrap_content"
+                android:layout_height="350dp"
+                android:padding="@dimen/default_padding"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="refresh"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/Lprivacy"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight=".2"
-                android:src="@drawable/icon_down_light" />
-        </LinearLayout>
+                android:visibility="gone"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
 
-        <com.jaldeeinc.jaldee.widgets.TouchWebView
-            android:id="@+id/privacyWeb"
-            android:layout_width="wrap_content"
-            android:layout_height="350dp"
-            android:padding="@dimen/default_padding"
-            android:visibility="gone">
-        </com.jaldeeinc.jaldee.widgets.TouchWebView>
+                <TextView
+                    android:id="@+id/privacy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:background="@color/app_background"
+                    android:padding="@dimen/default_padding"
+                    android:text="@string/privacypolicy"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/view_border" />
+                <ImageView
+                    android:id="@+id/collapseprivacy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight=".2"
+                    android:src="@drawable/icon_down_light" />
+            </LinearLayout>
+
+            <com.jaldeeinc.jaldee.widgets.TouchWebView
+                android:id="@+id/privacyWeb"
+                android:layout_width="wrap_content"
+                android:layout_height="350dp"
+                android:padding="@dimen/default_padding"
+                android:visibility="gone">
+            </com.jaldeeinc.jaldee.widgets.TouchWebView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_border" />
 
 
             <LinearLayout
@@ -178,7 +183,7 @@
                     android:layout_weight="0.9"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Version  1.10.2"
+                    android:text="Version  1.10.3"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -189,7 +194,7 @@
                     android:layout_weight="1.5"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Last Updated on 01/09/2022"
+                    android:text="Last Updated on 22/11/2022"
                     android:textColor="@color/title_grey"
                     android:textSize="12sp"
                     android:textStyle="italic" />
@@ -203,10 +208,10 @@
                 android:background="@color/view_border" />
 
 
-        <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
         </LinearLayout>
 
     </ScrollView>
-  <!--  </ScrollView>-->
+    <!--  </ScrollView>-->
 
 </LinearLayout>

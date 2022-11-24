@@ -1,18 +1,12 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-
-import com.jaldeeinc.jaldee.Fragment.AppointmentMyJaldee;
-import com.jaldeeinc.jaldee.Fragment.CheckinsMyJaldee;
 import com.jaldeeinc.jaldee.Fragment.MyJaldee;
-import com.jaldeeinc.jaldee.Fragment.Tab1Fragment;
-import com.jaldeeinc.jaldee.Fragment.TokensMyJaldee;
 import com.jaldeeinc.jaldee.R;
 
 public class NotificationActivity extends AppCompatActivity {

@@ -1,14 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-
-import androidx.core.util.AtomicFile;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
+
 import java.util.ArrayList;
 
 
@@ -62,63 +56,24 @@ public class DetailFileAdapter extends RecyclerView.Adapter<DetailFileAdapter.My
         // final  fileList = mfileList.get(position);
         Log.i("path", this.imagePathList.get(position));
         String imagePath = this.imagePathList.get(position);
-        if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
-            myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+        MediaTypeAndExtention type = Config.getFileType(imagePath);
+
+        if (type.getMediaType().equals(Constants.docType)) {
+            if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdf));
+            } else {
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_document));
+            }
+        } else if (type.getMediaType().equals(Constants.audioType)) {
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+        } else if (type.getMediaType().equals(Constants.videoType)) {
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+        } else if (type.getMediaType().equals(Constants.txtType)) {
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_text));
         } else {
-
-
             Uri imgUri = Uri.parse(imagePathList.get(position));
             myViewHolder.iv_file_attach.setImageURI(imgUri);
-
-//            Glide.with(mContext)
-//                    .load(imgUri) // Uri of the picture
-//                    .into(myViewHolder.iv_file_attach);
-
-//            Uri imgUri = Uri.parse(imagePathList.get(position));
-//            try {
-//                Bitmap bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(imgUri));
-//                myViewHolder.iv_file_attach.setImageBitmap(bitmap);
-//                myViewHolder.iv_file_attach.invalidate();
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//            String path = imagePathList.get(position);
-//
-//            File imgFile = new File(path);
-//            if(imgFile.exists())
-//            {
-//                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//                myViewHolder.iv_file_attach.setImageBitmap(myBitmap);
-//            }
-//            Uri imgUri = Uri.parse(imagePathList.get(position));
-//            myViewHolder.iv_file_attach.setImageURI(null);
-//            myViewHolder.iv_file_attach.setImageURI(imgUri);
-//            PicassoTrustAll.getInstance(mContext)
-//                    .load(imgUri)
-//                    .centerCrop()
-//                    .resize(200,200)
-//                    .into(myViewHolder.iv_file_attach);
-
-//            Uri imgUri = Uri.parse(imagePathList.get(position));
-////            myViewHolder.iv_file_attach.setImageURI(null);
-//            File imgFile = new  File(imagePathList.get(position));
-//            myViewHolder.iv_file_attach.setImageURI(Uri.fromFile(imgFile));
-
-//
-//            if(imgFile.exists()){
-//
-////                Bitmap myBitmap = BitmapFactory.decodeFile("file:"+imgFile.getAbsolutePath());
-//                String mImagePath = "file:" + imgFile.getAbsolutePath();
-//                PicassoTrustAll.getInstance(mContext)
-//                    .load(mImagePath)
-//                    .centerCrop()
-//                    .resize(200,200)
-//                    .into(myViewHolder.iv_file_attach);
-////                myViewHolder.iv_file_attach.setImageResource(mImagePath);
-//
-//            }
-
-
         }
 
         myViewHolder.delete_file.setOnClickListener(new View.OnClickListener() {

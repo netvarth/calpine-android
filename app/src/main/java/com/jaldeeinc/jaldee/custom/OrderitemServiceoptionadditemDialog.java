@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.custom;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,17 +16,11 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -37,11 +29,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -51,7 +38,6 @@ import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ItemsActivity;
-import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
@@ -61,7 +47,6 @@ import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnairInpt;
-import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.Item;
@@ -78,9 +63,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class OrderitemServiceoptionadditemDialog extends Fragment implements IServiceOption {
     Context mContext;
@@ -924,23 +907,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
                         if (orgFilePath == null) {
                             orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                         }
-                        /*Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, getActivity());
-                        String filepath = "";//default fileName
-
-                        String mimeType = getActivity().getContentResolver().getType(uri);
-                        String uriString = uri.toString();
-                        String extension = "";
-                        if (uriString.contains(".")) {
-                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-                        }
-
-                        if (mimeType != null) {
-                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-                        }
-                        if (orgFilePath == null) {
-                            orgFilePath = getFilePathFromURI(getContext(), uri, extension);
-                        }*/
 
                         View fileUploadView = viewsList1.get(qLabelName1);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
@@ -1036,10 +1002,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 

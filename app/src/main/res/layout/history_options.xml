@@ -4,22 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/top_curved"
+    android:orientation="vertical"
     android:paddingTop="@dimen/dimen_20dp"
-    android:paddingBottom="@dimen/dimen_25dp"
-    android:orientation="vertical">
+    android:paddingBottom="@dimen/dimen_25dp">
 
     <ImageView
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/close"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/dimen_25dp">
+        android:layout_marginEnd="@dimen/dimen_25dp"
+        android:src="@drawable/close">
 
     </ImageView>
 
     <LinearLayout
-        android:id="@+id/ll_bHistory"
+        android:id="@+id/ll_mypayments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -29,9 +29,9 @@
         <ImageView
             android:layout_width="@dimen/dimen_25dp"
             android:layout_height="@dimen/dimen_25dp"
-            android:src="@drawable/history_icon"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_15dp"
+            android:src="@drawable/history_icon"
             app:tint="@color/title_color">
 
         </ImageView>
@@ -39,16 +39,46 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bookings History"
-            android:textSize="@dimen/dimen_16dp"
-            android:textColor="@color/title_color"
             android:layout_gravity="center"
-           android:layout_marginStart="@dimen/dimen_8dp">
+            android:layout_marginStart="@dimen/dimen_8dp"
+            android:text="My Payments"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/dimen_16dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/ll_bHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="@dimen/dimen_15dp">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:src="@drawable/history_icon"
+            app:tint="@color/title_color">
+
+        </ImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_8dp"
+            android:text="Bookings History"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/dimen_16dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    </LinearLayout>
 
 
     <LinearLayout
@@ -61,9 +91,9 @@
         <ImageView
             android:layout_width="@dimen/dimen_25dp"
             android:layout_height="@dimen/dimen_25dp"
-            android:src="@drawable/history_icon"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_15dp"
+            android:src="@drawable/history_icon"
             app:tint="@color/title_color">
 
         </ImageView>
@@ -71,11 +101,11 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Orders History"
-            android:textSize="@dimen/dimen_16dp"
-            android:textColor="@color/title_color"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_8dp">
+            android:layout_marginStart="@dimen/dimen_8dp"
+            android:text="Orders History"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/dimen_16dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

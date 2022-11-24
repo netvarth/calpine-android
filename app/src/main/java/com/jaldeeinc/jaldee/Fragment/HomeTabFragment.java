@@ -47,12 +47,10 @@ public class HomeTabFragment extends Fragment {
     //Fragments
 
     FavouriteFragment favFragment;
-    DashboardFragment homeFragment;
     HomeSearchFragment homeSearchFragment;
     // CheckinsFragmentCopy checkinFragment;
 
 
-    Tab1Fragment tab1Fragment;
     MyJaldee myJaldeeFragment;
     InboxFragment inboxFragment;
     ProfileFragment profileFragment;
@@ -234,11 +232,9 @@ public class HomeTabFragment extends Fragment {
 
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-        homeFragment = new DashboardFragment();
         homeSearchFragment = new HomeSearchFragment();
 
 
-        tab1Fragment = new Tab1Fragment();
         myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
         if (myJaldeeTab == 2 || myJaldeeTab == 1) {
@@ -247,7 +243,6 @@ public class HomeTabFragment extends Fragment {
         if (message != null && !message.equalsIgnoreCase("")) {
             bundle.putString("message", message);
         }
-        tab1Fragment.setArguments(bundle);
         myJaldeeFragment.setArguments(bundle);
         // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();

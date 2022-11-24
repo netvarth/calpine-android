@@ -2,9 +2,6 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
@@ -13,26 +10,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
-import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.ItemsActivity;
-import com.jaldeeinc.jaldee.custom.CustomNotes;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapter.MyViewHolder> {
@@ -78,14 +70,26 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
         // final  fileList = mfileList.get(position);
         Log.i("path", itemList.get(position).getImagePath());
         String imagePath = itemList.get(position).getImagePath();
-        if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
-            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdfs));
+        MediaTypeAndExtention type = Config.getFileType(imagePath);
+        if (type.getMediaType().equals(Constants.docType)) {
+            if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdf));
+            } else {
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_document));
+            }
+        } else if (type.getMediaType().equals(Constants.audioType)) {
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+        } else if (type.getMediaType().equals(Constants.videoType)) {
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+        } else if (type.getMediaType().equals(Constants.txtType)) {
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_text));
         } else {
 
             Uri imgUri = Uri.parse(itemList.get(position).getImagePath());
-            myViewHolder.iv_file_attach.setImageURI(imgUri);
-           // Glide.with(mContext).load(imgUri).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
-            /*Picasso.Builder builder = new Picasso.Builder(myViewHolder.iv_file_attach.getContext());
+
+            //myViewHolder.iv_file_attach.setImageURI(imgUri);
+            // Glide.with(mContext).load(imgUri).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
+            Picasso.Builder builder = new Picasso.Builder(myViewHolder.iv_file_attach.getContext());
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
@@ -93,7 +97,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
                     myViewHolder.iv_file_attach.setImageURI(imgUri);
                 }
             });
-            builder.build().load(imgUri).fit().into(myViewHolder.iv_file_attach);*/
+            builder.build().load(imgUri).fit().into(myViewHolder.iv_file_attach);
 
         }
 
@@ -128,7 +132,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
 
                 if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                    openOnlinePdf(mContext,imagePath);
+                    Config.openOnlinePdf(mContext, imagePath);
 
                 } else {
 
@@ -147,15 +151,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
         return itemList.size();
     }
 
-    private void openOnlinePdf(Context mContext, String filePath) {
 
-//        Intent intent=new Intent(Intent.ACTION_VIEW);
-//        Uri uri = Uri.fromFile(new File(filePath));
-//        intent.setDataAndType(uri, "application/pdf");
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        mContext.startActivity(intent);
-
-    }
 
     private void showFullImage(int position) {
 
@@ -170,7 +166,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
             dialog.getWindow().setGravity(Gravity.BOTTOM);
             dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
             TouchImageView tImage = dialog.findViewById(R.id.iv_image);
-            CustomTextViewMedium tvCaption = dialog.findViewById(R.id.tv_caption);
+            TextView tvCaption = dialog.findViewById(R.id.tv_caption);
             ImageView ivClose = dialog.findViewById(R.id.iv_close);
             tvCaption.setMovementMethod(new ScrollingMovementMethod());
 

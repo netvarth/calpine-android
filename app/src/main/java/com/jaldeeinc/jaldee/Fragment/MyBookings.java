@@ -1,5 +1,8 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,16 +19,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +34,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
@@ -64,9 +63,9 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
@@ -106,16 +105,12 @@ import java.util.stream.Collectors;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 
 public class MyBookings extends RootFragment implements ISelectedBooking, ISendData, IDeleteImagesInterface, ISaveNotes {
@@ -145,17 +140,15 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     List<RlsdQnr> fReleasedQNR, fReleasedQNR1;
 
     // files related
-    Bitmap bitmap;
     File f, file;
     String path, from, from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
     TextView tv_attach, tv_camera;
     private BottomSheetDialog dialog;
-    CustomTextViewSemiBold tvErrorMessage;
+    TextView tvErrorMessage;
     RecyclerView recycle_image_attachment;
     private int GALLERY = 1, CAMERA = 2;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private Uri mImageUri;
     ImagePreviewAdapter imagePreviewAdapter;
@@ -295,6 +288,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         if (activeAppointment.getProviderAccount() != null) {
                             bookingInfo.setSpName(activeAppointment.getProviderAccount().getBusinessName());
                         }
+                        if (activeAppointment.getProviderAccount() != null) {
+                            bookingInfo.setUniqueId(activeAppointment.getProviderAccount().getUniqueId());
+                        }
                         if (activeAppointment.getProvider() != null) {  // to get businessName of firstName & lastName
                             if (activeAppointment.getProvider().getBusinessName() != null) {
                                 bookingInfo.setProviderName(activeAppointment.getProvider().getBusinessName());
@@ -323,11 +319,15 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                             }
                         }
 
-                        if (activeAppointment.getAppmtDate() != null && activeAppointment.getAppmtTime() != null) { //  to set time and date
+                        if (activeAppointment.getAppmtDate() != null) { //  to set time and date
 
                             String date = getCustomDateString(activeAppointment.getAppmtDate());
-                            String time = convertTime(activeAppointment.getAppmtTime().split("-")[0]);
-                            bookingInfo.setDate(date + " " + time);
+                            if(activeAppointment.getAppmtTime() != null) {
+                                String time = convertTime(activeAppointment.getAppmtTime().split("-")[0]);
+                                bookingInfo.setDate(date + " " + time);
+                            } else {
+                                bookingInfo.setDate(date);
+                            }
                             bookingInfo.setBookingOn(activeAppointment.getAppmtDate()); // to check if it is today's or future's
                         }
 
@@ -362,7 +362,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         bookings.add(bookingInfo);
                     }
 
-
                     for (ActiveCheckIn activeCheckIn : checkInList) {
 
                         Bookings bookingInfo = new Bookings();
@@ -388,7 +387,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         if (activeCheckIn.getProviderAccount() != null) {
                             bookingInfo.setSpName(activeCheckIn.getProviderAccount().getBusinessName());
                         }
-
+                        if (activeCheckIn.getProviderAccount() != null) {
+                            bookingInfo.setUniqueId(activeCheckIn.getProviderAccount().getUniqueId());
+                        }
                         if (activeCheckIn.getProvider() != null) {  // to get businessName of firstName & lastName
                             if (activeCheckIn.getProvider().getBusinessName() != null) {
                                 bookingInfo.setProviderName(activeCheckIn.getProvider().getBusinessName());
@@ -1106,39 +1107,16 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type;
+        MediaTypeAndExtention type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            String extension = "";
+            type = Config.getFileType(imagePathList.get(i).getImagePath());
 
-            if (imagePathList.get(i).getImagePath().contains(".")) {
-                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
-            }
+            file = new File(imagePathList.get(i).getImagePath());
 
-            if (extension.equalsIgnoreCase("pdf")) {
-                type = MediaType.parse("application/pdf");
-            } else if (extension.equalsIgnoreCase("png")) {
-                type = MediaType.parse("image/png");
-            } else if (extension.equalsIgnoreCase("jpeg")) {
-                type = MediaType.parse("image/jpeg");
-            } else {
-                type = MediaType.parse("image/*");
-            }
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getImagePath());
-            }
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type.getMediaTypeWithExtention(), file));
         }
 
         Map<String, String> query = new HashMap<>();
@@ -1199,39 +1177,16 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type;
+        MediaTypeAndExtention type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            String extension = "";
+            type = Config.getFileType(imagePathList.get(i).getImagePath());
 
-            if (imagePathList.get(i).getImagePath().contains(".")) {
-                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
-            }
+            file = new File(imagePathList.get(i).getImagePath());
 
-            if (extension.equalsIgnoreCase("pdf")) {
-                type = MediaType.parse("application/pdf");
-            } else if (extension.equalsIgnoreCase("png")) {
-                type = MediaType.parse("image/png");
-            } else if (extension.equalsIgnoreCase("jpeg")) {
-                type = MediaType.parse("image/jpeg");
-            } else {
-                type = MediaType.parse("image/*");
-            }
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getImagePath());
-            }
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type.getMediaTypeWithExtention(), file));
         }
 
         Map<String, String> query = new HashMap<>();
@@ -1358,8 +1313,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, mActivity);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -1371,9 +1324,33 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
+                        if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -1402,9 +1379,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, mActivity);
-                            String filepath = "";//default fileName
-
                             String mimeType = mContext.getContentResolver().getType(imageUri);
                             String uriString = imageUri.toString();
                             String extension = "";
@@ -1415,9 +1389,34 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(imageUri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
+                            if (Arrays.asList(Constants.fileExtFormats).contains(extension)) {
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, imageUri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -1446,15 +1445,22 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
         } else if (requestCode == CAMERA) {
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                if (bitmap != null) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                }
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch     (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+
+                String path = photoFile.getAbsolutePath();////////
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     ShoppingListModel model = new ShoppingListModel();
@@ -1465,11 +1471,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                     } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
-                }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
@@ -1493,41 +1494,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         alertDialog.show();
     }
 
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
     public static void copy(Context context, Uri srcUri, File dstFile) {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
@@ -1539,25 +1505,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = 0;
-        if (path != null) {
-            cut = path.lastIndexOf('/');
-        }
-        if (cut != -1) {
-            if (path != null) {
-                fileName = path.substring(cut + 1);
-            }
-        }
-        return fileName;
     }
 
     public String saveImage(Bitmap myBitmap) {
@@ -1635,4 +1582,5 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         imagePathList.get(position).setCaption(caption);
         imagePreviewAdapter.notifyDataSetChanged();
     }
+
 }

@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.custom;
 
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -78,8 +80,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
-
 public class ActionsDialog extends Dialog {
 
     private Context mContext;
@@ -106,10 +106,8 @@ public class ActionsDialog extends Dialog {
     private ImageView iv_attach;
     TextView tv_attach, tv_camera;
     private BottomSheetDialog dialog;
-    CustomTextViewSemiBold tvErrorMessage;
     RecyclerView recycle_image_attachment;
     private int GALLERY = 1, CAMERA = 2;
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private Uri mImageUri;
     private ISendData iSendData;
@@ -189,7 +187,9 @@ public class ActionsDialog extends Dialog {
                 }
 
                 // hide instructions link when there are no post instructions
-                if (bookings.getAppointmentInfo().getService() != null && bookings.getAppointmentInfo().getService().isPostInfoEnabled()) {
+                if (bookings.getAppointmentInfo().getService() != null && bookings.getAppointmentInfo().getService().isPostInfoEnabled()
+                        && ((bookings.getAppointmentInfo().getService().getPostInfoText() != null && !bookings.getAppointmentInfo().getService().getPostInfoText().trim().isEmpty())
+                        || (bookings.getAppointmentInfo().getService().getPostInfoTitle() != null && !bookings.getAppointmentInfo().getService().getPostInfoTitle().trim().isEmpty()))) {
                     llInstructions.setVisibility(View.VISIBLE);
                 } else {
                     hideView(llInstructions);
@@ -214,7 +214,10 @@ public class ActionsDialog extends Dialog {
 
                 // To show meetingDetails
                 if (bookings.getAppointmentInfo().getService() != null) {
-                    if (bookings.getAppointmentInfo().getService().getServiceType() != null && bookings.getAppointmentInfo().getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                    if (bookings.getAppointmentInfo().getService().getServiceType() != null
+                            && bookings.getAppointmentInfo().getService().getServiceType().equalsIgnoreCase("virtualService")
+                            && !bookings.getAppointmentInfo().getApptStatus().equalsIgnoreCase(Constants.REQUESTED)
+                            && !bookings.getAppointmentInfo().getApptStatus().equalsIgnoreCase(Constants.REQUESTREJECTED)) {
 
                         llMeetingDetails.setVisibility(View.VISIBLE);
                         if (bookings.getAppointmentInfo().getService().getVirtualCallingModes() != null) {
@@ -376,7 +379,9 @@ public class ActionsDialog extends Dialog {
 
 
                 // hide instructions link when there are no post instructions
-                if (bookings.getCheckInInfo().getService() != null && bookings.getCheckInInfo().getService().isPostInfoEnabled()) {
+                if (bookings.getCheckInInfo().getService() != null && bookings.getCheckInInfo().getService().isPostInfoEnabled()
+                        && ((bookings.getCheckInInfo().getService().getPostInfoText() != null && !bookings.getCheckInInfo().getService().getPostInfoText().trim().isEmpty())
+                        || (bookings.getCheckInInfo().getService().getPostInfoTitle() != null && !bookings.getCheckInInfo().getService().getPostInfoTitle().trim().isEmpty()))) {
                     llInstructions.setVisibility(View.VISIBLE);
                 } else {
                     hideView(llInstructions);
@@ -1508,12 +1513,8 @@ public class ActionsDialog extends Dialog {
                         ratingDialog.setContentView(R.layout.rating);
                         ratingDialog.setCancelable(true);
                         ratingDialog.show();
-                        TextView tv_title = (TextView) ratingDialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) ratingDialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) ratingDialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) ratingDialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) ratingDialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
@@ -1681,12 +1682,8 @@ public class ActionsDialog extends Dialog {
                         ratingDialog.setContentView(R.layout.rating);
                         ratingDialog.setCancelable(true);
                         ratingDialog.show();
-                        TextView tv_title = (TextView) ratingDialog.findViewById(R.id.txtratevisit);
                         final EditText edt_message = (EditText) ratingDialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) ratingDialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) ratingDialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) ratingDialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {

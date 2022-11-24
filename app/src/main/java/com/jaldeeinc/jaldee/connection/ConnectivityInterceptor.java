@@ -53,8 +53,6 @@ public class ConnectivityInterceptor implements Interceptor {
              //   Toast.makeText(mContext,  mContext.getResources().getString(R.string.dialog_server_down_text), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
-
-
             }
         }
 

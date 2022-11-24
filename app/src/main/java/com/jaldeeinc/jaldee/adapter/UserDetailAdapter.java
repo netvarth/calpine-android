@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import static com.jaldeeinc.jaldee.adapter.SearchLocationAdapter.getWaitingTime;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -50,8 +51,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import static com.jaldeeinc.jaldee.adapter.SearchLocationAdapter.getWaitingTime;
 
 public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.MyViewHolder> {
 
@@ -325,7 +324,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         });
         holder.btn_appointments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
                 iAppointment.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iAppointment.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
@@ -349,7 +348,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 //                }
                 iAppointment.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iAppointment);
-            }
+            */}
         });
 
         if (userDetails != null) {

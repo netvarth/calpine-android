@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="@dimen/dimen_20dp">
 
@@ -10,109 +10,115 @@
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/close"
-        android:padding="@dimen/padding5"
-        android:layout_gravity="end"
         android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:padding="@dimen/padding5"
+        android:src="@drawable/close"
         app:tint="@color/gray">
 
     </ImageView>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+    <TextView
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
+        android:fontFamily="@font/font_semibold"
         android:text="Meeting Details"
         android:textColor="@color/dark_blue"
         android:textSize="@dimen/dimen_16sp"
         android:textStyle="bold">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+    </TextView>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+    <TextView
         android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_below="@id/info"
         android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:fontFamily="@font/font_medium"
         android:text="Service name"
-        android:textSize="10sp"
-        android:layout_below="@id/info">
+        android:textSize="10sp">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+    </TextView>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+    <TextView
         android:id="@+id/tv_serviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="@dimen/dimen_18dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textColor="@color/dark_blue"
         android:layout_below="@id/hint"
         android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/padding3">
+        android:layout_marginTop="@dimen/padding3"
+        android:ellipsize="end"
+        android:fontFamily="@font/font_semibold"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/dark_blue"
+        android:textSize="@dimen/dimen_18dp">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+    </TextView>
 
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+    <TextView
         android:id="@+id/tv_timeInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_serviceName"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_5dp"
+        android:fontFamily="@font/font_medium"
         android:text=""
         android:visibility="gone">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+    </TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
         android:orientation="vertical">
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:layout_marginEnd="@dimen/dimen_16dp"
+            android:fontFamily="@font/font_medium"
             android:letterSpacing="0.07"
             android:text="Provider will call you on this number"
             android:textColor="#000000"
             android:textSize="13sp">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </TextView>
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
+        <TextView
             android:id="@+id/tv_phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_16dp"
             android:layout_marginTop="@dimen/dimen_8dp"
             android:layout_marginEnd="@dimen/dimen_16dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
+            android:fontFamily="@font/font_semibold"
             android:letterSpacing="0.07"
-            android:textColor="#000000"
-            android:layout_gravity="center"
             android:text=""
-            android:textStyle="bold"
+            android:textColor="#000000"
             android:textIsSelectable="true"
-            android:textSize="@dimen/dimen_15sp">
+            android:textSize="@dimen/dimen_15sp"
+            android:textStyle="bold">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
+        </TextView>
 
 
     </LinearLayout>
 
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+    <TextView
         android:id="@+id/tv_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -120,11 +126,12 @@
         android:layout_marginTop="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_50dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
+        android:fontFamily="@font/font_semibold"
         android:text="OK"
         android:textColor="@color/dark_blue"
         android:textSize="@dimen/dimen_16sp"
         android:textStyle="bold">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+    </TextView>
 
 </LinearLayout>

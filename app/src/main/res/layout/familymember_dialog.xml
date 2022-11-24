@@ -159,7 +159,7 @@
             <EditText
                 android:id="@+id/edtMail"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/padding40"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_8dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter your Email"

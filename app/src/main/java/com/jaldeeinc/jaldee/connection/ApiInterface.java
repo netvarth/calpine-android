@@ -1,8 +1,6 @@
 package com.jaldeeinc.jaldee.connection;
 
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -78,7 +76,6 @@ import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
 import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -97,8 +94,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -149,6 +144,13 @@ public interface ApiInterface {
     //@Headers({"Accept: application/json", "BOOKING_REQ_FROM: CONSUMER_APP"})
     @PUT("consumer/login/reset/{otp}")
     Call<String> SetResetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
+
+    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @DELETE("consumer/login")
+    Call<ResponseBody> logOut();
+
+    @DELETE("consumer/login/deActivate")
+    Call<ResponseBody> deleteConsumerAccount();
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/{consumerId}")
@@ -258,9 +260,6 @@ public interface ApiInterface {
     @DELETE("consumer/familyMember/{memberId}")
     Call<ResponseBody> getFamilyMEmberDelete(@Path("memberId") int id);
 
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @DELETE("consumer/login")
-    Call<ResponseBody> logOut();
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/waitlist")
@@ -371,13 +370,12 @@ public interface ApiInterface {
     @GET("{uniqueId}/services.json")
     Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
+    @GET("provider/account/settings/location/{locationId}/{uniqueId}/departmentProviders")
+    Call<JSONObject> getUserss(@Path("locationId") int locationId, @Path("uniqueId") int uniqueId);
+
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/appointment/service/{id}")
-    Call<ArrayList<SearchAppoinment>> getSearchAppointment(@Path("id") int id);
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("{consumerID}/apptServices.json")
@@ -537,6 +535,12 @@ public interface ApiInterface {
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/appointment")
     Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @POST("consumer/appointment/service/request")
+    Call<ResponseBody> AppointmentRequest(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @GET("consumer/appointment/service/request")
+    Call<ArrayList<ActiveAppointment>> getAppointmentRequest();
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/bill/{ynwuuid}")
@@ -712,11 +716,6 @@ public interface ApiInterface {
     @GET("{uniqueId}/departmentProviders.json")
     Observable<ArrayList<SearchDepartmentServices>> getDepartmentProviders(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
-    // to get only users when there are no departments
-//    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/departmentProviders.json")
-    Observable<ArrayList<ProviderUserModel>> getProviders(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
-
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
     Observable<ArrayList<ScheduleList>> getAppointmentSchedule(@Path("id") String id);
@@ -732,7 +731,8 @@ public interface ApiInterface {
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/appointment")
     Observable<ArrayList<ActiveAppointment>> getAppointments(@QueryMap(encoded = true) Map<String, String> query);
-
+    @GET("consumer/appointment/today")
+    Observable<ArrayList<ActiveAppointment>> getAppointmentsToday(@QueryMap(encoded = true) Map<String, String> query);
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/waitlist")
     Observable<ArrayList<ActiveCheckIn>> getCheckIns(@QueryMap(encoded = true) Map<String, String> query);

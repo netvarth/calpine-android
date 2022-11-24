@@ -7,63 +7,65 @@
     android:background="@color/spinnerbg"
     android:focusableInTouchMode="true">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/payment_list"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/layout_toolbar"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="@color/hometopbar"
-            android:visibility="gone"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/custom_toolbar" />
-        </LinearLayout>
-
-
-
-
-        <ListView
-            android:id="@+id/payment_inner_list"
-            android:background="#ffffff"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-        </ListView>
-
-
-        <LinearLayout
-            android:id="@+id/ll_noPayments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_40dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/ll_bookings"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding5"
-                android:text="No payments available."
-                android:textColor="@color/title_color">
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_todays"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding3"
+                    android:nestedScrollingEnabled="true">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <LinearLayout
+                    android:id="@+id/ll_noTodayBookings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_40dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/confused">
+
+                    </ImageView>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:text="No Requests available"
+                        android:textColor="@color/title_color">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>

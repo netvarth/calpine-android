@@ -15,19 +15,21 @@
         android:layout_margin="@dimen/default_padding"
         android:background="@color/app_background"
         android:orientation="vertical">
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <TextView
             android:id="@+id/txtratevisit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_semibold"
             android:layout_marginTop="@dimen/default_padding"
             android:text=" Rate Your Visit"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_subtitle" />
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" Rate *"
+            android:fontFamily="@font/font_semibold"
             android:layout_marginTop="@dimen/padding15"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
@@ -49,11 +51,12 @@
             android:layout_marginTop="@dimen/padding7"
             android:progressDrawable="@drawable/rating_display" />-->
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <TextView
             android:id="@+id/txtsendmsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding2"
+            android:fontFamily="@font/font_semibold"
             android:text=" Message *"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />

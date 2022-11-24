@@ -52,7 +52,6 @@ import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.CatalogItem;
-import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -103,7 +102,6 @@ public class ServiceOptionActivity extends AppCompatActivity implements IFilesIn
     ArrayList<String> list = new ArrayList<>();
     private HashMap<String, View> viewsList = new HashMap<>();
     private String qLabelName = "";
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
     private int GALLERY = 3, CAMERA = 4;
     private Uri mImageUri;

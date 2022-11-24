@@ -1,58 +1,37 @@
 package com.jaldeeinc.jaldee.activities;
 
 import static com.jaldeeinc.jaldee.activities.BookingDetails.convertTime;
-import static com.jaldeeinc.jaldee.activities.BookingDetails.convertToTitleForm;
 import static com.jaldeeinc.jaldee.activities.BookingDetails.getCustomDateString;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-
-import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.bumptech.glide.Glide;
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.Contents;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.InstructionsDialog;
-import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
-import com.jaldeeinc.jaldee.model.BookingModel;
+import com.jaldeeinc.jaldee.custom.CircleTransform;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -65,46 +44,64 @@ import retrofit2.Response;
 
 public class MultipleAppointmentConfirmation extends AppCompatActivity {
     Context mContext;
+    boolean livetrack;
     List<String> uids;
-    String providerId;
     ActiveAppointment activeCheckInInfo = new ActiveAppointment();
     List<String> confirmIds = new ArrayList<>();
     List<String> times = new ArrayList<>();
-    CardView cvBack;
-    CustomTextViewBold tvProvider, tv_consumer, tvConfirmationNumber, tvDate, tvTime, tvBatchNo;
-    CustomTextViewMedium tvProviderName, tv_location, tvServiceName;
-    ImageView icon_service;
-    private LinearLayout llBatchNo;
-    NeomorphFrameLayout llMoreDetails;
-    Button btnOk;
-    LinearLayout llMessage, ll_add_to_calendar;
-    private String uuid;
-
+    CardView cvShare, btnOk;
+    private String uuid, typeOfService, serviceDescription, countryCode, phoneNumber, email, providerLogoUrl, providerId;
+    TextView tv_email, tv_phoneNumber, tv_description, tv_datehint, tv_timeHint, tv_cnsmrDetails_Heading, tvProviderName1, tvProviderName,
+            tvServiceName, tvProvider, tvConfirmationNumber, tvDate, tvTime, tvBatchNo, tvServiceName1, tvProvider1,
+            tvConsumerName, tvLocation, tvStatus, tvAmount, tv_postInfoTitle, tv_postInfo, icon_text, tvTokenWaitTime, tv_token_number;
+    ImageView iv_location_icon, iv_prvdr_phone_icon, iv_prvdr_email_icon, ivQR, iv_serviceIcon, icon_service;
+    LinearLayout ll_token, ll_status, llPayment, ll_postinfo, ll_tokenWaitTime, llBatchNo, llMessage, ll_add_to_calendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multiple_appointment_confirmation);
+        setContentView(R.layout.booking_confirmation);
         mContext = this;
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            uids = extras.getStringArrayList("uids");
-            providerId = extras.getString("accountID");
+        initializations();
+
+        Intent i = getIntent();
+        serviceDescription = i.getStringExtra("serviceDescription");
+        typeOfService = i.getStringExtra("typeOfService");
+        //terminology = i.getStringExtra("terminology");
+        //from = i.getStringExtra("from");
+        countryCode = i.getStringExtra("waitlistPhonenumberCountryCode");
+        phoneNumber = i.getStringExtra("waitlistPhonenumber");
+        email = i.getStringExtra("email");
+        livetrack = i.getBooleanExtra("livetrack", false);
+        providerId = i.getStringExtra("accountID");
+        uids = i.getStringArrayListExtra("uids");
+        providerLogoUrl = i.getStringExtra("providerLogoUrl");
+        if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
+            PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(iv_serviceIcon);
         }
+
+        if (email != null && !email.trim().isEmpty()) {
+            tv_email.setText(email);
+        }
+        if (phoneNumber != null && countryCode != null) {
+            tv_phoneNumber.setText(countryCode + " " + phoneNumber);
+        }
+        if (serviceDescription != null && !serviceDescription.trim().isEmpty()) {
+            tv_description.setVisibility(View.VISIBLE);
+            tv_description.setText(serviceDescription);
+        }
+        Glide.with(mContext).load(R.drawable.location_icon_1).into(iv_location_icon);
+        Glide.with(mContext).load(R.drawable.phone_icon_1).into(iv_prvdr_phone_icon);
+        Glide.with(mContext).load(R.drawable.email_icon_1).into(iv_prvdr_email_icon);
+        ll_token.setVisibility(View.GONE);
+        tv_datehint.setText("Date");
+        tv_timeHint.setText("Time");
+        tv_cnsmrDetails_Heading.setText("Booking For");
         getConfirmationDetails(providerId, uids);
 
-        initializations();
-        cvBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent home = new Intent(MultipleAppointmentConfirmation.this, Home.class);
-                startActivity(home);
-                finish();
-            }
-        });
     }
 
     private void initializations() {
-        cvBack = findViewById(R.id.cv_back);
+        /*cvBack = findViewById(R.id.cv_back);
         tvProvider = findViewById(R.id.tv_doctorName);
         tvProviderName = findViewById(R.id.tv_providerName);
         tv_location = findViewById(R.id.tv_locationName);
@@ -119,10 +116,62 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
         llMoreDetails = findViewById(R.id.ll_moreDetails);
         btnOk = findViewById(R.id.cv_ok);
         ll_add_to_calendar = findViewById(R.id.ll_add_to_calendar);
+        llMessage = findViewById(R.id.ll_message);*/
+
+        tvProviderName = findViewById(R.id.tv_providerName);
+        tvProviderName1 = findViewById(R.id.tv_providerName1);
+        tvServiceName = findViewById(R.id.tv_serviceName);
+        tvServiceName1 = findViewById(R.id.tv_serviceName1);
+        tvProvider = findViewById(R.id.tv_doctorName);
+        tvProvider1 = findViewById(R.id.tv_doctorName1);
+        tvConfirmationNumber = findViewById(R.id.tv_confirmationNumber);
+        btnOk = findViewById(R.id.cv_ok);
+        icon_service = findViewById(R.id.iv_teleService);
+        tvConsumerName = findViewById(R.id.tv_consumerName);
+        tvLocation = findViewById(R.id.tv_locationName);
+        tvStatus = findViewById(R.id.tv_status);
+        ll_status = findViewById(R.id.ll_status);
+        tvDate = findViewById(R.id.tv_date);
+        tvTime = findViewById(R.id.tv_time);
+        llPayment = findViewById(R.id.ll_payment);
+        tvAmount = findViewById(R.id.tv_amount);
+        cvShare = findViewById(R.id.cv_share);
+        ivQR = findViewById(R.id.iv_Qr);
         llMessage = findViewById(R.id.ll_message);
+        ll_add_to_calendar = findViewById(R.id.ll_add_to_calendar);
+        tv_datehint = findViewById(R.id.tv_datehint);
+        tv_description = findViewById(R.id.tv_description);
+        tv_cnsmrDetails_Heading = findViewById(R.id.tv_cnsmrDetails_Heading);
+        tv_phoneNumber = findViewById(R.id.tv_phoneNumber);
+        tv_email = findViewById(R.id.tv_email);
+        ll_postinfo = findViewById(R.id.ll_postinfo);
+        tv_postInfoTitle = findViewById(R.id.tv_postInfoTitle);
+        tv_postInfo = findViewById(R.id.tv_postInfo);
+        iv_location_icon = findViewById(R.id.iv_location_icon);
+        iv_prvdr_phone_icon = findViewById(R.id.iv_prvdr_phone_icon);
+        iv_prvdr_email_icon = findViewById(R.id.iv_prvdr_email_icon);
+        icon_text = findViewById(R.id.icon_text);
+        iv_serviceIcon = findViewById(R.id.iv_serviceIcon);
+        //checkin
+        tv_timeHint = findViewById(R.id.tv_timehint);
+        ll_tokenWaitTime = findViewById(R.id.ll_tokenWaitTime);
+        tvTokenWaitTime = findViewById(R.id.tv_tokenWaitTime);
+        ll_token = findViewById(R.id.ll_token);
+        tv_token_number = findViewById(R.id.tv_token_number);
+
+        //appt
+        tvBatchNo = findViewById(R.id.tv_batchNo);
+        llBatchNo = findViewById(R.id.ll_batch);
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(mContext, Home.class);
+        startActivity(home);
+        finish();
+        super.onBackPressed();
+    }
     private void getConfirmationDetails(String userId, List<String> uids) {
 
         final Dialog mDialog = Config.getProgressDialog(MultipleAppointmentConfirmation.this, MultipleAppointmentConfirmation.this.getResources().getString(R.string.dialog_log_in));
@@ -172,10 +221,17 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
 
                 if (activeCheckInInfo.getProvider().getBusinessName() != null && !activeCheckInInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
                     tvProvider.setText(activeCheckInInfo.getProvider().getBusinessName());
+
+                    tvProvider1.setText(activeCheckInInfo.getProvider().getBusinessName());
+                    tvProvider1.setVisibility(View.VISIBLE);
                 } else {
                     String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
                     tvProvider.setText(name);
+
+                    tvProvider1.setText(name);
+                    tvProvider1.setVisibility(View.VISIBLE);
                 }
+                tvProviderName1.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
                 tvProviderName.setVisibility(View.VISIBLE);
                 tvProviderName.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
                 tvProviderName.setOnClickListener(new View.OnClickListener() {
@@ -193,9 +249,13 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
                     }
                 });
             } else {
-                tvProviderName.setVisibility(View.INVISIBLE);
+                tvProviderName.setVisibility(View.GONE);
+                tvProviderName1.setVisibility(View.GONE);
+                tvProvider1.setVisibility(View.VISIBLE);
+                tvProvider1.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
+                tvProvider1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvProvider.setVisibility(View.VISIBLE);
                 tvProvider.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
-
                 tvProvider.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -216,8 +276,8 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
             // to set location
             if (activeCheckInInfo.getLocation() != null) {
                 if (activeCheckInInfo.getLocation().getPlace() != null) {
-                    tv_location.setText(activeCheckInInfo.getLocation().getPlace());
-                    tv_location.setOnClickListener(new View.OnClickListener() {
+                    tvLocation.setText(activeCheckInInfo.getLocation().getPlace());
+                    tvLocation.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             openMapView(activeCheckInInfo.getLocation().getLattitude(), activeCheckInInfo.getLocation().getLongitude(), activeCheckInInfo.getLocation().getPlace());
@@ -228,15 +288,35 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
 
             // to set consumer name
             if (activeCheckInInfo.getAppmtFor() != null) {
+                String fName, lName;
                 if (activeCheckInInfo.getAppmtFor().get(0).getUserName() != null) {
-                    tv_consumer.setText(activeCheckInInfo.getAppmtFor().get(0).getUserName());
+                    fName = activeCheckInInfo.getAppmtFor().get(0).getUserName();
+                    if (fName != null && !fName.trim().isEmpty()) {
+                        icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+                    }
+                    tvConsumerName.setText(activeCheckInInfo.getAppmtFor().get(0).getUserName());
                 } else {
-                    tv_consumer.setText(activeCheckInInfo.getAppmtFor().get(0).getFirstName() + " " + activeCheckInInfo.getAppmtFor().get(0).getLastName());
+                    fName = activeCheckInInfo.getAppmtFor().get(0).getFirstName();
+                    lName = activeCheckInInfo.getAppmtFor().get(0).getLastName();
+                    if (fName != null && !fName.trim().isEmpty()) {
+                        icon_text.setText(String.valueOf(fName.trim().charAt(0)));
+                    } else if (lName != null && !lName.trim().isEmpty()) {
+                        icon_text.setText(String.valueOf(lName.trim().charAt(0)));
+                    }
+                    tvConsumerName.setText(fName + " " + lName);
                 }
             }
 
             if (activeCheckInInfo.getService() != null) {
-                tvServiceName.setText(activeCheckInInfo.getService().getName());
+                ivQR.setVisibility(View.GONE);
+                /********************************/
+                String sName = activeCheckInInfo.getService().getName();
+                String append = " Booked";
+
+                tvServiceName.setText(sName + append);
+                tvServiceName1.setText(sName);
+                /********************************/
+
 
                 if (activeCheckInInfo.getService().getServiceType() != null && activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
@@ -264,12 +344,20 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
 
             }
 
+            // to set confirmation number
             if (activeCheckInInfo.getAppointmentEncId() != null) {
                 tvConfirmationNumber.setText(confirmIds
                         .stream()
-                        .map(a -> String.valueOf(a.replaceAll(" ", "\u00a0")))
+                        .map(a -> String.valueOf(a.replaceAll(" ", "\n")))
                         .collect(Collectors.joining(", ")));
             }
+
+            // to set status
+            ll_status.setVisibility(View.GONE);
+            tvStatus.setVisibility(View.GONE);
+
+            // to set paid info
+            llPayment.setVisibility(View.GONE);
 
             // to set appointment date
             if (activeCheckInInfo.getAppmtDate() != null) {
@@ -279,6 +367,10 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+            // hide instructions link when there are no post instructions
+            ll_postinfo.setVisibility(View.GONE);
+
 
             // to set slot time
             if (activeCheckInInfo.getAppmtTime() != null) {
@@ -294,6 +386,9 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
             } else {
                 llBatchNo.setVisibility(View.GONE);
             }
+
+            cvShare.setVisibility(View.GONE);
+
             llMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -316,6 +411,7 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
                     }
                 }
             });
+
             ll_add_to_calendar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -350,10 +446,10 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_INSERT);
                     intent.setData(CalendarContract.Events.CONTENT_URI);
                     if (activeCheckInInfo.getProviderAccount().getBusinessName() != null && !activeCheckInInfo.getProviderAccount().getBusinessName().equalsIgnoreCase("")) {
-                        intent.putExtra(CalendarContract.Events.TITLE, activeCheckInInfo.getProviderAccount().getBusinessName() +" - "+ activeCheckInInfo.getService().getName());//activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, activeCheckInInfo.getProviderAccount().getBusinessName() + " - " + activeCheckInInfo.getService().getName());//activeCheckInInfo.getCheckinEncId());
                     } else {
                         String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
-                        intent.putExtra(CalendarContract.Events.TITLE, name +" - "+ activeCheckInInfo.getService().getName());// activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, name + " - " + activeCheckInInfo.getService().getName());// activeCheckInInfo.getCheckinEncId());
                     }
                     intent.putExtra(CalendarContract.Events.DESCRIPTION, "Time slots : " + times
                             .stream()

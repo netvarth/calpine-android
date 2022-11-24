@@ -1,9 +1,8 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -24,10 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 
@@ -94,10 +92,37 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                     viewHolder.tvSpName.setText(bookings.getProviderName());
                     viewHolder.tvProviderName.setVisibility(View.VISIBLE);
                     viewHolder.tvProviderName.setText(bookings.getSpName());
+                    viewHolder.tvProviderName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            try {
+                                Intent intent = new Intent(context, ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID", bookings.getUniqueId());
+                                //intent.putExtra("locationId", bookings.getLocation().getId());
+                                context.startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 } else {
                     viewHolder.tvProviderName.setVisibility(View.GONE);
                     viewHolder.tvSpName.setText(bookings.getSpName());
+                    viewHolder.tvSpName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                            try {
+                                Intent intent = new Intent(context, ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID", bookings.getUniqueId());
+                                //intent.putExtra("locationId", bookings.getLocation().getId());
+                                context.startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
 
                 if (bookings.isRescheduled()) {
@@ -116,15 +141,13 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 }
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-                if (bookings.getBookingOn() != null && bookings.getBookingType() != null) {
+                if (bookings.getBookingType() != null) {
                     if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                         if (bookings.getAppointmentInfo() != null) {
 
                             if (bookings.isVirtual() && bookings.getCallingType() != null) {
                                 if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("Completed"))) {
-                                    //viewHolder.tvDateAndTime.setText("Cancelled");
-                                    //viewHolder.tvDateAndTime.setTextColor(Color.RED);
                                     viewHolder.tvDateAndTime.setVisibility(View.GONE);
                                 } else if (bookings.getVideoCallMessage() != null && bookings.getVideoCallMessage().equals("Meeting session expired")) {
                                     viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
@@ -139,40 +162,52 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                         if (bookings.isVideoService()) {
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         } else {
-                                            //String time = convertTime(bookings.getAppointmentInfo().getAppmtTime().split("-")[0]);
-                                            //viewHolder.tvDateAndTime.setText("Today," + " " + time);
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         }
                                     } else if (bookings.getCallingType().equalsIgnoreCase("phone")) {
-                                        //String time = convertTime(bookings.getAppointmentInfo().getAppmtTime().split("-")[0]);
-                                        //viewHolder.tvDateAndTime.setText("Today," + " " + time);
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                     } else if (bookings.getCallingType().equalsIgnoreCase("VideoCall")) {
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
 
                                     }
-                                    if (date.equalsIgnoreCase(bookings.getBookingOn())) {
-                                        viewHolder.tvDateAndTime.setTextColor(0xFF28A745);
-                                    } else {
-                                        viewHolder.tvDateAndTime.setTextColor(0xFFDC3545);
+                                    if (bookings.getBookingOn() != null) {
+                                        if (date.equalsIgnoreCase(bookings.getBookingOn())) {
+                                            viewHolder.tvDateAndTime.setTextColor(0xFF28A745);
+                                        } else {
+                                            viewHolder.tvDateAndTime.setTextColor(0xFFDC3545);
+                                        }
                                     }
 
                                 }
                             } else {
-                                if (date.equalsIgnoreCase(bookings.getBookingOn())) {
-                                    if (bookings.getAppointmentInfo().getAppmtTime() != null) {
-                                        String time = convertTime(bookings.getAppointmentInfo().getAppmtTime().split("-")[0]);
-                                        viewHolder.tvDateAndTime.setText("Today," + " " + time);
+                                if (bookings.getBookingOn() != null) {
+                                    if (date.equalsIgnoreCase(bookings.getBookingOn())) {
+                                        if (bookings.getAppointmentInfo().getAppmtTime() != null) {
+                                            String time = convertTime(bookings.getAppointmentInfo().getAppmtTime().split("-")[0]);
+                                            viewHolder.tvDateAndTime.setText("Today," + " " + time);
+                                        } else {
+                                            viewHolder.tvDateAndTime.setText("Today");
+                                        }
+                                    } else {
+                                        viewHolder.tvDateAndTime.setText(bookings.getDate());
                                     }
                                 } else {
-                                    viewHolder.tvDateAndTime.setText(bookings.getDate());
+                                    viewHolder.tvDateAndTime.setVisibility(View.GONE);
+                                }
+                                /**below code for REQUEST TYPE BOOKING**/
+                                if ((bookings.getBookingStatus() != null) && (bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTED) || bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTREJECTED))
+                                        && bookings.isNoDateTime()) {
+                                    viewHolder.tvDateAndTime.setVisibility(View.GONE);
                                 }
                             }
 
                             if (bookings.getAppointmentInfo().getAppmtFor() != null && bookings.getAppointmentInfo().getAppmtFor().size() > 0) {
-
+                                if ((bookings.getBookingStatus() != null) && (bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTED) || bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTREJECTED))) {
+                                    viewHolder.tvForHint.setText("Request For");
+                                } else {
+                                    viewHolder.tvForHint.setText("Appointment For");
+                                }
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
-                                viewHolder.tvForHint.setText("Appointment For");
                                 String name = bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName();
                                 viewHolder.tvBookingFor.setText(name);
                             } else {
@@ -214,8 +249,6 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                         if (bookings.getCheckInInfo() != null) {
                             if (bookings.isVirtual() && bookings.getCallingType() != null) {
                                 if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("Completed"))) {
-                                    //viewHolder.tvDateAndTime.setText("Cancelled");
-                                    //viewHolder.tvDateAndTime.setTextColor(Color.RED);
                                     viewHolder.tvDateAndTime.setVisibility(View.GONE);
                                 } else if (bookings.getVideoCallMessage() != null && bookings.getVideoCallMessage().equals("Meeting session expired")) {
                                     viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
@@ -231,13 +264,9 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                         if (bookings.isVideoService()) {
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         } else {
-                                            //String time = convertTime(bookings.getAppointmentInfo().getAppmtTime().split("-")[0]);
-                                            //viewHolder.tvDateAndTime.setText("Today," + " " + time);
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         }
                                     } else if (bookings.getCallingType().equalsIgnoreCase("phone")) {
-                                        //String time = convertTime(bookings.getAppointmentInfo().getAppmtTime().split("-")[0]);
-                                        //viewHolder.tvDateAndTime.setText("Today," + " " + time);
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                     } else if (bookings.getCallingType().equalsIgnoreCase("VideoCall")) {
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
@@ -247,7 +276,6 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                     } else {
                                         viewHolder.tvDateAndTime.setTextColor(0xFFDC3545);
                                     }
-
                                 }
                             } else {
                                 if (date.equalsIgnoreCase(bookings.getBookingOn())) {
@@ -383,7 +411,11 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                         if (bookings.getBookingStatus().equalsIgnoreCase("Done")) {
                             viewHolder.tvStatus.setText("Completed");
                         } else {
-                            viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
+                            if (bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTREJECTED)) {
+                                viewHolder.tvStatus.setText("Request Rejected");
+                            } else {
+                                viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
+                            }
                         }
                         if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
                             viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
@@ -395,6 +427,10 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                             viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
                         } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
                             viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.REQUESTREJECTED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
                         } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.DONE)) {
                             viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
                         } else {
@@ -482,9 +518,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivBookingType, ivServiceIcon, ivMore, ivRescheduled;
-        CustomTextViewBold tvSpName, tvBookingFor;
-        CustomTextViewSemiBold tvProviderName;
-        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tokenNo, tvForHint;
+        TextView tvStatus, tvProviderName, tvSpName, tvServiceName, tvForHint, tvBookingFor, tokenNo, tvDateAndTime, tvpayment;
         CardView cvBooking;
         RelativeLayout rl_qnr_info_needed;
         RelativeLayout rlStatus;

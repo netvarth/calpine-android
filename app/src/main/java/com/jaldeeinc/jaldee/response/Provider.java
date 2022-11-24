@@ -3,10 +3,11 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Provider {
+public class Provider implements Serializable {
 
     @SerializedName("virtualFields")
     @Expose

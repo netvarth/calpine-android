@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.MaintananceActivity;
 import com.jaldeeinc.jaldee.activities.Register;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -102,6 +102,13 @@ public class ResponseInteceptor implements Interceptor {
             context.startActivity(iLogout);
             // mAdapterCallback.onMethodForceUpdate();
 
+        }
+        if (response.code() == 405) {  //Maintanance mode
+            response.close();
+            Config.logV(" ERROR  405 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Intent intent = new Intent(context, MaintananceActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
         }
         return response;
     }

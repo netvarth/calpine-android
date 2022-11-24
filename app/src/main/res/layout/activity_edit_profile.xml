@@ -443,6 +443,44 @@
                             android:textColor="@color/app_background"
                             android:textSize="@dimen/txtsize_hint" />
 
+                        <LinearLayout
+                            android:id="@+id/ll_cancel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginTop="@dimen/dimen_20dp"
+                            android:layout_marginBottom="@dimen/dimen_20dp"
+                            android:gravity="left"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <LinearLayout
+                                android:id="@+id/ll_delete_account"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/rctngle_bordergrey_roundededge7_whitefilled"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/dimen_10dp"
+                                    android:fontFamily="@font/font_regular"
+                                    android:gravity="center"
+                                    android:text="Delete Your Account"
+                                    android:textColor="@color/red6"
+                                    android:textSize="@dimen/txtsize_10"
+                                    android:visibility="visible">
+
+                                </TextView>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

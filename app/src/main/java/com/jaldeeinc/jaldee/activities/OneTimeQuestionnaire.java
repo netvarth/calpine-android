@@ -18,7 +18,9 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,10 +31,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,7 +50,6 @@ import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Fragment.DataGridFragment;
 import com.jaldeeinc.jaldee.Interface.IDataGridListener;
-import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
@@ -79,7 +80,6 @@ import com.jaldeeinc.jaldee.response.ListProperties;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.Questions;
-import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -109,9 +109,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
@@ -123,16 +120,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener {
+public class OneTimeQuestionnaire extends Fragment implements IFilesInterface, DatePickerDialog.OnDateSetListener {
 
-    @BindView(R.id.ll_mainLayout)
     LinearLayout llParentLayout;
-
-    @BindView(R.id.cv_back)
+    LinearLayout toolbar;
     CardView cvBack;
 
-    @BindView(R.id.cv_submit)
     CardView cvSubmit;
+    TextView tv_hint;
 
     private static Context mContext;
     private int providerId;
@@ -149,7 +144,6 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
     private int GALLERY = 3, CAMERA = 4;
     private Uri mImageUri;
     String singleFilePath = "";
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
     Questionnaire questionnaire = new Questionnaire();
     public String path;
     private boolean isEdit = false;
@@ -157,37 +151,61 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
     File file;
     String requestFor, requestFrom;
     Intent intent;
-    boolean fromUserProvider;
-    int userId;
+
+    public OneTimeQuestionnaire() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom_questionnaire);
-        ButterKnife.bind(this);
-        mContext = OneTimeQuestionnaire.this;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.activity_custom_questionnaire, container, false);
+        llParentLayout = view.findViewById(R.id.ll_mainLayout);
+        cvBack = view.findViewById(R.id.cv_back);
+        cvSubmit = view.findViewById(R.id.cv_submit);
+        toolbar = view.findViewById(R.id.toolbar);
+        tv_hint = view.findViewById(R.id.tv_hint);
         iFilesInterface = this;
+        mContext = getActivity();
+
 
         requestMultiplePermissions();
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        intent = getIntent();
+        /*intent = getIntent();
         requestFor = intent.getStringExtra("requestFor");
         requestFrom = intent.getStringExtra("requestFrom");
         providerId = intent.getIntExtra("providerId", 0);
         consumerId = intent.getIntExtra("consumerId", 0);
-        fMemId = intent.getIntExtra("familyMemId", 0);
-        userId = intent.getIntExtra("userId", 0);
-        fromUserProvider = intent.getBooleanExtra("fromUser", false);
+        fMemId = intent.getIntExtra("familyMemId", 0);*/
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            requestFor = bundle.getString("requestFor");
+            requestFrom = bundle.getString("requestFrom");
+            providerId = bundle.getInt("providerId", 0);
+            consumerId = bundle.getInt("consumerId", 0);
+            fMemId = bundle.getInt("familyMemId", 0);
+        }
+        if (requestFor.equalsIgnoreCase(Constants.APPOINTMENT) || requestFor.equalsIgnoreCase(Constants.CHECKIN)) {
+            toolbar.setVisibility(View.GONE);
+            tv_hint.setVisibility(View.GONE);
+            cvSubmit.setVisibility(View.GONE);
+        }
         try {
             ApiGetOneTimeQNR();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        cvBack.setOnClickListener(new View.OnClickListener() {
+        /*cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int uniqueID = SharedPreference.getInstance(mContext).getIntValue("uniqueID", 0);
@@ -199,7 +217,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                     startActivity(intent);
                 }
             }
-        });
+        });*/
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -210,9 +228,10 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                 }
             }
         });
+        return view;
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         int uniqueID = SharedPreference.getInstance(mContext).getIntValue("uniqueID", 0);
         if (uniqueID != 0) {
@@ -222,11 +241,11 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
             intent.putExtra("uniqueID", String.valueOf(uniqueID));
             startActivity(intent);
         }
-    }
+    }*/
 
     // files related
     private void requestMultiplePermissions() {
-        Dexter.withActivity(this)
+        Dexter.withActivity(getActivity())
                 .withPermissions(
                         Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -243,7 +262,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
                             //openSettingsDialog();fc
-                            Toast.makeText(getApplicationContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -255,7 +274,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()
@@ -265,13 +284,9 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
     private void ApiGetOneTimeQNR() {
 
         ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<Questionnaire> call;
-        if (fromUserProvider) {
-            call = apiService.getOneTimeQnr(fMemId, consumerId, userId);
-        } else {
-            call = apiService.getOneTimeQnr(fMemId, consumerId, providerId);
-        }
+                ApiClient.getClient(getContext()).create(ApiInterface.class);
+
+        Call<Questionnaire> call = apiService.getOneTimeQnr(fMemId, consumerId, providerId);
 //        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<Questionnaire>() {
             @Override
@@ -487,21 +502,21 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                     } else if (getQuestion.getFieldDataType().equalsIgnoreCase("dataGrid")) {
 
-                        QuestionnaireGridView gridView = new QuestionnaireGridView(this);
+                        QuestionnaireGridView gridView = new QuestionnaireGridView(getContext());
                         gridView.setQuestionData(getQuestion);
 
                         gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
 
-                                SharedPreference.getInstance(OneTimeQuestionnaire.this).setValue(Constants.QUESTION, "");
+                                SharedPreference.getInstance(getContext()).setValue(Constants.QUESTION, "");
                                 SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, "");
 
                                 SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(getQuestion));
 
                                 DataGridFragment dataGridFragment = DataGridFragment.newInstance("");
                                 dataGridFragment.setGridView(gridView);
-                                final FragmentManager fragmentManager = getSupportFragmentManager();
+                                final FragmentManager fragmentManager = getChildFragmentManager();
                                 fragmentManager.beginTransaction()
                                         .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
                                         .commit();
@@ -512,7 +527,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                             @Override
                             public void onEditClick(DataGrid gridObj, int position) {
 
-                                SharedPreference.getInstance(OneTimeQuestionnaire.this).setValue(Constants.QUESTION, "");
+                                SharedPreference.getInstance(getContext()).setValue(Constants.QUESTION, "");
                                 SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, "");
 
                                 SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(getQuestion));
@@ -520,7 +535,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                                 DataGridFragment dataGridFragment = DataGridFragment.newInstance("", "", position);
                                 dataGridFragment.setGridView(gridView);
-                                final FragmentManager fragmentManager = getSupportFragmentManager();
+                                final FragmentManager fragmentManager = getChildFragmentManager();
                                 fragmentManager.beginTransaction()
                                         .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
                                         .commit();
@@ -537,14 +552,14 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         }
     }
 
-    private void submitQuestionnaire() throws JSONException {
-
+    public boolean submitQuestionnaire() throws JSONException {
+        boolean isvalid = true;
         QuestionnairInpt input = new QuestionnairInpt();
         input.setQuestionnaireId(questionnaire.getId());
         ArrayList<AnswerLine> answerLines = new ArrayList<>();
 
         if (validForm(questionnaire.getQuestionsList())) {
-
+            isvalid = true;
             labelPaths = new ArrayList<>();
 
             for (Questions questions : questionnaire.getQuestionsList()) {
@@ -819,7 +834,10 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
             int j = 0;
             j = j + 1;
+        } else {
+            isvalid = false;
         }
+        return isvalid;
     }
 
     private void addFileUploadView(QuestionnaireFileUploadModel model) {
@@ -850,7 +868,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
             tvMutipleFileManditory.setVisibility(View.GONE);
         }
 
-        rvFiles.setLayoutManager(new LinearLayoutManager(this));
+        rvFiles.setLayoutManager(new LinearLayoutManager(getContext()));
         FilesAdapter filesAdapter = new FilesAdapter(model.getFiles(), mContext, false, iFilesInterface);
         filesAdapter.setLabelName(model.getLabelName());
         rvFiles.setAdapter(filesAdapter);
@@ -961,7 +979,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                 com.jaldeeinc.jaldee.custom.DatePicker mDatePickerDialogFragment;
                 mDatePickerDialogFragment = new com.jaldeeinc.jaldee.custom.DatePicker();
 
-                mDatePickerDialogFragment.show(getSupportFragmentManager(), "DATE PICK");
+                mDatePickerDialogFragment.show(getChildFragmentManager(), "DATE PICK");
 
             }
         });
@@ -1120,7 +1138,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
             }
         }
 
-        rvCheckBoxes.setLayoutManager(new LinearLayoutManager(this));
+        rvCheckBoxes.setLayoutManager(new LinearLayoutManager(getContext()));
         CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter(checkBoxList, listModel.getMaxAnswerable(), mContext);
         rvCheckBoxes.setAdapter(checkBoxAdapter);
 
@@ -1152,7 +1170,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                 if (singleFile.getType().equalsIgnoreCase(".pdf")) {
 
-                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
                 } else {
 
                     Glide.with(mContext).load(singleFile.getFilePath()).into(ivSingleFile);
@@ -1160,13 +1178,13 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
             } else {
                 if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("pdf")) {
 
-                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
 
                 } else if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("mp3")) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.audio_icon));
 
-                } else if (Arrays.asList(videoFormats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
+                } else if (Arrays.asList(Constants.videoExtFormats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.video_icon));
 
@@ -1235,7 +1253,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                     } else {
 
-                        Intent intent = new Intent(OneTimeQuestionnaire.this, ImageActivity.class);
+                        Intent intent = new Intent(getContext(), ImageActivity.class);
                         intent.putExtra("urlOrPath", singleFile.getFilePath());
                         startActivity(intent);
                     }
@@ -1250,11 +1268,11 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                     if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                        Config.openPdf(getApplicationContext(), imagePath);
+                        Config.openPdf(getContext(), imagePath);
 
-                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+                    } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
-                        Intent intent = new Intent(OneTimeQuestionnaire.this, VideoActivity.class);
+                        Intent intent = new Intent(getContext(), VideoActivity.class);
                         intent.putExtra("urlOrPath", imagePath);
                         startActivity(intent);
 
@@ -1264,7 +1282,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                     } else {
 
-                        Intent intent = new Intent(OneTimeQuestionnaire.this, ImageActivity.class);
+                        Intent intent = new Intent(getContext(), ImageActivity.class);
                         intent.putExtra("urlOrPath", imagePath);
                         startActivity(intent);
                     }
@@ -1310,7 +1328,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
     private void openGalleryForOneImage() {
 
         try {
-            Dialog dialog = new Dialog(OneTimeQuestionnaire.this);
+            Dialog dialog = new Dialog(getContext());
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.camera_options);
             dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
@@ -1409,7 +1427,8 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -1552,10 +1571,6 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -1633,9 +1648,9 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                             if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                                ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                                ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
 
-                            } else if (Arrays.asList(videoFormats).contains(extension)) {
+                            } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                                 ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
 
@@ -1709,9 +1724,9 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                             if (tvSupportedTypes.getText().toString().contains(extension)) {
 
                                 if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
-                                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdf));
 
-                                } else if (Arrays.asList(videoFormats).contains(extension)) {
+                                } else if (Arrays.asList(Constants.videoExtFormats).contains(extension)) {
 
                                     ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
 
@@ -1751,10 +1766,6 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                     e.printStackTrace();///////////
                 }////////
                 String path = photoFile.getAbsolutePath();////////
-                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                String path = saveImage(bitmap);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -1782,7 +1793,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
         try {
 
-            Dialog dialog = new Dialog(OneTimeQuestionnaire.this);
+            Dialog dialog = new Dialog(getContext());
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.camera_options);
             dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
@@ -1885,7 +1896,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         Intent i = new Intent(android.content.Intent.ACTION_VIEW);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        i.setDataAndType(FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(imagePath)), "audio/*");
+        i.setDataAndType(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", new File(imagePath)), "audio/*");
         startActivity(i);
     }
 
@@ -2052,17 +2063,6 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         imagePathList = labelPaths;
         for (int i = 0; i < imagePathList.size(); i++) {
 
-           /* try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getPath());
-            }*/
             file = new File(imagePathList.get(i).getPath());
 
             mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
@@ -2077,11 +2077,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<SubmitQuestionnaire> call = null;
-        if(fromUserProvider){
-            call = apiService.submitOneTimeQnr(fMemId, consumerId, userId, requestBody);
-        }else {
-            call = apiService.submitOneTimeQnr(fMemId, consumerId, providerId, requestBody);
-        }
+        call = apiService.submitOneTimeQnr(fMemId, consumerId, providerId, requestBody);
 
 
         call.enqueue(new Callback<SubmitQuestionnaire>() {
@@ -2091,7 +2087,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     if (response.code() == 200) {
 
@@ -2114,19 +2110,15 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                         } else {
 
                             Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                            finish();
+                            //finish();
                         }
                         if (!requestFor.isEmpty() && requestFrom.isEmpty()) {
-                            if (requestFor.equalsIgnoreCase(Constants.APPOINTMENT)) {
-                                intent.setClass(OneTimeQuestionnaire.this, AppointmentActivity.class);
-                            } else if (requestFor.equalsIgnoreCase(Constants.CHECKIN)) {
-                                intent.setClass(OneTimeQuestionnaire.this, CheckInActivity.class);
-                            } else if (requestFor.equalsIgnoreCase(Constants.DONATION)) {
-                                intent.setClass(OneTimeQuestionnaire.this, DonationActivity.class);
+                            if (requestFor.equalsIgnoreCase(Constants.DONATION)) {
+                                intent.setClass(mContext, DonationActivity.class);
                             }
                             startActivity(intent);
                         } else if (requestFor.isEmpty() && !requestFrom.isEmpty()) {
-                            finish();
+                            // finish();
                         }
                     } else {
                         if (response.code() == 422) {
@@ -2145,7 +2137,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
             public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
                 // Log error here since request failed
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
                 Config.logV("Fail---------------" + t.toString());
             }
         });
@@ -2182,15 +2174,14 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                                 public void accept(Object object) throws Exception {
                                     //Do something on successful completion of all requests
                                     Log.e("ListOf Calls", "0");
-                                    runOnUiThread(new Runnable() {
+                                    getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             // Stuff that updates the UI
                                             try {
                                                 if (mDialog.isShowing())
-                                                    Config.closeDialog(getParent(), mDialog);
-
-                                                    ApiCheckStatus(fMemId, consumerId, result);
+                                                    Config.closeDialog(getActivity(), mDialog);
+                                                ApiCheckStatus(fMemId, consumerId, providerId, result);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -2214,7 +2205,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         }
     }
 
-    private void ApiCheckStatus(int fMemId, int consumerId, SubmitQuestionnaire result) throws JSONException {
+    private void ApiCheckStatus(int fMemId, int consumerId, int providerId, SubmitQuestionnaire result) throws JSONException {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -2241,11 +2232,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         uploadObj.putOpt("urls", uploadArray);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
-        if(fromUserProvider){
-            call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, userId, body);
-        }else {
-            call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, providerId, body);
-        }
+        call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, providerId, body);
 
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -2260,7 +2247,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                     if (response.code() == 200) {
 
                         Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                        finish();
+                        //finish();
 
                     } else {
                         if (response.code() == 422) {

@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--        android:font="@font/inter_variablefont_slnt_wght"
 -->
+    <!--<font
+        android:font="@font/font_montserrat_blackitalic"/>-->
     <font
-        android:font="@font/font_montserrat_blackitalic"/>
+        android:font="@font/poppins_blackitalic" />
 </font-family>

@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.model;
 
 import com.jaldeeinc.jaldee.response.Catalog;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -26,6 +27,7 @@ public class BookingModel implements Serializable {
     public String phoneNumber;
     public Questionnaire questionnaire;
     public String from;
+    public String appointmentType;
     public ArrayList<String> questionnaireImages;
     public String providerName;
     public String accountBusinessName;
@@ -45,10 +47,60 @@ public class BookingModel implements Serializable {
     public String whtsappPhoneNumber;
     public String providerPhoneNumber;
     public String providerEmail;
+    public String serviceBookingType;
+
     public double eligibleJcashAmt;
     public float amountRequiredNow;
     public float netTotal;
     public boolean isToken;
+    public String providerLogo;
+    public Provider providerResponse;
+    public Integer providerUniqueId;
+    public String profileDetails;
+
+    public String getProfileDetails() {
+        return profileDetails;
+    }
+
+    public void setProfileDetails(String profileDetails) {
+        this.profileDetails = profileDetails;
+    }
+
+    public String getServiceBookingType() { return serviceBookingType; }
+
+    public void setServiceBookingType(String serviceBookingType) { this.serviceBookingType = serviceBookingType; }
+
+    public String getAppointmentType() {
+        return appointmentType;
+    }
+
+    public void setAppointmentType(String appointmentType) {
+        this.appointmentType = appointmentType;
+    }
+
+    public Integer getProviderUniqueId() {
+        return providerUniqueId;
+    }
+
+    public void setProviderUniqueId(Integer providerUniqueId) {
+        this.providerUniqueId = providerUniqueId;
+    }
+
+    public Provider getProviderResponse() {
+        return providerResponse;
+    }
+
+    public void setProviderResponse(Provider providerResponse) {
+        this.providerResponse = providerResponse;
+    }
+
+    public String getProviderLogo() {
+        return providerLogo;
+    }
+
+    public void setProviderLogo(String providerLogo) {
+        this.providerLogo = providerLogo;
+    }
 
     public Catalog getCatalogInfo() {
         return catalogInfo;

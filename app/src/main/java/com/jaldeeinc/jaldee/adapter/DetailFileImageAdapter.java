@@ -1,14 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-
-import androidx.core.util.AtomicFile;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
-import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImageAdapter.MyViewHolder> {
     private final ArrayList<String> imagePathList;
     Context mContext;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_file_attach;
         LinearLayout fileList;
@@ -69,11 +59,32 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
         // final  fileList = mfileList.get(position);
         //Log.i("path", this.imagePathList.get(position));
         String imagePath = this.imagePathList.get(position);
-        if(imagePath != null && !imagePath.isEmpty()) {
-            if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
+        //String ext = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+        MediaTypeAndExtention type = Config.getFileType(imagePath);
+
+        if (imagePath != null && !imagePath.isEmpty()) {
+            if (type.getMediaType().equals(Constants.docType)) {
+                if (type.getMediaTypeWithExtention().equals(Constants.pdfType)) {
+                    myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+                    myViewHolder.delete_file.setVisibility(View.VISIBLE);
+                    myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdf));
+                } else {
+                    myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+                    myViewHolder.delete_file.setVisibility(View.VISIBLE);
+                    myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_document));
+                }
+            } else if (type.getMediaType().equals(Constants.audioType)) {
                 myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
                 myViewHolder.delete_file.setVisibility(View.VISIBLE);
-                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdfs));
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+            } else if (type.getMediaType().equals(Constants.videoType)) {
+                myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+                myViewHolder.delete_file.setVisibility(View.VISIBLE);
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+            } else if (type.getMediaType().equals(Constants.txtType)) {
+                myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+                myViewHolder.delete_file.setVisibility(View.VISIBLE);
+                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_text));
             } else {
 
             /*Uri imgUri = Uri.parse(imagePathList.get(position));
