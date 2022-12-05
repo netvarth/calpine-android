@@ -14,9 +14,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.QuestionnaireGridItemView;
-import com.jaldeeinc.jaldee.model.AnswerLine;
-import com.jaldeeinc.jaldee.model.DataGridAnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 
 import java.util.ArrayList;
@@ -34,15 +31,15 @@ public class QGridItemAdapter extends RecyclerView.Adapter<QGridItemAdapter.View
 
     @NonNull
     @Override
-    public QGridItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.q_grid_text, parent, false);
-        return new QGridItemAdapter.ViewHolder(v, false);
+        return new ViewHolder(v, false);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull QGridItemAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         final GridColumnAnswerLine answer = answerLines.get(position);
 

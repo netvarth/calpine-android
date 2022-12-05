@@ -26,8 +26,6 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 
 import java.text.ParseException;
@@ -76,7 +74,9 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
         uids = i.getStringArrayListExtra("uids");
         providerLogoUrl = i.getStringExtra("providerLogoUrl");
         if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
-            PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(iv_serviceIcon);
+            Glide.with(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).circleCrop().fitCenter().into(iv_serviceIcon);
+
+            //PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(iv_serviceIcon);
         }
 
         if (email != null && !email.trim().isEmpty()) {

@@ -28,18 +28,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
@@ -170,7 +168,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final DepartmentUserSearchModel searchdetailList = searchList.get(position);
 //        Log.i("SearchDetailListUser", new Gson().toJson(searchdetailList));
-        final DeptListAdapter.MyViewHolder myViewHolder = (DeptListAdapter.MyViewHolder) holder;
+        final MyViewHolder myViewHolder = (MyViewHolder) holder;
         resetPage(myViewHolder);
         handleProfileInfo(myViewHolder, searchdetailList);
         handleCheckinInfo(myViewHolder, searchdetailList);
@@ -396,14 +394,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
             // }
         }
-//        myViewHolder.layout_type.addView(parent);
-//        //////////////////////////////////////////////////////////////
-//        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
-//                "fonts/Montserrat_Bold.otf");
-//        myViewHolder.tv_name.setTypeface(tyface_confm);
-//        myViewHolder.btncheckin.setTypeface(tyface_confm);
-//        // myViewHolder.tv_Open.setTypeface(tyface_confm);
-//
         myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -541,122 +531,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
             if (searchdetailList.getServices().size() > 0) {
                 myViewHolder.L_services.setVisibility(View.VISIBLE);
-
-//                myViewHolder.L_services.removeAllViews();
-//                int size = 0;
-//                if (searchdetailList.getServices().size() == 1) {
-//                    size = 1;
-//                } else {
-//                    if (searchdetailList.getServices().size() == 2) {
-//                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
-//                        size = 2;
-//                        }
-//                        else{
-//                            size = 1;
-//                        }
-//
-//                    } else {
-//                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
-//                            size = 2;
-//                        }
-//                        else{
-//                            size = 1;
-//                        }
-//                    }
-//                }
-//                for (int i = 0; i < size; i++) {
-//                    TextView dynaText = new TextView(context);
-//                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                            "fonts/Montserrat_Regular.otf");
-//                    dynaText.setTypeface(tyface);
-//                    dynaText.setText(searchdetailList.getServices().get(i).getName());
-//                    try {
-//                        if (searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")) {
-//
-//                            if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
-//                                dynaText.setCompoundDrawablePadding(10);
-//                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
-//                                dynaText.setCompoundDrawablePadding(10);
-//                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
-//                                dynaText.setCompoundDrawablePadding(10);
-//                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
-//                                dynaText.setCompoundDrawablePadding(10);
-//                            }
-//
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    dynaText.setTextSize(11);
-//                    dynaText.setPadding(5, 0, 5, 0);
-//                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-//                    dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-//                    dynaText.setMaxLines(1);
-//                    if (size > 2) {
-//                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                        dynaText.setMaxEms(10);
-//                    }
-//                    final int finalI = i;
-//                    dynaText.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            try {
-//                                //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
-//                                for (int i = 0; i < searchdetailList.getServices().size(); i++) {
-//                                    if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
-//                                        Intent iService = new Intent(activity, SearchServiceActivity.class);
-//                                        iService.putExtra("name", searchdetailList.getServices().get(i).getName());
-//                                        iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
-//                                        iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
-//                                        iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
-//                                        iService.putExtra("from","multiuser");
-//                                        iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
-//                                        iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
-//                                        iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
-//                                        iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
-//                                        iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
-//                                        iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
-//                                        if (searchdetailList.getServices().get(i).getVirtualCallingModes() != null) {
-//                                            iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
-//                                        }
-//                                        activity.startActivity(iService);
-//
-//                                    }
-//                                }
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//                    });
-//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                    params.setMargins(0, 0, 20, 0);
-//
-//                    dynaText.setLayoutParams(params);
-//                    myViewHolder.L_services.addView(dynaText);
-//                }
-//                int count = searchdetailList.getServices().size() - size;
-//                if (searchdetailList.getServices().size() > 2 && count > 0) {
-//                    TextView dynaTextMore = new TextView(context);
-//                    dynaTextMore.setText("+ " + count + " more");
-//                    dynaTextMore.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            mAdapterCallback.onMethodServiceCallbackUser((ArrayList) searchdetailList.getServices(), searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
-//                        }
-//                    });
-//                    dynaTextMore.setGravity(Gravity.LEFT);
-//                    dynaTextMore.setTextColor(context.getResources().getColor(R.color.title_consu));
-//                  //  dynaText.setText(" ... ");
-//                    myViewHolder.L_services.addView(dynaTextMore);
-//                    dynaTextMore.setTextSize(11);
-//
-//
-//                }
 
                 if (searchdetailList.getServices().size() == 1) {
 
@@ -1006,24 +880,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             } else {
                 myViewHolder.L_services.setVisibility(View.GONE);
             }
-//            try {
-//                // String serviceName = searchdetailList.getServices().toString();
-//                try {
-//                    JSONArray jsonArray = new JSONArray(searchdetailList.getServices());
-//                    String jsonArry = jsonArray.getString(0);
-//                    JSONArray jsonArray1 = new JSONArray(jsonArry);
-//                    for(int i =0;i<jsonArray1.length();i++){
-//                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
-//                        String name = jsonObject.optString("name");
-//                        serviceNames.add(i,name);
-//                        Log.i("sar",serviceNames.toString());
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }catch (Exception e) {
-//                e.printStackTrace();
-//            }
         }
     }
 
@@ -1255,7 +1111,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         }
         myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", searchdetailList.getLocation().getId());
                 iCheckIn.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
@@ -1278,7 +1134,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 if (searchdetailList.getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
-                v.getContext().startActivity(iCheckIn);
+                v.getContext().startActivity(iCheckIn);*/
             }
         });
 
@@ -1292,7 +1148,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
         myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 if (searchdetailList.getLocation() != null) {
                     iCheckIn.putExtra("serviceId", searchdetailList.getLocation().getId());
@@ -1317,7 +1173,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 if (searchdetailList.getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
-                v.getContext().startActivity(iCheckIn);
+                v.getContext().startActivity(iCheckIn);*/
             }
         });
     }
@@ -1440,27 +1296,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
                         if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
                             try {
-//                                String array_json = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).toString();
-
-
-                                //Get the instance of JSONArray that contains JSONObjects
-//                                    JSONArray jsonArray = new JSONArray(array_json);
-//                                    String jsonarry = jsonArray.getString(0);
-//                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
-
-                                //Iterate the jsonArray and print the info of JSONObjects
 
                                 workingModelArrayList.clear();
 
-                                //  for (int i = 0; i < searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().size(); i++) {
-                                //  JSONObject jsonObject = jsonArray1.getJSONObject(i);
-
-//                                        String id = jsonObject.optString("recurringType").toString();
-//                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
-//                                        String timeslot = jsonObject.optString("timeSlots").toString();
-//                                        // String publish_date = jsonObject.optString("publish_date").toString();
-//                                        JSONArray jsonArray_time = new JSONArray(timeslot);
-//                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
                                 String sTime = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots().get(0).getsTime();
                                 String eTime = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots().get(0).geteTime();
 
@@ -1530,168 +1368,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         SearchViewDetail getBusinessData = searchdetailList.getSearchViewDetail();
         handleJaldeeVerification(myViewHolder, getBusinessData);
         setSpecializations(myViewHolder, getBusinessData);
-//        if (getBusinessData.getSocialMedia() != null) {
-//            if (getBusinessData.getSocialMedia().size() > 0) {
-//                LsocialMedia.setVisibility(View.VISIBLE);
-//                for (int i = 0; i < getBusinessData.getSocialMedia().size(); i++) {
-//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
-////                        tv_SocialMedia.setVisibility(View.VISIBLE);
-//                        ic_fac.setVisibility(View.VISIBLE);
-//                        final int finalI = i;
-//                        ic_fac.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                try {
-//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI).getValue()));
-//                                    startActivity(myIntent);
-//                                } catch (ActivityNotFoundException e) {
-//                                    Toast.makeText(mContext, "No application can handle this request."
-//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
-////                        tv_SocialMedia.setVisibility(View.VISIBLE);
-//                        ic_gplus.setVisibility(View.VISIBLE);
-//                        final int finalI3 = i;
-//                        ic_gplus.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                try {
-//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI3).getValue()));
-//                                    startActivity(myIntent);
-//                                } catch (ActivityNotFoundException e) {
-//                                    Toast.makeText(mContext, "No application can handle this request."
-//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
-////                        tv_SocialMedia.setVisibility(View.VISIBLE);
-//                        ic_twitt.setVisibility(View.VISIBLE);
-//                        final int finalI1 = i;
-//                        ic_twitt.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                try {
-//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI1).getValue()));
-//                                    startActivity(myIntent);
-//                                } catch (ActivityNotFoundException e) {
-//                                    Toast.makeText(mContext, "No application can handle this request."
-//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
-////                        tv_SocialMedia.setVisibility(View.VISIBLE);
-//                        ic_link.setVisibility(View.VISIBLE);
-//                        final int finalI5 = i;
-//                        ic_link.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                try {
-//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI5).getValue()));
-//                                    startActivity(myIntent);
-//                                } catch (ActivityNotFoundException e) {
-//                                    Toast.makeText(mContext, "No application can handle this request."
-//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
-////                        tv_SocialMedia.setVisibility(View.VISIBLE);
-//                        ic_pin.setVisibility(View.VISIBLE);
-//                        final int finalI4 = i;
-//                        ic_pin.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                try {
-//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI4).getValue()));
-//                                    startActivity(myIntent);
-//                                } catch (ActivityNotFoundException e) {
-//                                    Toast.makeText(mContext, "No application can handle this request."
-//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
-////                        tv_SocialMedia.setVisibility(View.VISIBLE);
-//                        ic_yout.setVisibility(View.VISIBLE);
-//                        final int finalI2 = i;
-//                        ic_yout.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                try {
-//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI2).getValue()));
-//                                    startActivity(myIntent);
-//                                } catch (ActivityNotFoundException e) {
-//                                    Toast.makeText(mContext, "No application can handle this request."
-//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            } else {
-//                LsocialMedia.setVisibility(View.GONE);
-//                tv_SocialMedia.setVisibility(View.GONE);
-//            }
-//        } else {
-//            LsocialMedia.setVisibility(View.GONE);
-//            tv_SocialMedia.setVisibility(View.GONE);
-//        }
-//        contactDetail.clear();
-//        if (getBusinessData.getPhoneNumbers().size() > 0) {
-//            for (int i = 0; i < getBusinessData.getPhoneNumbers().size(); i++) {
-//                Config.logV("Phone @@@@@@@@@@@@" + getBusinessData.getPhoneNumbers().get(i).getInstance());
-//                ContactModel contact = new ContactModel();
-//                contact.setInstance(getBusinessData.getPhoneNumbers().get(i).getInstance());
-//                contact.setResource(getBusinessData.getPhoneNumbers().get(i).getResource());
-//                contact.setLabel(getBusinessData.getPhoneNumbers().get(i).getLabel());
-//                contactDetail.add(contact);
-//            }
-//        }
-//        if (getBusinessData.getEmails().size() > 0) {
-//            for (int i = 0; i < getBusinessData.getEmails().size(); i++) {
-//                ContactModel contact = new ContactModel();
-//                contact.setInstance(getBusinessData.getEmails().get(i).getInstance());
-//                contact.setResource(getBusinessData.getEmails().get(i).getResource());
-//                contact.setLabel(getBusinessData.getEmails().get(i).getLabel());
-//                contactDetail.add(contact);
-//            }
-//        }
-//
-//        if (getBusinessData.getPhoneNumbers().size() > 0 || getBusinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
-//            tv_contact.setVisibility(View.VISIBLE);
-//            tv_contact.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (!isContact) {
-//                        Config.logV("Open");
-//                        isContact = true;
-//                        tv_contact.setText("Contact");
-//                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.contact_selected, 0, 0);
-//                        BottomSheetContactDialog();
-//                    } else {
-//                        Config.logV("CLosed");
-//                    }
-//                }
-//            });
-//        } else {
-//            tv_contact.setVisibility(View.GONE);
-//        }
-//        tv_msg.setEnabled(true);
         Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_name.setTypeface(tyface_confm);
@@ -1712,27 +1388,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         } catch (Exception e) {
 
         }
-//        if (getBusinessData.getServiceSector().getDisplayName() != null && getBusinessData.getServiceSubSector().getDisplayName() != null) {
-//            myViewHolder.tv_domain.setText(getBusinessData.getServiceSector().getDisplayName() + " " + "(" + getBusinessData.getServiceSubSector().getDisplayName() + ")");
-//        }
-//        if (getBusinessData.getBusinessDesc() != null) {
-//            myViewHolder.m.setVisibility(View.VISIBLE);
-//            tv_desc.setText(getBusinessData.getBusinessDesc());
-//            tv_desc.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    int lineCount = tv_desc.getLineCount();
-//                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
-//                    if (lineCount > 3) {
-//                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "..more", true);
-//                    } else {
-//                    }
-//                    // Use lineCount here
-//                }
-//            });
-//        } else {
-//            tv_desc.setVisibility(View.GONE);
-//        }
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.listener(new Picasso.Listener() {
             @Override
@@ -1741,7 +1396,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
         if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-            PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+            Glide.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).circleCrop().fitCenter().into(myViewHolder.profile);
+
+            //PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
             myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1759,7 +1416,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     }
                 }
 
-
             });
         }
 
@@ -1772,9 +1428,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             return searchList.size();
         }
         return 0;
-
     }
-
 
     private void apiJDN(String uniqueID) {
         ApiInterface apiService =

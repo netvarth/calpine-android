@@ -26,15 +26,15 @@ public class LAmenitiesListingAdapter extends RecyclerView.Adapter<LAmenitiesLis
 
     @NonNull
     @Override
-    public LAmenitiesListingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item, viewGroup, false);
-        return new LAmenitiesListingAdapter.ViewHolder(v);
+        return new ViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final LAmenitiesListingAdapter.ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Regular.otf");

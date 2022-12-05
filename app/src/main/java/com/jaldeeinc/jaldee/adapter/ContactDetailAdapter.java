@@ -3,12 +3,13 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
@@ -58,7 +59,7 @@ public class ContactDetailAdapter extends RecyclerView.Adapter<ContactDetailAdap
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.contact_list_row, parent, false);
 
-        return new ContactDetailAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override

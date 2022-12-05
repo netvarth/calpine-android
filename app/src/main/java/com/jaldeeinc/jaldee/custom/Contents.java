@@ -1,7 +1,7 @@
 package com.jaldeeinc.jaldee.custom;
 
 import android.provider.ContactsContract;
- 
+
 public final class Contents {
     private Contents() {
     }

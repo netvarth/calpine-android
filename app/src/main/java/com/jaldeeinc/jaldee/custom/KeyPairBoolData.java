@@ -22,7 +22,7 @@ public class KeyPairBoolData implements Serializable {
 		this.imagePath = imagePath;
 	}
 
-	public KeyPairBoolData(String name, String imagePath,String type) {
+	public KeyPairBoolData(String name, String imagePath, String type) {
 		this.name = name;
 		this.imagePath = imagePath;
 		this.type = type;

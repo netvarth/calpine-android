@@ -37,39 +37,6 @@ public class SearchVirtualFields {
     ArrayList domain;
     @SerializedName("subdomain")
     ArrayList subdomain;
-/*
-  *//*  public Object getValue() {
-        return value;
-    }*//*
-
-   *//* @SerializedName("value")
-    private Object value;*//*
-    public static class DataStateDeserializer implements JsonDeserializer<SearchVirtualFields> {
-
-        @Override
-        public SearchVirtualFields deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            SearchVirtualFields userResponse = new Gson().fromJson(json, SearchVirtualFields.class);
-            JsonObject jsonObject = json.getAsJsonObject();
-
-            if (jsonObject.has("value")) {
-                JsonElement elem = jsonObject.get("value");
-                if (elem != null && !elem.isJsonNull()) {
-                    if(elem.isJsonPrimitive()){
-                        Config.logV("Value @@@@@@@@@@@");
-                    }else{
-                        Config.logV("Value @@@@@@@@@@@!!!!!");
-
-                    }
-                }
-            }
-            return userResponse ;
-        }
-    }
-
-  */
-
-
-
 
     public String getHead() {
         return head;

@@ -431,7 +431,6 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                         TextView tvPath = singleFileUploadView.findViewById(R.id.tv_path);
                         TextView tvSupportedTypes = singleFileUploadView.findViewById(R.id.tv_supportedTypes);
 
-
                         if (!tvPath.getText().toString().trim().equalsIgnoreCase("")) {
                             path = tvPath.getText().toString();
                         }
@@ -753,7 +752,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -913,7 +912,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             uploadArray.put(urlObj);
         }
         uploadObj.putOpt("urls", uploadArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
         if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
             call = apiService.checkAppointmentUploadStatus(uid, accountId, body);
@@ -977,7 +976,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -1041,7 +1040,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -1787,7 +1786,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
     private void playAudio(String imagePath) {
 
-        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent i = new Intent(Intent.ACTION_VIEW);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setDataAndType(FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(imagePath)), "audio/*");

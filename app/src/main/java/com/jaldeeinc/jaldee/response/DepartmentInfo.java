@@ -4,7 +4,6 @@ package com.jaldeeinc.jaldee.response;
 import com.jaldeeinc.jaldee.adapter.Section;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DepartmentInfo implements Section<DepServiceInfo> {
 

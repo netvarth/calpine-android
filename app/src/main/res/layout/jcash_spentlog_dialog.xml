@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_14sp">
+    android:paddingBottom="14sp">
 
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/dimen_8dp">
+        android:padding="8dp">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/tv_cstmr_infrmn"
@@ -22,10 +22,10 @@
             android:layout_gravity="center"
             android:ellipsize="end"
             android:maxLines="1"
-            android:padding="@dimen/dimen_5dp"
+            android:padding="5dp"
             android:text="Spent list"
             android:textColor="@color/black"
-            android:textSize="@dimen/dimen_18dp">
+            android:textSize="18dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -47,22 +47,21 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/cv_bottom"
         android:layout_below="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_8dp"
-            android:layout_marginLeft="@dimen/dimen_8dp">
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp">
 
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycle_spentlist"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:paddingLeft="@dimen/dimen_5dp"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintHeight_min="10dp"

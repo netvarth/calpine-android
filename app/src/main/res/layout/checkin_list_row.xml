@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:visibility="gone"
-            android:layout_marginRight="@dimen/dimen_5dp"/>
+            android:layout_marginRight="5dp"/>
 
 
         <TextView

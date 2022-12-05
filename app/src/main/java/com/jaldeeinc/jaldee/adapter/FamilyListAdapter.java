@@ -4,11 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.FamilyAdapterCallback;
@@ -75,7 +75,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.familytlist_row, parent, false);
 
-        return new FamilyListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
@@ -150,7 +150,8 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.Base_Theme_AppCompat_Light_Dialog);
+                //AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.Base_Theme_AppCompat_Light_Dialog);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage("Do you really want to delete family member ?");
                 builder.setCancelable(true);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

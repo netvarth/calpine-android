@@ -19,7 +19,7 @@
             android:layout_weight="0.75"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:textSize="@dimen/dimen_12dp"
+            android:textSize="12dp"
             android:textColor="@color/title_grey"
             android:text="Service" />
 

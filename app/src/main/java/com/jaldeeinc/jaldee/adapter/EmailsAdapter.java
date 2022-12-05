@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.ViewNotesDialog;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ public class EmailsAdapter extends RecyclerView.Adapter<EmailsAdapter.ViewHolder
     private boolean isLoading = true;
     public Context context;
     private int lastPosition = -1;
-    private ViewNotesDialog viewNotesDialog;
 
 
     public EmailsAdapter(ArrayList<SearchViewDetail> itemsList, Context context) {
@@ -32,16 +30,16 @@ public class EmailsAdapter extends RecyclerView.Adapter<EmailsAdapter.ViewHolder
 
     @NonNull
     @Override
-    public EmailsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.email_item, viewGroup, false);
-        return new EmailsAdapter.ViewHolder(v, false);
+        return new ViewHolder(v, false);
 
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final EmailsAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         SearchViewDetail number = numbersList.get(position);
 

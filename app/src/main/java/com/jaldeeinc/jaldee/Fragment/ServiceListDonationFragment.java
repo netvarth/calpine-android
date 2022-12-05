@@ -14,18 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.ServiceListAppointmentAdapter;
 import com.jaldeeinc.jaldee.adapter.ServiceListDonationAdapter;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 
 import java.util.ArrayList;
-
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by sharmila on 3/9/18.

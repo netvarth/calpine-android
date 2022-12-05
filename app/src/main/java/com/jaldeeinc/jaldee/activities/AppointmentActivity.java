@@ -66,12 +66,10 @@ import com.jaldeeinc.jaldee.custom.AddNotes;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
-import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
@@ -84,7 +82,6 @@ import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
@@ -499,11 +496,11 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                     ivteleService.setVisibility(View.VISIBLE);
                     if (serviceInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
 
-                        ivteleService.setImageResource(R.drawable.zoom);
+                        ivteleService.setImageResource(R.drawable.zoomicon_sized);
 
                     } else if (serviceInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
-                        ivteleService.setImageResource(R.drawable.googlemeet);
+                        ivteleService.setImageResource(R.drawable.googlemeet_sized);
 
                     } else if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
                         if (serviceInfo.getVirtualServiceType() != null && serviceInfo.getVirtualServiceType().equalsIgnoreCase("videoService")) {
@@ -1087,9 +1084,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         }
     }
 
-    SectorCheckin checkin_sector = null;
-    int partySize = 0;
-    boolean enableparty = false;
     boolean multiplemem = false;
 
     private void ApiJaldeegetS3Coupons(String s3Coupons) {
@@ -1917,7 +1911,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
-
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
             ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
 
@@ -2135,12 +2128,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
 
     }
 
-    private void showToolTip() {
-
-        CustomToolTip tipWindow = new CustomToolTip(AppointmentActivity.this, CustomToolTip.DRAW_TOP, "Please add notes");
-        tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
-    }
-
     @Override
     public void sendFamilyMemberDetails(int fmemId, String firstName, String lastName, String phone, String email, String conCode, String whtsappCountryCode, String whatsappNumber, String telegramCountryCode, String telegramNumber, String age, JSONArray preferredLanguages, JSONObject bookingLocation, String gender) {
 
@@ -2193,11 +2180,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     @Override
     public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
         MultiplefamilyList.addAll(familyList);
-
-    }
-
-    @Override
-    public void SelectedPincodeLocation(PincodeLocationsResponse selectedPincodeLocation) {
 
     }
 

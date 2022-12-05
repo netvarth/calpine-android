@@ -1,15 +1,12 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.VisibleForTesting;
-import com.google.android.material.textfield.TextInputEditText;
-import androidx.fragment.app.DialogFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +17,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.DatePickerDialog;
 
-import com.google.gson.Gson;
+import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.textfield.TextInputEditText;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -472,7 +470,8 @@ Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            //DatePickerDialog da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
             da.show();
             da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);

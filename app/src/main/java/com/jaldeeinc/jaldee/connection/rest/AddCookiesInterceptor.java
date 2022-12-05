@@ -32,7 +32,7 @@ public class AddCookiesInterceptor implements Interceptor {
     }
 
     @Override
-    public Response intercept(Interceptor.Chain chain) throws IOException {
+    public Response intercept(Chain chain) throws IOException {
         Request.Builder builder = chain.request().newBuilder();
 
        /* HashSet<String> preferences = (HashSet<String>) PreferenceManager.getDefaultSharedPreferences(context).getStringSet(PREF_COOKIES, new HashSet<String>());

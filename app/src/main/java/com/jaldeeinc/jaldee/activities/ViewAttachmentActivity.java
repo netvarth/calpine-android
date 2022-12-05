@@ -1,20 +1,18 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.OrderListImagesAdapter;
 import com.jaldeeinc.jaldee.response.ShoppingList;
-import com.jaldeeinc.jaldee.response.ViewAttachments;
 
 import java.util.ArrayList;
 

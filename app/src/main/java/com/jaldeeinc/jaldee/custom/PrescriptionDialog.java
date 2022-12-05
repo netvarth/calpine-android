@@ -137,11 +137,11 @@ public class PrescriptionDialog extends Dialog {
         } else {
             link = Constants.URL + url;
         }
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/html");
         String shareBody = link;
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Prescription details");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Prescription details");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         view.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 

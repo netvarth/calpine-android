@@ -2,29 +2,15 @@ package com.jaldeeinc.jaldee.payment;
 
 import android.app.Activity;
 import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.razorpay.Checkout;
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Mani on 01/07/2020.

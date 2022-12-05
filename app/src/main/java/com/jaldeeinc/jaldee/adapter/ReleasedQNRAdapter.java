@@ -70,17 +70,15 @@ public class ReleasedQNRAdapter extends RecyclerView.Adapter<ReleasedQNRAdapter.
     }
 
     @Override
-    public ReleasedQNRAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.released_qnr_item, parent, false);
 
-
-        return new ReleasedQNRAdapter.MyViewHolder(itemView);
-
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ReleasedQNRAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
 
         final RlsdQnr rlsdQnr = rlsdQnrs.get(position);
         try {

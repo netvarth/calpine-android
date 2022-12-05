@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    app:cardElevation="@dimen/dimen_0dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,10 +15,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_1dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_1dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="10">
@@ -33,8 +33,8 @@
                     android:id="@+id/tv_itemDetailsName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_10dp"
-                    android:layout_marginBottom="@dimen/dimen_5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
                     android:fontFamily="@font/font_medium"
                     android:text="Item Details"
                     android:textColor="@color/dark_blue"
@@ -44,12 +44,12 @@
                     android:id="@+id/tv_itemDetailsPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_marginRight="10dp"
                     android:fontFamily="@font/font_medium"
                     android:text="800"
                     android:textColor="@color/black5"
                     android:textSize="@dimen/txtsize_10"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
             </LinearLayout>
 
             <LinearLayout
@@ -64,27 +64,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_note"
-                    android:layout_marginRight="@dimen/dimen_1dp"
+                    android:layout_marginRight="1dp"
                     android:backgroundTint="@color/red5"
-                    app:cardCornerRadius="@dimen/dimen_22dp"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    app:cardCornerRadius="22dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
-                        android:paddingLeft="@dimen/dimen_10dp"
-                        android:paddingRight="@dimen/dimen_10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dimen_20dp"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:layout_marginRight="@dimen/dimen_20dp"
-                            android:layout_marginBottom="@dimen/dimen_5dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:fontFamily="@font/font_medium"
                             android:text="Edit"
                             android:textColor="@color/red4"
@@ -99,27 +99,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_note"
-                    android:layout_marginRight="@dimen/dimen_1dp"
+                    android:layout_marginRight="1dp"
                     android:backgroundTint="@color/red5"
                     android:visibility="gone"
-                    app:cardCornerRadius="@dimen/dimen_22dp">
+                    app:cardCornerRadius="22dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
-                        android:paddingLeft="@dimen/dimen_10dp"
-                        android:paddingRight="@dimen/dimen_10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dimen_20dp"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:layout_marginRight="@dimen/dimen_20dp"
-                            android:layout_marginBottom="@dimen/dimen_5dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:fontFamily="@font/font_medium"
                             android:text="Remove"
                             android:textColor="@color/red4"
@@ -128,36 +128,37 @@
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_itemPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_note"
-                    android:layout_marginRight="@dimen/dimen_1dp"
-                    android:backgroundTint="@color/white"
-                    app:elevation="@dimen/dimen_0dp"
-                    android:layout_margin="@dimen/dimen_1dp"
-                    android:visibility="gone"
                     android:layout_gravity="center"
-                    app:cardCornerRadius="@dimen/dimen_22dp">
+                    android:layout_margin="1dp"
+                    android:layout_marginRight="1dp"
+                    android:backgroundTint="@color/white"
+                    android:visibility="gone"
+                    app:cardCornerRadius="22dp"
+                    app:elevation="0dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
-                        android:paddingLeft="@dimen/dimen_10dp"
-                        android:paddingRight="@dimen/dimen_10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:visibility="visible">
 
                         <TextView
                             android:id="@+id/tv_itemPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
                             android:fontFamily="@font/font_medium"
                             android:text="Edit"
-                            android:layout_marginRight="@dimen/dimen_10dp"
-                            android:layout_marginLeft="@dimen/dimen_10dp"
                             android:textColor="@color/grey5"
                             android:textSize="@dimen/txtsize_12" />
 
@@ -165,13 +166,14 @@
 
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_divider"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
             android:background="@color/grey15"
             android:orientation="horizontal"
             android:visibility="gone" />

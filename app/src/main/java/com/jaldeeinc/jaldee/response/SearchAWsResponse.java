@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by sharmila on 19/7/18.
  */
 
-public class SearchAWsResponse  {
+public class SearchAWsResponse {
 
     String parking_type_location1;
     String firstaid_location1;

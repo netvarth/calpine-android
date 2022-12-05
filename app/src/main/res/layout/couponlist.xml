@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginRight="@dimen/dimen_8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     android:background="#ffffff"
                     android:nestedScrollingEnabled="true"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginRight="@dimen/dimen_8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
                     android:background="@color/white"
                     android:nestedScrollingEnabled="false"
@@ -95,10 +95,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dimen_25dp"
+                android:layout_marginTop="25dp"
                 android:text="No coupons available at the moment"
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_15dp">
+                android:textSize="15dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

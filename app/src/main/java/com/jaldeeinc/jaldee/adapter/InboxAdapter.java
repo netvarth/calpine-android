@@ -53,22 +53,22 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     }
 
     @Override
-    public InboxAdapter.MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
 
         if (isLoading) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shimmer_inbox, viewGroup, false);
-            return new InboxAdapter.MyViewHolder(v, true);
+            return new MyViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.inboxlist_row, viewGroup, false);
-            return new InboxAdapter.MyViewHolder(v, false);
+            return new MyViewHolder(v, false);
         }
     }
 
 
     @Override
-    public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
 
         if (!isLoading) {
             final NewInbox inboxList = mInboxList.get(position);
@@ -125,7 +125,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             });
 
         } else {
-            InboxAdapter.MyViewHolder skeletonViewHolder = (InboxAdapter.MyViewHolder) myViewHolder;
+            MyViewHolder skeletonViewHolder = (MyViewHolder) myViewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }

@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.custom;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +28,6 @@ import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
-
 import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.adapter.CartItemServceOptnAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailPageItemsAdapter;

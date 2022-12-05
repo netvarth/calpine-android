@@ -38,22 +38,22 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
     @NonNull
     @Override
-    public AddressAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new AddressAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.address, parent, false);
-            return new AddressAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AddressAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
             final Address address = addressList.get(position);
@@ -103,7 +103,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
         } else {
 
-            AddressAdapter.ViewHolder skeletonViewHolder = (AddressAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

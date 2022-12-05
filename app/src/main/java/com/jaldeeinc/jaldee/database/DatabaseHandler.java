@@ -12,23 +12,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.model.OrderItem;
+import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
-import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.ConsumerDetails;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.JaldeeWaitlistDistanceTime;
 import com.jaldeeinc.jaldee.response.LocationDetails;
 import com.jaldeeinc.jaldee.response.ProfileModel;
-import com.jaldeeinc.jaldee.model.Domain_Spinner;
-import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.response.ProviderDetails;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.ServiceDetails;
@@ -37,7 +35,6 @@ import com.jaldeeinc.jaldee.response.VirtualServiceDetails;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 

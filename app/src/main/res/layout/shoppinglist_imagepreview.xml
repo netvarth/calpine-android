@@ -8,30 +8,30 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp">
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp">
 
         <TextView
             android:fontFamily="@font/font_regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Preview"
-            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginStart="15dp"
             android:textColor="@color/dark_black"
             android:layout_centerVertical="true"
-            android:textSize="@dimen/dimen_18dp">
+            android:textSize="18dp">
 
         </TextView>
 
 
         <ImageView
             android:id="@+id/iv_close"
-            android:layout_width="@dimen/dimen_35dp"
-            android:layout_height="@dimen/dimen_35dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:background="@drawable/bg_circle"
             android:backgroundTint="@color/spinnerbg"
-            android:padding="@dimen/dimen_8dp"
+            android:padding="8dp"
             android:src="@drawable/close"
             app:tint="@color/title_color">
 
@@ -43,8 +43,8 @@
         android:id="@+id/iv_image"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
 
     <TextView
@@ -53,15 +53,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:layout_marginBottom="@dimen/dimen_25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/edittext"
         android:backgroundTint="@color/special_background"
-        android:paddingStart="@dimen/dimen_15dp"
-        android:paddingTop="@dimen/dimen_5dp"
-        android:paddingEnd="@dimen/dimen_15dp"
-        android:paddingBottom="@dimen/dimen_5dp"
+        android:paddingStart="15dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="5dp"
         android:maxLines="3"
         android:scrollbars="vertical"
         android:textColor="@color/title_color">

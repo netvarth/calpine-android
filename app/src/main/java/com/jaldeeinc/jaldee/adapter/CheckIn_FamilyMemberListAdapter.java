@@ -2,8 +2,6 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +11,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -55,7 +54,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     int memId,update;
     Button changemem;
 
-    public CheckIn_FamilyMemberListAdapter(Button changemem,int update,int memId, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity,IFamillyListSelected iFamillyListSelected) {
+    public CheckIn_FamilyMemberListAdapter(Button changemem, int update, int memId, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity, IFamillyListSelected iFamillyListSelected) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
@@ -70,7 +69,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
 
     ArrayList<FamilyArrayModel> CheckList = new ArrayList<>();
 
-    public CheckIn_FamilyMemberListAdapter(Button changemem,ArrayList<FamilyArrayModel> mCheckList, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity,IFamillyListSelected iFamillyListSelected) {
+    public CheckIn_FamilyMemberListAdapter(Button changemem, ArrayList<FamilyArrayModel> mCheckList, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity, IFamillyListSelected iFamillyListSelected) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
@@ -83,17 +82,17 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     }
 
     @Override
-    public CheckIn_FamilyMemberListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.radio_familytlist_row, parent, false);
 
-        return new CheckIn_FamilyMemberListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
     public int getItemViewType(int position) {
         return position;
     }
     @Override
-    public void onBindViewHolder(final CheckIn_FamilyMemberListAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final FamilyArrayModel familylist = familyList.get(position);
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 

@@ -6,16 +6,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:paddingEnd="10dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="16dp"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -23,13 +23,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding5"
-                android:src="@mipmap/img_back_arrow"
+                android:src="@drawable/img_back_arrow"
                 app:tint="@color/dark_blue">
 
             </ImageView>
 
         </androidx.cardview.widget.CardView>
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,7 +41,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 android:visibility="visible"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
@@ -66,7 +65,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 android:visibility="visible"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
@@ -90,7 +89,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
 
@@ -109,19 +108,18 @@
 
             </androidx.cardview.widget.CardView>
 
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_enquiry"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_24sp"
-                    android:layout_height="@dimen/dimen_26dp"
+                    android:layout_width="24sp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/padding5"
                     android:padding="1dp"
@@ -138,7 +136,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="@dimen/padding5"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
@@ -165,7 +163,7 @@
         style="@style/Widget.Neumorph.CardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dimen_60dp"
+        android:layout_marginTop="60dp"
         app:neumorph_backgroundColor="@color/white"
         app:neumorph_insetBottom="@dimen/dimen_0dp"
         app:neumorph_insetEnd="@dimen/dimen_1dp"
@@ -174,7 +172,6 @@
         app:neumorph_shadowColorDark="#BEF2F2F2"
         app:neumorph_shadowColorLight="#BEF2F2F2"
         app:neumorph_shapeType="pressed">
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -190,7 +187,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
 
                     <LinearLayout
                         android:id="@+id/mProfile"
@@ -221,9 +217,7 @@
                             android:textStyle="bold"
                             android:visibility="visible" />
 
-
                     </LinearLayout>
-
 
                     <RatingBar
                         android:id="@+id/rb_ratingBar"
@@ -237,7 +231,6 @@
                         android:visibility="gone" />
 
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -267,7 +260,7 @@
                                 android:maxLines="2"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_18sp">
+                                android:textSize="18sp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -282,7 +275,7 @@
                                 android:maxLines="1"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_15dp"
+                                android:textSize="15dp"
                                 android:visibility="gone">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
@@ -317,9 +310,7 @@
 
                             </LinearLayout>
 
-
                         </LinearLayout>
-
 
                         <ImageView
                             android:id="@+id/iv_verified"
@@ -334,13 +325,12 @@
 
                     </LinearLayout>
 
-
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/tv_specializations"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/padding2"
-                        android:layout_marginTop="@dimen/dimen_8dp"
+                        android:layout_marginTop="8dp"
                         android:text="Specializations"
                         android:textAllCaps="true"
                         android:textColor="@color/title_color"
@@ -354,7 +344,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/padding2"
                         android:layout_marginTop="@dimen/padding5"
-                        android:layout_marginEnd="@dimen/dimen_2dp"
+                        android:layout_marginEnd="2dp"
                         android:orientation="vertical"
                         android:visibility="visible">
 
@@ -400,7 +390,6 @@
 
                 </LinearLayout>
 
-
             </LinearLayout>
 
             <LinearLayout
@@ -438,9 +427,9 @@
                             android:id="@+id/tv_moreInfo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dimen_2dp"
-                            android:paddingBottom="@dimen/dimen_2dp"
-                            android:paddingLeft="@dimen/dimen_5dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
                             android:layout_alignParentEnd="true"
                             android:layout_marginStart="@dimen/padding2"
                             android:layout_marginTop="@dimen/padding5"
@@ -481,7 +470,6 @@
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-
                 </LinearLayout>
 
                 <ScrollView
@@ -495,7 +483,7 @@
                         android:layout_marginTop="@dimen/padding5"
                         android:background="#f9f9f9"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/dimen_5dp"
+                        android:paddingBottom="5dp"
                         android:visibility="gone">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -506,7 +494,7 @@
                             android:layout_marginTop="@dimen/padding5"
                             android:text="Area of specialization"
                             android:textColor="@color/title_grey_light"
-                            android:textSize="@dimen/dimen_12sp">
+                            android:textSize="12sp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -522,6 +510,7 @@
                             android:textSize="@dimen/txtsize_12">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_languagesKnownHint"
                             android:layout_width="wrap_content"
@@ -530,7 +519,7 @@
                             android:layout_marginTop="@dimen/padding5"
                             android:text="Languages Known"
                             android:textColor="@color/title_grey_light"
-                            android:textSize="@dimen/dimen_12sp">
+                            android:textSize="12sp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -569,7 +558,7 @@
                                 android:layout_marginTop="@dimen/padding5"
                                 android:text="Social media links and Listing sites"
                                 android:textColor="@color/title_grey_light"
-                                android:textSize="@dimen/dimen_12sp">
+                                android:textSize="12sp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -581,7 +570,6 @@
                                 android:layout_marginTop="@dimen/padding2"
                                 android:orientation="horizontal"
                                 android:visibility="gone">
-
 
                                 <ImageView
                                     android:id="@+id/iv_facebook"
@@ -657,9 +645,7 @@
 
                             </LinearLayout>
 
-
                         </LinearLayout>
-
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_contactDetails"
@@ -669,7 +655,7 @@
                             android:layout_marginTop="@dimen/padding5"
                             android:text="Contact Details"
                             android:textColor="@color/title_grey_light"
-                            android:textSize="@dimen/dimen_12sp"
+                            android:textSize="12sp"
                             android:visibility="gone">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -706,7 +692,6 @@
 
                         </LinearLayout>
 
-
                     </LinearLayout>
 
                 </ScrollView>
@@ -714,7 +699,6 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -736,9 +720,9 @@
                                 android:id="@+id/ll_location"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dimen_5dp"
-                                android:layout_marginEnd="@dimen/dimen_85dp"
-                                android:layout_marginBottom="@dimen/dimen_5dp">
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="85dp"
+                                android:layout_marginBottom="5dp">
 
                                 <ImageView
                                     android:layout_width="@dimen/padding25"
@@ -762,7 +746,6 @@
 
                             </LinearLayout>
 
-
                             <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                                 android:id="@+id/tv_changeLocation"
                                 android:layout_width="wrap_content"
@@ -783,10 +766,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:layout_marginTop="5dp"
                             android:background="@drawable/custom_status"
                             android:backgroundTint="@color/spinnerbg"
-                            android:elevation="@dimen/dimen_12dp"
+                            android:elevation="12dp"
                             android:visibility="gone">
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -794,15 +777,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
                                 android:layout_marginBottom="3dp"
-                                android:paddingStart="@dimen/dimen_10dp"
-                                android:paddingEnd="@dimen/dimen_10dp"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
                                 android:text="Amenities"
                                 android:textColor="@color/location_theme"
-                                android:textSize="@dimen/dimen_12dp">
+                                android:textSize="12dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-                        </LinearLayout>
 
+                        </LinearLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_services"
@@ -817,7 +800,7 @@
                             android:id="@+id/ll_noSlots"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_40dp"
+                            android:layout_marginTop="40dp"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:visibility="gone">
@@ -841,16 +824,14 @@
 
                         </LinearLayout>
 
-
                     </LinearLayout>
 
                 </FrameLayout>
 
             </LinearLayout>
 
-
         </RelativeLayout>
 
-
     </soup.neumorphism.NeumorphCardView>
+
 </RelativeLayout>

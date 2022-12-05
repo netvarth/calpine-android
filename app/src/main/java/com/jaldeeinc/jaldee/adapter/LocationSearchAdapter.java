@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -13,6 +12,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.LocationSearchCallback;
@@ -47,7 +48,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     }
 
     Context mContext;
-    LocationSearchAdapter.ValueFilter valueFilter;
+    ValueFilter valueFilter;
     ArrayList<LocationResponse> items;
     ArrayList<LocationResponse> filteredItems;
     String name;
@@ -69,14 +70,14 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     }
 
     @Override
-    public LocationSearchAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.searchlocation_row, parent, false);
-        return new LocationSearchAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(LocationSearchAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
 
         if(items!=null){
             final LocationResponse searchdetailList = items.get(position);
@@ -100,7 +101,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     @Override
     public Filter getFilter() {
         if (valueFilter == null) {
-            valueFilter = new LocationSearchAdapter.ValueFilter();
+            valueFilter = new ValueFilter();
         }
         return valueFilter;
     }

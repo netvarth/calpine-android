@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.custom;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 
 public class CustomTextViewSemiBold extends androidx.appcompat.widget.AppCompatTextView

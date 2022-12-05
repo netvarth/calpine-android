@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.jaldeeinc.jaldee.CustomSwipe.transform.DiscreteScrollItemTransformer;
 import com.jaldeeinc.jaldee.CustomSwipe.util.ScrollListenerAdapter;
 import com.jaldeeinc.jaldee.R;

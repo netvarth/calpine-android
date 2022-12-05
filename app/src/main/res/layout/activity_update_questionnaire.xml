@@ -15,17 +15,17 @@
         <LinearLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60dp"
+            android:layout_height="60dp"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:paddingEnd="@dimen/dimen_10dp">
+            android:paddingEnd="10dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_back"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
 
@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/padding5"
-                    android:src="@mipmap/img_back_arrow"
+                    android:src="@drawable/img_back_arrow"
                     app:tint="@color/dark_blue">
 
                 </ImageView>
@@ -47,17 +47,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/cv_back"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginStart="15dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text=""
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_18dp">
+                android:textSize="18dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
         </LinearLayout>
-
 
         <soup.neumorphism.NeumorphCardView
             android:id="@+id/pressed_card"
@@ -85,22 +84,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-
                     <TextView
                         android:id="@+id/tv_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_8dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:gravity="center_horizontal"
                         android:text="Please provide us with little more information to complete your booking"
                         android:textColor="@color/dark_black"
-                        android:textSize="@dimen/dimen_15dp"
+                        android:textSize="15dp"
                         android:visibility="visible">
 
                     </TextView>
-
 
                 </LinearLayout>
 
@@ -113,10 +110,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/padding45"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/padding5"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             app:cardBackgroundColor="@color/location_theme"
             app:cardCornerRadius="@dimen/padding3">
 
@@ -133,14 +130,14 @@
                     android:text="Update"
                     android:fontFamily="@font/font_semibold"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/dimen_18sp">
+                    android:textSize="18sp">
 
                 </TextView>
 
                 <ImageView
                     android:id="@+id/iv_next"
-                    android:layout_width="@dimen/dimen_20dp"
-                    android:layout_height="@dimen/dimen_16sp"
+                    android:layout_width="20dp"
+                    android:layout_height="16sp"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/txtsize_10"
                     android:src="@drawable/rightarrow"

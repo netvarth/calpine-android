@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/iv_icon"
         android:layout_width="@dimen/padding25"
-        android:layout_height="@dimen/dimen_25dp"
+        android:layout_height="25dp"
         android:layout_marginStart="@dimen/padding5"
         android:layout_gravity="center"
         android:visibility="gone">

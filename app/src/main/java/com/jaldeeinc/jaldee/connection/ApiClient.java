@@ -176,7 +176,7 @@ public class ApiClient {
     public static String getDeviceName() {
         String deviceName = Build.MANUFACTURER
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
-                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
+                + " " + Build.VERSION_CODES.class.getFields()[Build.VERSION.SDK_INT].getName();
 
 
        /* String manufacturer = Build.MANUFACTURER;

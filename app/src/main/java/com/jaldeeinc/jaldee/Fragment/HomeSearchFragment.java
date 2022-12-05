@@ -1,5 +1,8 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,17 +16,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.SearchView;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -37,6 +29,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
@@ -56,7 +58,6 @@ import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.activities.JaldeeWalletActivity;
 import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
@@ -84,7 +85,7 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
+import com.jaldeeinc.jaldee.utils.DialogUtils1;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -101,9 +102,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 public class HomeSearchFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -558,7 +556,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
         //SEARCH
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-        searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(androidx.appcompat.R.id.search_src_text);
+        //searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(androidx.appcompat.R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
         searchSrcTextView.setDropDownHeight(450);
@@ -2350,11 +2348,11 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     private void checkPermissions() {
         try {
             int permissionLocation = ContextCompat.checkSelfPermission((Activity) mContext,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION);
+                    Manifest.permission.ACCESS_FINE_LOCATION);
             List<String> listPermissionsNeeded = new ArrayList<>();
             if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
                 Config.logV("Google Not Granted" + permissionLocation);
-                listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+                listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
                 if (!listPermissionsNeeded.isEmpty()) {
 
                     requestPermissions(new String[]{
@@ -2624,7 +2622,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
         try {
             //You can display a message here
-            DialogUtilsKt.showUIDialog(mContext, "", "Unable to access location", () -> {
+            DialogUtils1.showUIDialog(mContext, "", "Unable to access location", () -> {
 
                 Intent intent = new Intent(getActivity(), Home.class);
                 startActivity(intent);

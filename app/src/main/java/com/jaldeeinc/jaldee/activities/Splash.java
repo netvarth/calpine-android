@@ -1,22 +1,18 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import pl.droidsonroids.gif.GifImageView;

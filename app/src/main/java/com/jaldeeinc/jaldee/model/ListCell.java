@@ -30,7 +30,7 @@ public class ListCell implements Comparable<ListCell>{
 
     String msector;
 
-    public ListCell(String name, String category,String sector,String displayname)
+    public ListCell(String name, String category, String sector, String displayname)
     {
         this.name = name;
         this.category = category;

@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
-import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -34,8 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -85,15 +80,15 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     }
 
     @Override
-    public ServiceListAppointmentAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.servicelist_row, parent, false);
 
-        return new ServiceListAppointmentAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ServiceListAppointmentAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final SearchAppointmentDepartmentServices serviceList = mServiceList.get(position);
 
         if (serviceList.getServices() != null) {
@@ -108,15 +103,15 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     if (serviceList.getServiceType().equalsIgnoreCase("virtualservice")) {
                         myViewHolder.ivIcon.setVisibility(View.VISIBLE);
                         if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                            myViewHolder.ivIcon.setImageResource(R.drawable.zoom);
+                            myViewHolder.ivIcon.setImageResource(R.drawable.zoomicon_sized);
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                            myViewHolder.ivIcon.setImageResource(R.drawable.google_meet);
+                            myViewHolder.ivIcon.setImageResource(R.drawable.googlemeet_sized);
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             if(serviceList.getVirtualCallingModes().get(0).getVirtualServiceType()!=null && serviceList.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
                                 myViewHolder.ivIcon.setImageResource(R.drawable.whatsapp_videoicon);
                             }
                             else {
-                                myViewHolder.ivIcon.setImageResource(R.drawable.whatsapp);
+                                myViewHolder.ivIcon.setImageResource(R.drawable.whatsappicon_sized);
                             }
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             myViewHolder.ivIcon.setImageResource(R.drawable.phoneicon_sized);
@@ -137,29 +132,6 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     @Override
                     public void onClick(View v) {
                         if (from.equalsIgnoreCase("searchdetail")) {
-
-//                            final String mServicename = serviceList.getServices().get(finalI).getName();
-//                            final String mServiceprice = String.valueOf(serviceList.getServices().get(finalI).getTotalAmount());
-//                            final String mServicedesc = serviceList.getServices().get(finalI).getDescription();
-//                            final String mServiceduration = String.valueOf(serviceList.getServices().get(finalI).getServiceDuration());
-//                            final boolean mTaxable = serviceList.getServices().get(finalI).isTaxable();
-//                            final ArrayList<SearchAppointmentDepartmentServices> mServiceGallery = serviceList.getServicegallery();
-//
-//                            final boolean isPrepayment = serviceList.getServices().get(finalI).isPrePayment();
-//                            final String minPrepayment = String.valueOf(serviceList.getServices().get(finalI).getMinPrePaymentAmount());
-//
-//                            Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-//                            iService.putExtra("name", mServicename);
-//                            iService.putExtra("duration", mServiceduration);
-//                            iService.putExtra("price", mServiceprice);
-//                            iService.putExtra("desc", mServicedesc);
-//                            iService.putExtra("servicegallery", mServiceGallery);
-//                            iService.putExtra("title", title);
-//                            iService.putExtra("taxable", mTaxable);
-//                            iService.putExtra("isPrePayment", isPrepayment);
-//                            iService.putExtra("MinPrePaymentAmount", minPrepayment);
-//                            iService.putExtra("from","appt");
-//                            mContext.startActivity(iService)
                             appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointmentServices);
                             appointmentServiceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             appointmentServiceInfoDialog.show();
@@ -186,15 +158,15 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
             try {
                 if (serviceList.getServiceType().equalsIgnoreCase("virtualservice")) {
                     if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
                     } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                     } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                         if(serviceList.getVirtualCallingModes().get(0).getVirtualServiceType()!=null && serviceList.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
                             myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
                         }
                         else {
-                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
                         }
                     } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                         myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
@@ -209,29 +181,6 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                 @Override
                 public void onClick(View v) {
                     if (from.equalsIgnoreCase("searchdetail")) {
-//                        final String mServicename = serviceList.getName();
-//                        final String mServiceprice = String.valueOf(serviceList.getTotalAmount());
-//                        final String mServicedesc = serviceList.getDescription();
-//                        final String mServiceduration = String.valueOf(serviceList.getServiceDuration());
-//                        final boolean mTaxable = serviceList.isTaxable();
-//                        final ArrayList<SearchAppointmentDepartmentServices> mServiceGallery = serviceList.getServicegallery();
-//
-//                        final boolean isPrepayment = serviceList.isPrePayment();
-//                        final String minPrepayment = String.valueOf(serviceList.getMinPrePaymentAmount());
-//
-//                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-//                        iService.putExtra("name", mServicename);
-//                        iService.putExtra("duration", mServiceduration);
-//                        iService.putExtra("price", mServiceprice);
-//                        iService.putExtra("desc", mServicedesc);
-//                        iService.putExtra("servicegallery", mServiceGallery);
-//                        iService.putExtra("title", title);
-//                        iService.putExtra("taxable", mTaxable);
-//                        iService.putExtra("isPrePayment", isPrepayment);
-//                        iService.putExtra("MinPrePaymentAmount", minPrepayment);
-//                        iService.putExtra("from","appt");
-//                        mContext.startActivity(iService);
-
                         appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), serviceList);
                         appointmentServiceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         appointmentServiceInfoDialog.show();

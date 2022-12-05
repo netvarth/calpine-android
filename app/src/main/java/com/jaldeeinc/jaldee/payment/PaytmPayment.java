@@ -25,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,11 +82,9 @@ public class PaytmPayment extends AppCompatActivity {
             jsonObj.put("purpose", purpose);
             jsonObj.put("custId", customerId);
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<PaytmChecksum> call = apiService.generateHashPaytm(body);
@@ -156,10 +153,8 @@ public class PaytmPayment extends AppCompatActivity {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(mActivity, mDialog);
-
             }
         });
-
 
     }
 

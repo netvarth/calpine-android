@@ -32,7 +32,7 @@
                     android:layout_marginTop="@dimen/padding3"
                     android:text="Today"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_16sp">
+                    android:textSize="16sp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
@@ -49,8 +49,8 @@
                     android:id="@+id/ll_noTodayBookings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_40dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -82,7 +82,7 @@
                     android:layout_marginTop="@dimen/padding3"
                     android:text="Upcoming"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_16sp">
+                    android:textSize="16sp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
@@ -100,7 +100,7 @@
                     android:id="@+id/ll_noFutureBookings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_40dp"
+                    android:layout_marginTop="40dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -130,8 +130,8 @@
                 android:id="@+id/ll_noBookings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_40dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone">

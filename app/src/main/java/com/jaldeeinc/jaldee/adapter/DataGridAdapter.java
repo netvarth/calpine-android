@@ -31,15 +31,15 @@ public class DataGridAdapter extends RecyclerView.Adapter<DataGridAdapter.ViewHo
 
     @NonNull
     @Override
-    public DataGridAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.questionnaire_grid_item, parent, false);
-        return new DataGridAdapter.ViewHolder(v, false);
+        return new ViewHolder(v, false);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DataGridAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         final DataGrid gridObj = gridList.get(position);
 

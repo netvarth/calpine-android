@@ -1,11 +1,12 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -24,7 +25,7 @@ public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapte
     Context context;
     String from;
 
-    public BIllDiscountAdapter(String from,ArrayList<BillModel> billServiceData, Context context) {
+    public BIllDiscountAdapter(String from, ArrayList<BillModel> billServiceData, Context context) {
         this.billServiceData = billServiceData;
         this.context = context;
         this.from=from;
@@ -32,7 +33,7 @@ public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapte
     }
 
     @Override
-    public BIllDiscountAdapter.BillAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BillAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView =null;
         if(from.equalsIgnoreCase("totalbill")){
@@ -40,12 +41,12 @@ public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapte
         }else {
              queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_discount_listrow, parent, false);
         }
-        BIllDiscountAdapter.BillAdapterViewHolder gvh = new BIllDiscountAdapter.BillAdapterViewHolder(queueView);
+        BillAdapterViewHolder gvh = new BillAdapterViewHolder(queueView);
         return gvh;
     }
 
     @Override
-    public void onBindViewHolder(final BIllDiscountAdapter.BillAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(final BillAdapterViewHolder holder, int position) {
 //        DecimalFormat format = new DecimalFormat("0.00");
         holder.txtdiscountName.setText(String.valueOf(billServiceData.get(position).getName()));
         if(billServiceData.get(position).getDiscValue()!=0.0) {

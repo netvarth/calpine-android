@@ -23,17 +23,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
-
-import androidx.annotation.RequiresApi;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -55,6 +44,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -190,7 +187,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
         // Check if enabled and if not send user to the GPS settings
         if (!enabled) {
-            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
@@ -392,7 +389,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                                         permission.CAMERA}, CAMERA);
                                 return;
                             } else {
-                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                 Intent cameraIntent = new Intent();
                                 cameraIntent.setType("image/*");
                                 cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -400,7 +397,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                                 startActivityForResult(intent, CAMERA);
                             }
                         } else {
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
                             cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -991,7 +988,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call;
         if (firstTimerate) {
             call = apiService.PostRating(accountID, body);
@@ -1059,7 +1056,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1122,7 +1119,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

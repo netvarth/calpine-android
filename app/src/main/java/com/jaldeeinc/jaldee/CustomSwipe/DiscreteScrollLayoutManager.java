@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.jaldeeinc.jaldee.CustomSwipe.transform.DiscreteScrollItemTransformer;
 
 import java.util.Locale;

@@ -4,10 +4,10 @@
     android:id="@+id/cv_paymentMode"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/dimen_5dp"
-    android:maxHeight="@dimen/dimen_50dp"
+    android:layout_margin="5dp"
+    android:maxHeight="50dp"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="@dimen/dimen_15dp"
+    app:cardCornerRadius="15dp"
     app:cardElevation="0dp">
 
     <LinearLayout
@@ -21,7 +21,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_margin="10dp"
             android:orientation="vertical"
             android:weightSum="10">
 
@@ -34,8 +34,8 @@
 
                 <LinearLayout
                     android:id="@+id/ll_circle_shape"
-                    android:layout_width="@dimen/dimen_10dp"
-                    android:layout_height="@dimen/dimen_10dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:background="@drawable/circle_bordergrey_greyfilled"
                     android:orientation="horizontal" />
 
@@ -75,6 +75,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-
 </FrameLayout>

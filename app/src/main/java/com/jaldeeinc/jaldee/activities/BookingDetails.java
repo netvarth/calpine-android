@@ -58,7 +58,6 @@ import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.ChatHistory;
 import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomerNotes;
@@ -247,7 +246,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
     private ActiveAppointment apptInfo = new ActiveAppointment();
     private InstructionsDialog instructionsDialog;
     private CustomerNotes customerNotes;
-    private ChatHistory chatHistory;
     ArrayList<InboxModel> mInboxList = new ArrayList<>();
     private TeleServiceCheckIn meetingDetails;
     private MeetingDetailsWindow meetingDetailsWindow;
@@ -465,11 +463,11 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onClick(View view) {
 
                 if (apptInfo != null && apptInfo.getAppointmentEncId() != null) {
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                     sharingIntent.setType("text/html");
                     String statusUrl = Constants.URL + "status/" + apptInfo.getAppointmentEncId();
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your Appointment status link");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Share your Appointment status link");
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, statusUrl);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 }
 

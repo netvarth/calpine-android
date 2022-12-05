@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/dimen_8dp"
-        android:layout_marginTop="@dimen/dimen_12dp"
-        android:layout_marginEnd="@dimen/dimen_8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="@dimen/txtsize_12"
         android:orientation="vertical">
 
@@ -27,15 +27,15 @@
             <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
                 android:id="@+id/tv_spName"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_25dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="2.3"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text=""
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_18sp">
+                android:textSize="18sp">
 
             </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
 
@@ -52,7 +52,7 @@
                 android:padding="@dimen/padding3"
                 android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/dimen_10dp"
+                android:textSize="10dp"
                 android:textStyle="bold">
 
             </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
@@ -64,13 +64,13 @@
             android:id="@+id/tv_providerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:text=""
             android:textColor="@color/title_color"
-            android:textSize="@dimen/dimen_16sp"
+            android:textSize="16sp"
             android:visibility="gone">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -78,7 +78,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/padding3"
             android:layout_marginEnd="@dimen/padding15"
             android:gravity="center_vertical"
@@ -86,9 +86,9 @@
 
             <ImageView
                 android:id="@+id/iv_serviceIcon"
-                android:layout_width="@dimen/dimen_26dp"
-                android:layout_height="@dimen/dimen_26dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="5dp"
                 android:visibility="gone">
 
             </ImageView>
@@ -96,22 +96,19 @@
             <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
                 android:id="@+id/tv_serviceName"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_20dp"
+                android:layout_height="20dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text=""
-                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginTop="5dp"
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_16sp">
+                android:textSize="16sp">
 
             </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
 
-
         </LinearLayout>
 
-
     </LinearLayout>
-
 
 </LinearLayout>
 

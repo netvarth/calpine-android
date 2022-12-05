@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,7 +27,6 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -37,19 +35,12 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
-import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
-import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
@@ -63,12 +54,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import butterknife.BindView;
@@ -196,7 +182,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
     /*@BindView(R.id.tv_bookingAt)
     CustomTextViewMedium tv_bookingAt;*/
     @BindView(R.id.tv_vitual_service_number)
-    CustomTextViewBold tv_vitual_service_number;
+    TextView tv_vitual_service_number;
     @BindView(R.id.tv_waitingInLine)
     CustomTextViewLight tvWaitingInLine;
 
@@ -254,7 +240,9 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
         if (bookingModel != null) {
             providerLogoUrl = bookingModel.getProviderLogo();
             if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
-                PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(ivServiceIcon);
+                Glide.with(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).circleCrop().fitCenter().into(ivServiceIcon);
+
+                //PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(ivServiceIcon);
             }
             try {
                 jsonObject = new JSONObject(bookingModel.getJsonObject());
@@ -379,9 +367,9 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                     if (bookingModel.getServiceInfo().getCallingMode() != null) {
                         ivServiceIcon.setVisibility(View.VISIBLE);
                         if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("Zoom")) {
-                            ivServiceIcon.setImageResource(R.drawable.zoom);
+                            ivServiceIcon.setImageResource(R.drawable.zoomicon_sized);
                         } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                            ivServiceIcon.setImageResource(R.drawable.googlemeet);
+                            ivServiceIcon.setImageResource(R.drawable.googlemeet_sized);
                         } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             if (bookingModel.getServiceInfo().getVirtualServiceType() != null && bookingModel.getServiceInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                 ivServiceIcon.setImageResource(R.drawable.whatsapp_videoicon);
@@ -489,7 +477,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
     public void ApiBooking(ArrayList<BookingModel> bookingModels, int accountId) {
         final Dialog mDialog = Config.getProgressDialog(ReconfirmationMultipleApptActivity.this, ReconfirmationMultipleApptActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), bookingModels.get(0).getJsonObject().toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), bookingModels.get(0).getJsonObject().toString());
         ApiInterface apiService = ApiClient.getClient(ReconfirmationMultipleApptActivity.this).create(ApiInterface.class);
         Call<ResponseBody> call = null;
         if (bookingModel.getFrom() != null) {
@@ -564,7 +552,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
             }
         }
 
-        RequestBody body1 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), String.valueOf(captions));
+        RequestBody body1 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(captions));
         mBuilder.addFormDataPart("captions", "blob", body1);
 
         RequestBody requestBody = mBuilder.build();
@@ -576,7 +564,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = null;
         if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT)) {
             call = apiService.appointmentSendAttachments(id, Integer.parseInt(accountID.split("-")[0]), requestBody);
@@ -637,7 +625,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -811,7 +799,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
 
         uploadObj.putOpt("urls", uploadArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
         if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT)) {
             call = apiService.checkAppointmentUploadStatus(uid, accountId, body);

@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.adapter;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,9 +12,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -34,6 +30,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
@@ -41,17 +39,17 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
-import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
-import com.jaldeeinc.jaldee.custom.MeetingInfo;
-import com.jaldeeinc.jaldee.response.SearchAWsResponse;
-import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
+import com.jaldeeinc.jaldee.custom.MeetingInfo;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
+import com.jaldeeinc.jaldee.response.SearchAWsResponse;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -326,12 +324,10 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         TextView tv_place = (TextView) view.findViewById(R.id.txt_location);
         TextView tv_personahead = (TextView) view.findViewById(R.id.txt_personahead);
         TextView tv_token = (TextView) view.findViewById(R.id.txt_token);
-        TextView tv_time_queue = (TextView) view.findViewById(R.id.time_queue);
         TextView icon_fav = (TextView) view.findViewById(R.id.icon_fav);
         TextView icon_message = (TextView) view.findViewById(R.id.icon_message);
         TextView icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
         TextView icon_rate = (TextView) view.findViewById(R.id.icon_rate);
-        LinearLayout layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
         TextView tv_status = (TextView) view.findViewById(R.id.txt_status);
         Button btn_pay = (Button) view.findViewById(R.id.btn_pay);
         TextView tv_prepaid = (TextView) view.findViewById(R.id.txt_prepaid);

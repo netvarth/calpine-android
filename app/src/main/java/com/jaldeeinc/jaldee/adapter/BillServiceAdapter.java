@@ -2,20 +2,18 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.BillModel;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,6 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
     private List<BillModel> billServiceData;
     Context context;
 
-
     public BillServiceAdapter(ArrayList<BillModel> billServiceData, Context context) {
         this.billServiceData = billServiceData;
         this.context = context;
@@ -36,17 +33,17 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
     }
 
     @Override
-    public BillServiceAdapter.BillAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BillAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_items_listrow, parent, false);
-        BillServiceAdapter.BillAdapterViewHolder gvh = new BillServiceAdapter.BillAdapterViewHolder(queueView);
+        BillAdapterViewHolder gvh = new BillAdapterViewHolder(queueView);
         return gvh;
     }
 
     BIllDiscountAdapter billDiscountAdapter;
 
     @Override
-    public void onBindViewHolder(final BillServiceAdapter.BillAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(final BillAdapterViewHolder holder, int position) {
 
 
 //        DecimalFormat format = new DecimalFormat("0.00");

@@ -42,7 +42,7 @@ public class OrderTimeSlotAdapter extends RecyclerView.Adapter<OrderTimeSlotAdap
 
 
     @Override
-    public OrderTimeSlotAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.timeslots, parent, false);
         MyViewHolder gvh = new MyViewHolder(queueView);

@@ -2,9 +2,7 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,24 +14,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.adapter.LocationsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -42,8 +33,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class EnquiryDialog extends Dialog {
 
@@ -136,7 +125,7 @@ public class EnquiryDialog extends Dialog {
         obj.addProperty("msg", message);
         obj.addProperty("messageType", "ENQUIRY");
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
         mBuilder.addFormDataPart("message","blob",body);
         RequestBody requestBody = mBuilder.build();
 

@@ -36,11 +36,11 @@
                 android:id="@+id/info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginStart="15dp"
                 android:layout_weight="1"
                 android:text="Meeting Details"
                 android:textColor="@color/dark_blue"
-                android:textSize="@dimen/dimen_16sp"
+                android:textSize="16sp"
                 android:textStyle="bold">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
@@ -52,8 +52,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_mdetails"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
             android:text="Service name"
             android:textSize="10sp">
 
@@ -64,14 +64,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/hint"
-            android:layout_marginStart="@dimen/dimen_15sp"
-            android:layout_marginTop="@dimen/dimen_1dp"
+            android:layout_marginStart="15sp"
+            android:layout_marginTop="1dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/dark_blue"
-            android:textSize="@dimen/dimen_18dp">
+            android:textSize="18dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -80,8 +80,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_serviceName"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
             android:text=""
             android:visibility="gone">
 
@@ -92,8 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_timeInfo"
-            android:layout_marginStart="@dimen/dimen_15sp"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginStart="15sp"
+            android:layout_marginTop="10dp"
             android:text="Please click on the below link to join the meeting"
             android:textColor="#000000"
             android:textSize="@dimen/txtsize_12">
@@ -105,13 +105,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
             android:text=""
             android:textColor="@color/violet"
             android:textIsSelectable="true"
-            android:textSize="@dimen/dimen_16sp">
+            android:textSize="16sp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -119,14 +119,14 @@
         <Button
             android:id="@+id/bt_join"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimen_40dp"
+            android:layout_height="40dp"
             android:layout_below="@id/tv_meetingLink"
             android:layout_marginTop="@dimen/padding20"
-            android:layout_marginBottom="@dimen/dimen_16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/button_edge_color"
-            android:paddingStart="@dimen/dimen_8dp"
+            android:paddingStart="8dp"
             android:paddingTop="@dimen/padding5"
-            android:paddingEnd="@dimen/dimen_8dp"
+            android:paddingEnd="8dp"
             android:paddingBottom="@dimen/padding5"
             android:text="Join Meeting"
             android:textAllCaps="false"

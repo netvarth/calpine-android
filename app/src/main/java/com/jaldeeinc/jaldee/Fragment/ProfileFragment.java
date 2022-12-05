@@ -3,12 +3,8 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.jaldeeinc.jaldee.BuildConfig;
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.EditProfileActivity;
 import com.jaldeeinc.jaldee.activities.Home;
@@ -446,20 +443,6 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             }
         });
 
-
     }
 
-    /*@Override
-    public void onDestroyView() {
-
-        ViewGroup mContainer = (ViewGroup) getActivity().findViewById(R.id.mainlayout);
-        mContainer.removeAllViews();
-        super.onDestroyView();
-    }*/
-
-/*
-    @Override
-    public void fragmentBecameVisible() {
-
-    }*/
 }

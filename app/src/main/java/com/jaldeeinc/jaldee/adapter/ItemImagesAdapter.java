@@ -3,21 +3,16 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,20 +22,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.Interface.IImageInterface;
-import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
-import com.jaldeeinc.jaldee.model.CartItemModel;
-import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.ItemImages;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
 
@@ -62,22 +47,22 @@ public class ItemImagesAdapter extends RecyclerView.Adapter<ItemImagesAdapter.Vi
 
     @NonNull
     @Override
-    public ItemImagesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_shimmer, parent, false);
-            return new ItemImagesAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_thumbnail, parent, false);
-            return new ItemImagesAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemImagesAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
             final ItemImages itemImage = imagesList.get(position);
@@ -165,7 +150,7 @@ public class ItemImagesAdapter extends RecyclerView.Adapter<ItemImagesAdapter.Vi
 
         } else {
 
-            ItemImagesAdapter.ViewHolder skeletonViewHolder = (ItemImagesAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 
@@ -208,7 +193,7 @@ public class ItemImagesAdapter extends RecyclerView.Adapter<ItemImagesAdapter.Vi
     }
 
     @Override
-    public void onViewRecycled(@NonNull ItemImagesAdapter.ViewHolder holder) {
+    public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
         Glide.with(context).clear(holder.bIvItemImage);
     }

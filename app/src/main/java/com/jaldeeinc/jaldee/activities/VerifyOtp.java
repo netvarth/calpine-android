@@ -5,12 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
@@ -19,6 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -96,7 +94,7 @@ public class VerifyOtp extends AppCompatActivity {
         txtResendEmail = (TextView) findViewById(R.id.txtResendOtpEmail);
         txt_input_layout_otp=(TextInputLayout)findViewById(R.id.text_input_layout_pwd);
 
-        edtEmail = (EditText) findViewById(R.id.edtEmail);
+       // edtEmail = (EditText) findViewById(R.id.edtEmail);
       /*  btnSend = (Button) findViewById(R.id.btnEmailsend);*/
 
 

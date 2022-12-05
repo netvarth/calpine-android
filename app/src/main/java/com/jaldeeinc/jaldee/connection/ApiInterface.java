@@ -3,21 +3,17 @@ package com.jaldeeinc.jaldee.connection;
 
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
-import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
-import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.PriceList;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
-import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetailsOrder;
-import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
@@ -47,7 +43,6 @@ import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.RefundDetails;
 import com.jaldeeinc.jaldee.response.Schedule;
-import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
@@ -60,7 +55,6 @@ import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
-import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
@@ -108,44 +102,112 @@ import retrofit2.http.Url;
  */
 
 public interface ApiInterface {
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/{mobile}/check")
-    Call<ResponseBody> chkNewUser(@Path("mobile") String mobile, @Query("countryCode") String countryCode);
 
-    //@Headers({"Accept: application/json", "User-Agent: android", "BOOKING_REQ_FROM: CONSUMER_APP"})
-    @POST("consumer")
-    Call<ResponseBody> getSignUpResponse(@Body RequestBody jsonObj);
-
-    @POST("consumer/{otp}/verify")
-        //@Headers({"User-Agent: android", "BOOKING_REQ_FROM: CONSUMER_APP"})
-    Call<ResponseBody> OtpVerify(@Path("otp") String otp);
-
-    //@Headers({"Accept: application/json", "User-Agent: android", "BOOKING_REQ_FROM: CONSUMER_APP"})
-    @PUT("consumer/{otp}/activate")
-    Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
-
-
-    //@Headers({"Accept: application/json", "User-Agent: android", "BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/login")
     Call<LoginResponse> LoginResponse(@Body RequestBody jsonObj);
-
-    //@Headers({"Accept: application/json", "User-Agent: android", "BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("consumer/{mobile}/check")
+    Call<ResponseBody> chkNewUser(@Path("mobile") String mobile, @Query("countryCode") String countryCode);
+    @POST("consumer")
+    Call<ResponseBody> getSignUpResponse(@Body RequestBody jsonObj);
+    @POST("consumer/{otp}/verify")
+    Call<ResponseBody> OtpVerify(@Path("otp") String otp);
+    @PUT("consumer/{otp}/activate")
+    Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
     @POST("consumer/login")
     Single<LoginResponse> login(@Body RequestBody jsonObj);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/login/reset/{loginId}")
     Call<ResponseBody> ForgotPwdResponse(@Path("loginId") String loginId, @Body String countryCode);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/login/reset/{otp}/validate")
     Call<String> ForgotResetOtp(@Path("otp") String otp);
-
-    //@Headers({"Accept: application/json", "BOOKING_REQ_FROM: CONSUMER_APP"})
     @PUT("consumer/login/reset/{otp}")
     Call<String> SetResetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
-
+    @GET("search")
+    Call<SearchAWsResponse> getSearchAWS(@QueryMap(encoded = true) Map<String, String> query, @QueryMap(encoded = true) Map<String, String> params);
+    @GET("{consumerID}/businessProfile.json")
+    Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
+    Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/{userId}/providerservices.json")
+    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/{userId}/providerservices.json")
+    Call<ArrayList<SearchService>> getUserServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/{userId}/providerApptServices.json")
+    Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/{userId}/providerApptServices.json")
+    Call<ArrayList<SearchService>> getUserAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("{consumerID}/gallery.json")
+    Call<ArrayList<SearchViewDetail>> getSearchGallery(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{consumerID}/location.json")
+    Call<ArrayList<SearchLocation>> getSearchViewLoc(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{consumerID}/settings.json")
+    Call<SearchSetting> getSearchViewSetting(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{consumerID}/terminologies.json")
+    Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/departmentProviders.json")
+    Call<ArrayList<SearchDepartmentServices>> getUserandDepartments(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+    // to get only users when there are no departments
+    @GET("{uniqueId}/departmentProviders.json")
+    Call<ArrayList<ProviderUserModel>> getUsers(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/services.json")
+    Call<ArrayList<SearchService>> getService(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+    @GET("{uniqueId}/services.json")
+    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+    @GET("consumer/waitlist/services/{id}")
+    Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
+    @GET("{consumerID}/apptServices.json")
+    Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("consumer/donation/services")
+    Call<ArrayList<SearchDonation>> getSearchDonation(@Query("account") int id);
+    @GET("consumer/waitlist/department/services")
+    Call<SearchDepartment> getDepartment(@Query("account") int id);
+    @GET("consumer/waitlist")
+    Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String> query);
+    @GET("provider/waitlist/queues/waitingTime/{id}")
+    Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
+    @GET("provider/waitlist/queues/providerWaitingTime/{id}")
+    Call<ArrayList<QueueList>> getProviderAvailableQTime(@Path("id") String id);
+    @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
+    Call<ArrayList<ScheduleList>> getSchedule(@Path("id") String id);
+    @GET("provider/business/{id}")
+    Call<String> getUniqueID(@Path("id") String id);
+    @GET("{consumerID}/virtualFields.json")
+    Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{consumerID}/coupon.json")
+    Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("{consumerID}/jaldeediscount.json")
+    Call<JdnResponse> getJdnList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    @PUT("consumer/updatePushToken")
+    Call<ResponseBody> updatePushToken(@Body RequestBody jsonObj);
+    @PUT("consumer/providers/revealPhoneNo/{providerID}/{revelphone}")
+    Call<ResponseBody> RevealPhoneNo(@Path("providerID") int providerID, @Path("revelphone") boolean revealphone);
+    @DELETE("consumer/providers/{providerID}")
+    Call<ResponseBody> DeleteFavourite(@Path("providerID") int id);
+    @POST("consumer/providers/{providerID}")
+    Call<ResponseBody> AddFavourite(@Path("providerID") int id);
+    @GET("consumer/waitlist/rating")
+    Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String> query);
+    @GET("consumer/waitlist/services/{id}")
+    Observable<ArrayList<SearchService>> getCheckInServices(@Path("id") int id);
+    @POST("consumer/appointment")
+    Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
+    @DELETE("consumer/waitlist/{ynwuuid}")
+    Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
+    @GET("consumer/appointment/service/{id}")
+    Observable<ArrayList<SearchAppoinment>> getAppointmentServices(@Path("id") int id);
+    @GET("{uniqueId}/donationServices.json")
+    Observable<ArrayList<SearchDonation>> getDonationServices(@Path("uniqueId") int consumerid, @Query("modifiedDate") String mDate);
+    @GET("consumer/waitlist")
+    Observable<ArrayList<ActiveCheckIn>> getCheckIns(@QueryMap(encoded = true) Map<String, String> query);
+    @GET("consumer/communications/unreadCount")
+    Call<ResponseBody> getUnreadMessagesCount();
+    @GET("consumer/wallet/cash/info")
+    Call<JCashInfo> getJCashInfo();
+    @GET("consumer/providers")
+    Call<ArrayList<FavouriteModel>> getFavourites();
+    @POST("consumer/communications")
+    Call<ResponseBody> PostMessage(@Query("account") String account, @Body RequestBody jsonObj);
+
     @DELETE("consumer/login")
     Call<ResponseBody> logOut();
 
@@ -252,9 +314,7 @@ public interface ApiInterface {
     @GET("consumer/familyMember")
     Call<ArrayList<FamilyArrayModel>> getFamilyList();
 
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("provider/account/settings/locations/{pincode}")
-    Call<ArrayList<PincodeLocationsResponse>> getPinLocations(@Path("pincode") int id);
+
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @DELETE("consumer/familyMember/{memberId}")
@@ -305,121 +365,19 @@ public interface ApiInterface {
     @GET("ynwConf/searchDomain")
     Call<ResponseBody> getSearchDomain();
 
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("search")
-    Call<SearchAWsResponse> getSearchAWS(@QueryMap(encoded = true) Map<String, String> query, @QueryMap(encoded = true) Map<String, String> params);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/businessProfile.json")
-    Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
-    Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/{userId}/providerservices.json")
-    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/{userId}/providerservices.json")
-    Call<ArrayList<SearchService>> getUserServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/{userId}/providerApptServices.json")
-    Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/{userId}/providerApptServices.json")
-    Call<ArrayList<SearchService>> getUserAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Observable<SearchViewDetail> getUserBusinessProfiles(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/gallery.json")
-    Call<ArrayList<SearchViewDetail>> getSearchGallery(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/location.json")
-    Call<ArrayList<SearchLocation>> getSearchViewLoc(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/settings.json")
-    Call<SearchSetting> getSearchViewSetting(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/terminologies.json")
-    Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/departmentProviders.json")
-    Call<ArrayList<SearchDepartmentServices>> getUserandDepartments(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
-
-    // to get only users when there are no departments
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/departmentProviders.json")
-    Call<ArrayList<ProviderUserModel>> getUsers(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/services.json")
-    Call<ArrayList<SearchService>> getService(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/services.json")
-    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
     @GET("provider/account/settings/location/{locationId}/{uniqueId}/departmentProviders")
     Call<JSONObject> getUserss(@Path("locationId") int locationId, @Path("uniqueId") int uniqueId);
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist/services/{id}")
-    Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/apptServices.json")
-    Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/donation/services")
-    Call<ArrayList<SearchDonation>> getSearchDonation(@Query("account") int id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/donation")
     Call<ResponseBody> Donation(@Query("account") String account, @Body RequestBody jsonObj);
 
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/appointment/schedule/location/{locid}/service/{servid}/date/{dd}")
-    Call<ArrayList<AppointmentSchedule>> getAppointmentSchedule(@Path("locid") String locid, @Path("servid") String servid, @Path("dd") String dd, @Query("account") String account);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/appointment/schedule/{id}/{dd}")
-    Call<ScheduleId> getAppointmentScheduleId(@Path("id") String id, @Path("dd") String dd, @Query("account") String account);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist/department/services")
-    Call<SearchDepartment> getDepartment(@Query("account") int id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist")
-    Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String> query);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("provider/waitlist/queues/waitingTime/{id}")
-    Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("provider/waitlist/queues/providerWaitingTime/{id}")
-    Call<ArrayList<QueueList>> getProviderAvailableQTime(@Path("id") String id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
-    Call<ArrayList<ScheduleList>> getSchedule(@Path("id") String id);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("provider/business/{id}")
-    Call<String> getUniqueID(@Path("id") String id);
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET(" provider/waitlist/queues/waitingTime/{queueId}")
@@ -455,10 +413,6 @@ public interface ApiInterface {
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/communications")
-    Call<ResponseBody> PostMessage(@Query("account") String account, @Body RequestBody jsonObj);
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @POST("consumer/communications")
     Call<ResponseBody> postProviderMessage(@Query("account") String account, @Query("provider") String provider, @Body RequestBody jsonObj);
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
@@ -468,10 +422,6 @@ public interface ApiInterface {
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/communications")
     Call<ArrayList<InboxList>> getCommunications();
-
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/providers")
-    Call<ArrayList<FavouriteModel>> getFavourites();
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/waitlist/communicate/{waitlistid}")
@@ -532,10 +482,6 @@ public interface ApiInterface {
     @GET("consumer/wallet/redeem/remaining/amt")
     Call<String> getPrePayRemainingAmnt(@Query("useJcash") boolean useJcash, @Query("useJcredit") boolean useJcredit, @Query("advancePayAmount") String advancePayAmount);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @POST("consumer/appointment")
-    Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
-
     @POST("consumer/appointment/service/request")
     Call<ResponseBody> AppointmentRequest(@Query("account") String account, @Body RequestBody jsonObj);
 
@@ -551,10 +497,6 @@ public interface ApiInterface {
     Call<BillModel> getBillCoupon(@Path("coupon") String coupon, @Path("ynwuuid") String uuid, @Query("account") String account);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @DELETE("consumer/waitlist/{ynwuuid}")
-    Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @PUT("consumer/appointment/cancel/{ynwuuid}")
     Call<ResponseBody> deleteAppointment(@Path("ynwuuid") String uuid, @Query("account") String account);
 
@@ -564,29 +506,10 @@ public interface ApiInterface {
 
     /*@POST("PayUMoneyHash.php")
     Call<ResponseBody> generateHashTest(@Body RequestBody jsonObj);*/
-//    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @POST("hashgenerator")
-    Call<TestModel> generateHashTest();
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET(" ynwConf/settings/{sector}/{subsector}")
     Call<SectorCheckin> getSector(@Path("sector") String sector, @Path("subsector") String subsector);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @PUT("consumer/providers/revealPhoneNo/{providerID}/{revelphone}")
-    Call<ResponseBody> RevealPhoneNo(@Path("providerID") int providerID, @Path("revelphone") boolean revealphone);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @DELETE("consumer/providers/{providerID}")
-    Call<ResponseBody> DeleteFavourite(@Path("providerID") int id);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @POST("consumer/providers/{providerID}")
-    Call<ResponseBody> AddFavourite(@Path("providerID") int id);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist/rating")
-    Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String> query);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/appointment/rating")
@@ -629,34 +552,14 @@ public interface ApiInterface {
     @POST("checksum")
     Call<ArrayList<PaytmChecksum>> getPaytmCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @FormUrlEncoded
-    @POST("hashgenerator")
-    Call<CheckSumModelTest> getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/virtualFields.json")
-    Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("{consumerID}/{userId}/providerVirtualFields.json")
     Call<SearchVirtualFields> getProviderVirtualFields(@Path("consumerID") int consumerid, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/coupon.json")
-    Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("{consumerID}/providerCoupon.json")
     Call<ArrayList<ProviderCouponResponse>> getProviderCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{consumerID}/jaldeediscount.json")
-    Call<JdnResponse> getJdnList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @PUT("consumer/updatePushToken")
-    Call<ResponseBody> updatePushToken(@Body RequestBody jsonObj);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("ynwConf/refinedFilters/{subdomain}")
@@ -665,10 +568,6 @@ public interface ApiInterface {
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("ynwConf/refinedFilters/{domain}/{subdomain}")
     Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain, @Path("domain") String domain);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
-    Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId") int departmentId, @Query("account") int account);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/waitlist/{uuid}/meetingDetails/{mode}")
@@ -697,20 +596,8 @@ public interface ApiInterface {
     Observable<ArrayList<SearchDepartmentServices>> getDeptCheckInServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist/services/{id}")
-    Observable<ArrayList<SearchService>> getCheckInServices(@Path("id") int id);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("{consumerID}/apptServices.json")
     Observable<ArrayList<SearchAppointmentDepartmentServices>> getDeptAppointServices(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/appointment/service/{id}")
-    Observable<ArrayList<SearchAppoinment>> getAppointmentServices(@Path("id") int id);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("{uniqueId}/donationServices.json")
-    Observable<ArrayList<SearchDonation>> getDonationServices(@Path("uniqueId") int consumerid, @Query("modifiedDate") String mDate);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("{uniqueId}/departmentProviders.json")
@@ -733,9 +620,6 @@ public interface ApiInterface {
     Observable<ArrayList<ActiveAppointment>> getAppointments(@QueryMap(encoded = true) Map<String, String> query);
     @GET("consumer/appointment/today")
     Observable<ArrayList<ActiveAppointment>> getAppointmentsToday(@QueryMap(encoded = true) Map<String, String> query);
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/waitlist")
-    Observable<ArrayList<ActiveCheckIn>> getCheckIns(@QueryMap(encoded = true) Map<String, String> query);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/waitlist/history")
@@ -955,10 +839,6 @@ public interface ApiInterface {
     Call<WalletEligibleJCash> getWalletEligibleJCash();
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/wallet/cash/info")
-    Call<JCashInfo> getJCashInfo();
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/wallet/cash/available")
     Call<ArrayList<JCash>> getJCashAvailable();
 
@@ -991,10 +871,6 @@ public interface ApiInterface {
     Call<ResponseBody> readMessages(@Path("providerId") String providerId, @Path("messageIds") String messageIds, @Query("account") String accountId);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/communications/unreadCount")
-    Call<ResponseBody> getUnreadMessagesCount();
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/communications/filterComm")
     Call<ArrayList<NewInbox>> getChats();
 
@@ -1021,4 +897,25 @@ public interface ApiInterface {
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET(" consumer/payment/modes/{accountid}/{paymentPurpose}")
     Call<ArrayList<PaymentModel>> getPaymentMod(@Path("accountid") String accountid, @Path("paymentPurpose") String paymentPurpose);
+
+    /*//    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
+    Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId") int departmentId, @Query("account") int account);
+    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("provider/account/settings/locations/{pincode}")
+    Call<ArrayList<PincodeLocationsResponse>> getPinLocations(@Path("pincode") int id);
+    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("consumer/appointment/schedule/location/{locid}/service/{servid}/date/{dd}")
+    Call<ArrayList<AppointmentSchedule>> getAppointmentSchedule(@Path("locid") String locid, @Path("servid") String servid, @Path("dd") String dd, @Query("account") String account);
+    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("consumer/appointment/schedule/{id}/{dd}")
+    Call<ScheduleId> getAppointmentScheduleId(@Path("id") String id, @Path("dd") String dd, @Query("account") String account);
+    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @POST("hashgenerator")
+    Call<TestModel> generateHashTest();
+    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @FormUrlEncoded
+    @POST("hashgenerator")
+    Call<CheckSumModelTest> getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
+*/
 }

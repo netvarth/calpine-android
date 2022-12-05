@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
@@ -375,7 +376,7 @@ public class Shimmer {
 
     /**
      * Sets how often the shimmering animation will repeat. See {@link
-     * android.animation.ValueAnimator#setRepeatCount(int)}.
+     * ValueAnimator#setRepeatCount(int)}.
      */
     public T setRepeatCount(int repeatCount) {
       mShimmer.repeatCount = repeatCount;
@@ -384,7 +385,7 @@ public class Shimmer {
 
     /**
      * Sets how the shimmering animation will repeat. See {@link
-     * android.animation.ValueAnimator#setRepeatMode(int)}.
+     * ValueAnimator#setRepeatMode(int)}.
      */
     public T setRepeatMode(int mode) {
       mShimmer.repeatMode = mode;

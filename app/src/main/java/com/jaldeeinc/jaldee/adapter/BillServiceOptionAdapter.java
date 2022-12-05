@@ -25,14 +25,14 @@ public class BillServiceOptionAdapter extends RecyclerView.Adapter<BillServiceOp
 
     @NonNull
     @Override
-    public BillServiceOptionAdapter.BillServiceOptionAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BillServiceOptionAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_discount_listrow_total, parent, false);
-        BillServiceOptionAdapter.BillServiceOptionAdapterViewHolder gvh = new BillServiceOptionAdapter.BillServiceOptionAdapterViewHolder(queueView);
+        BillServiceOptionAdapterViewHolder gvh = new BillServiceOptionAdapterViewHolder(queueView);
         return gvh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BillServiceOptionAdapter.BillServiceOptionAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BillServiceOptionAdapterViewHolder holder, int position) {
         holder.txtdiscountName.setText(String.valueOf(items.get(position).getServiceOptionName()) + " (Service Option)" );
         if(items.get(position).getTotalPrice() != 0.0) {
 
@@ -53,8 +53,6 @@ public class BillServiceOptionAdapter extends RecyclerView.Adapter<BillServiceOp
             super(view);
             txtdiscountName = view.findViewById(R.id.txtdiscount);
             txtdiscountVal = view.findViewById(R.id.txtdiscountval);
-
-
 
         }
     }

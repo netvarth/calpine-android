@@ -58,16 +58,16 @@ public class MeetingInfo extends Dialog {
             try {
                 if (callingMode != null) {
                     if (callingMode.equalsIgnoreCase("Zoom")) {
-                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("GoogleMeet")) {
-                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("WhatsApp")) {
                         if (virtualServiceType != null && virtualServiceType.equalsIgnoreCase("videoService")) {
-                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappvide_custom, 0, 0, 0);
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon_sized, 0, 0, 0);
                         } else {
-                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
                         }
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("phone")) {

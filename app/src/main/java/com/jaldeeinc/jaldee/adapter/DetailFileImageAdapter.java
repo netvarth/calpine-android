@@ -47,15 +47,15 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
 
 
     @Override
-    public DetailFileImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.file_attach_list_row, parent, false);
 
-        return new DetailFileImageAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final DetailFileImageAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         // final  fileList = mfileList.get(position);
         //Log.i("path", this.imagePathList.get(position));
         String imagePath = this.imagePathList.get(position);

@@ -53,16 +53,13 @@ import com.jaldeeinc.jaldee.adapter.PaymentModeAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
-import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
@@ -330,7 +327,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
         getQuestionnaireImages();
         getServiceOptionQnrImages();
         if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
-            PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(ivServiceIcon);
+            Glide.with(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).circleCrop().into(ivServiceIcon);
+
+            //PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(ivServiceIcon);
         }
         if (bookingModel != null) {
             mFirstName = bookingModel.getCustomerName().split("\\s+")[0];
@@ -644,9 +643,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
                     if (bookingModel.getServiceInfo().getCallingMode() != null) {
                         iv_teleService.setVisibility(View.VISIBLE);
                         if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("Zoom")) {
-                            iv_teleService.setImageResource(R.drawable.zoom);
+                            iv_teleService.setImageResource(R.drawable.zoomicon_sized);
                         } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                            iv_teleService.setImageResource(R.drawable.googlemeet);
+                            iv_teleService.setImageResource(R.drawable.googlemeet_sized);
                         } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             if (bookingModel.getServiceInfo().getVirtualServiceType() != null && bookingModel.getServiceInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                 iv_teleService.setImageResource(R.drawable.whatsapp_videoicon);
@@ -752,9 +751,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
                     if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode() != null) {
                         iv_teleService.setVisibility(View.VISIBLE);
                         if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                            iv_teleService.setImageResource(R.drawable.zoom);
+                            iv_teleService.setImageResource(R.drawable.zoomicon_sized);
                         } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                            iv_teleService.setImageResource(R.drawable.googlemeet);
+                            iv_teleService.setImageResource(R.drawable.googlemeet_sized);
                         } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             if (bookingModel.getCheckInInfo().getVirtualServiceType() != null && bookingModel.getCheckInInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                 iv_teleService.setImageResource(R.drawable.whatsapp_videoicon);
@@ -1226,7 +1225,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
                 mDialog.show();
 
                 Log.i("QueueObj ", jsonObject.toString());
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
                 ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
                 Call<AdvancePaymentDetails> call = null;
 
@@ -1285,7 +1284,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
     public void ApiBooking(JSONObject jsonObject, int accountId) {
         final Dialog mDialog = Config.getProgressDialog(ReconfirmationActivity.this, ReconfirmationActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
         ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
         Call<ResponseBody> call = null;
         if (bookingModel.getFrom() != null) {
@@ -1358,7 +1357,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
                     }
 
                 }
-                RequestBody bod = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+                RequestBody bod = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
 
                 call = apiService.AppointmentRequest(String.valueOf(accountId), bod);
 
@@ -1525,7 +1524,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -1631,7 +1630,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -1731,7 +1730,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -2004,7 +2003,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
         }
 
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<WalletCheckSumModel> call = apiService.generateHash2(body);
         call.enqueue(new Callback<WalletCheckSumModel>() {
 
@@ -2242,7 +2241,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
             }
         }
 
-        RequestBody body1 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), String.valueOf(captions));
+        RequestBody body1 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(captions));
         mBuilder.addFormDataPart("captions", "blob", body1);
 
         RequestBody requestBody = mBuilder.build();
@@ -2254,7 +2253,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = null;
         if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT)) {
             call = apiService.appointmentSendAttachments(id, Integer.parseInt(accountID.split("-")[0]), requestBody);
@@ -2383,7 +2382,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
 
 
         uploadObj.putOpt("urls", uploadArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
         if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT)) {
             call = apiService.checkAppointmentUploadStatus(uid, accountId, body);
@@ -2620,7 +2619,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
             e.printStackTrace();
         }
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, bookingModel.getAccountId());
         call.enqueue(new Callback<ResponseBody>() {
 
@@ -2668,7 +2667,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
             e.printStackTrace();
         }
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, bookingModel.getAccountId());
         call.enqueue(new Callback<ResponseBody>() {
 
@@ -2892,8 +2891,4 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
 
     }
 
-    @Override
-    public void SelectedPincodeLocation(PincodeLocationsResponse selectedPincodeLocation) {
-
-    }
 }

@@ -262,7 +262,7 @@
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:layout_marginTop="10dp"
                             android:visibility="gone"
                             android:src="@drawable/confused">
 
@@ -321,7 +321,7 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:visibility="gone"
-                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:layout_marginTop="10dp"
                             android:src="@drawable/confused">
 
                         </ImageView>

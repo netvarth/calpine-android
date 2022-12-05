@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.LocationCheckinCallback;
@@ -21,7 +19,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
-
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -47,8 +44,6 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
         public TextView name, tv_waittime, txtservice, txttoken;
 
         ImageView ic_delete, ic_service;
-        LinearLayout lfamily;
-
 
         public MyViewHolder(View view) {
             super(view);
@@ -56,7 +51,6 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
             tv_waittime = (TextView) view.findViewById(R.id.txtwaittime);
             txtservice = (TextView) view.findViewById(R.id.txtservice);
             ic_delete = (ImageView) view.findViewById(R.id.delete);
-            lfamily = (LinearLayout) view.findViewById(R.id.lfamily);
             txttoken = (TextView) view.findViewById(R.id.txttoken);
             ic_service = view.findViewById(R.id.service_icon);
             //  tv_nocheckin=(TextView) view.findViewById(R.id.tv_nocheckin);
@@ -84,7 +78,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.checkin_list_row, parent, false);
 
-        return new LocationCheckinAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override

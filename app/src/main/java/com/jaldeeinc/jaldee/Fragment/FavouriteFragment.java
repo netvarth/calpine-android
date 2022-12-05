@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,12 +13,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +24,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.FavLocationAdapter;
 import com.jaldeeinc.jaldee.adapter.FavouriteAdapter;
+import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.callback.FavAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -43,7 +47,6 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
-import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,8 +64,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 
 /**

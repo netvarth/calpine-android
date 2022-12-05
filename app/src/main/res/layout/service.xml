@@ -44,32 +44,25 @@
         android:layout_margin="@dimen/padding5"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_5dp">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/img_service"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginTop="5dp"
             android:background="@color/white"
             android:scaleType="fitXY"
             android:src="@drawable/icon_noimage" />
-
-        <!-- <ImageView
-             android:id="@+id/img_servicesmall"
-             android:layout_width="50dp"
-             android:layout_gravity="left"
-             android:layout_marginTop="@dimen/default_padding"
-             android:layout_height="50dp" />-->
 
         <TextView
             android:id="@+id/txtservice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginRight="5dp"
             android:fontFamily="@font/font_bold"
             android:text="RootCanal"
             android:textColor="@color/title_grey"
@@ -80,10 +73,10 @@
             android:id="@+id/txtdescVal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_5dp"
-            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:justificationMode="inter_word"
             android:letterSpacing="0.03"
             android:lineSpacingExtra="@dimen/padding3"
@@ -95,15 +88,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp">
+            android:layout_marginRight="5dp">
 
             <LinearLayout
                 android:id="@+id/Lprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -124,8 +117,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="10dp"
-                        android:tint="@color/dark_blue"
-                        android:src="@drawable/indian_currency">
+                        android:src="@drawable/indian_currency"
+                        app:tint="@color/dark_blue">
 
                     </ImageView>
 
@@ -133,7 +126,7 @@
                         android:id="@+id/txtprice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_2dp"
+                        android:layout_marginTop="2dp"
                         android:fontFamily="@font/font_bold"
                         android:text=""
                         android:layout_marginStart="10dp"
@@ -151,7 +144,7 @@
                     android:text="Tax Applicable"
                     android:textSize="10sp"
                     android:visibility="gone"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_gravity="end">
 
                 </TextView>
@@ -193,11 +186,11 @@
                         android:id="@+id/txtduration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_2dp"
+                        android:layout_marginTop="2dp"
                         android:fontFamily="@font/font_bold"
                         android:gravity="center"
                         android:text=""
-                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginStart="10dp"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_14"
                         android:textStyle="bold" />
@@ -208,9 +201,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginRight="5dp"
             android:orientation="horizontal"
             android:weightSum="1">
 
@@ -218,7 +211,7 @@
                 android:id="@+id/Lminvalue"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
@@ -235,7 +228,7 @@
                     android:id="@+id/txtminValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_2dp"
+                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/font_bold"
                     android:text=""
                     android:textColor="@color/title_grey"
@@ -247,7 +240,7 @@
                 android:id="@+id/Lmaxvalue"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
@@ -264,7 +257,7 @@
                     android:id="@+id/txtmaxvalue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_2dp"
+                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/font_bold"
                     android:gravity="center"
                     android:text=""
@@ -279,7 +272,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding5"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -294,7 +287,7 @@
                 android:id="@+id/txtmultiples"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_2dp"
+                android:layout_marginTop="2dp"
                 android:fontFamily="@font/font_bold"
                 android:text=""
                 android:textColor="@color/title_grey"
@@ -306,9 +299,9 @@
             android:id="@+id/Lprepayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginRight="5dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -334,17 +327,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginRight="5dp"
             android:text="Description"
             android:textColor="#AAAAAA"
             android:textSize="@dimen/txtsize_hint"
             android:textStyle="bold"
             android:visibility="gone"/>
-
-
-
 
     </LinearLayout>
 </LinearLayout>

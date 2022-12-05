@@ -3,8 +3,8 @@
 
     <item
         android:drawable="@drawable/google_meet"
-        android:width="@dimen/dimen_15dp"
-        android:height="@dimen/dimen_15dp"
+        android:width="15dp"
+        android:height="15dp"
 
         />
 

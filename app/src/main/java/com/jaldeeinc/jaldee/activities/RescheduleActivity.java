@@ -532,9 +532,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                                         if (appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
                                             ivteleService.setVisibility(View.VISIBLE);
                                             if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                                ivteleService.setImageResource(R.drawable.zoom);
+                                                ivteleService.setImageResource(R.drawable.zoomicon_sized);
                                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                                ivteleService.setImageResource(R.drawable.googlemeet);
+                                                ivteleService.setImageResource(R.drawable.googlemeet_sized);
                                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                                 if (appointmentInfo.getService().getVirtualServiceType() != null && appointmentInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                                     ivteleService.setImageResource(R.drawable.whatsapp_videoicon);

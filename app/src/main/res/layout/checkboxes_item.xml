@@ -17,9 +17,9 @@
             android:buttonTint="@color/dark_blue"
             android:checked="false"
             android:fontFamily="@font/font_regular"
-            android:padding="@dimen/dimen_8dp"
+            android:padding="8dp"
             android:text="Checkbox"
-            android:textSize="@dimen/dimen_14dp"
+            android:textSize="14dp"
             android:layout_weight="10"
             android:visibility="visible">
 
@@ -31,9 +31,9 @@
             android:buttonTint="@color/dark_blue"
             android:checked="false"
             android:fontFamily="@font/font_regular"
-            android:padding="@dimen/dimen_8dp"
+            android:padding="8dp"
             android:text="Checkbox"
-            android:textSize="@dimen/dimen_14dp"
+            android:textSize="14dp"
             android:layout_weight="10"
             android:visibility="gone"/>
 
@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:text=""
             android:textColor="@color/black1"
-            android:textSize="@dimen/dimen_14dp"
+            android:textSize="14dp"
             android:layout_weight="10"
             android:gravity="center_vertical|end"
             android:visibility="gone">
@@ -55,8 +55,8 @@
     <LinearLayout
         android:id="@+id/ll_divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:layout_marginStart="@dimen/dimen_30dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="30dp"
         android:background="@color/grey2"
         android:orientation="horizontal"
         android:visibility="gone"/>

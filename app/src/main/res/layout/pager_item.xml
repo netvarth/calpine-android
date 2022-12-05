@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/chat_receive"
         android:visibility="visible">
 
@@ -28,14 +28,14 @@
             android:layout_gravity="center"
             android:background="@color/blue5"
             android:gravity="center"
-            android:paddingLeft="@dimen/dimen_10dp"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingRight="@dimen/dimen_10dp"
-            android:paddingBottom="@dimen/dimen_5dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
             android:text="Download"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_12sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 

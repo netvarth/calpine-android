@@ -67,22 +67,22 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
     @NonNull
     @Override
-    public SelectedItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new SelectedItemsAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item, parent, false);
-            return new SelectedItemsAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SelectedItemsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
             final CartItemModel cartItem = cartItemsList.get(position);
@@ -254,7 +254,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
         } else {
 
-            SelectedItemsAdapter.ViewHolder skeletonViewHolder = (SelectedItemsAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

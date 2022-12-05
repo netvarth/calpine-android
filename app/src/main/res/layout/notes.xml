@@ -6,14 +6,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_curved"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_30dp">
+    android:paddingBottom="30dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:layout_marginEnd="@dimen/dimen_10dp">
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="Notes "
                 android:textColor="@color/dark_black"
-                android:textSize="@dimen/dimen_16dp">
+                android:textSize="16dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="for "
                 android:textColor="@color/dark_black"
-                android:textSize="@dimen/dimen_16dp">
+                android:textSize="16dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -48,7 +48,7 @@
                 android:maxLines="1"
                 android:text="Item Name"
                 android:textColor="@color/dark_black"
-                android:textSize="@dimen/dimen_16dp">
+                android:textSize="16dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -71,9 +71,9 @@
         android:id="@+id/tv_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:text=""
         android:textColor="@color/title_color"
         android:textSize="14dp">

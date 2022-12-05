@@ -4,20 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.IClearFilter;
-import com.jaldeeinc.jaldee.Interface.IFilterOptions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.KeyValue;
 import com.jaldeeinc.jaldee.model.FilterChips;
 
 import java.util.ArrayList;
@@ -41,22 +36,22 @@ public class FilterChipsAdapter extends RecyclerView.Adapter<FilterChipsAdapter.
 
     @NonNull
     @Override
-    public FilterChipsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new FilterChipsAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.filter_chip, parent, false);
-            return new FilterChipsAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FilterChipsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
 
@@ -85,7 +80,7 @@ public class FilterChipsAdapter extends RecyclerView.Adapter<FilterChipsAdapter.
 
         } else {
 
-            FilterChipsAdapter.ViewHolder skeletonViewHolder = (FilterChipsAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

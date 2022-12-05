@@ -9,46 +9,46 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:paddingEnd="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_16dp">
+            android:layout_marginStart="16dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_margin="@dimen/dimen_5dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="@dimen/padding3">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_back"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="@dimen/padding3">
 
-            <ImageView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding5"
+                    android:clickable="false"
+                    android:src="@drawable/img_back_arrow"
+                    app:tint="@color/dark_blue">
+
+                </ImageView>
+
+            </androidx.cardview.widget.CardView>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/searchresult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/padding5"
-                android:clickable="false"
-                android:src="@mipmap/img_back_arrow"
-                app:tint="@color/dark_blue">
-
-            </ImageView>
-
-        </androidx.cardview.widget.CardView>
-
-        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-            android:id="@+id/searchresult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=""
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:textColor="@color/title_grey"
-            android:textSize="@dimen/txtsize_12"
-            android:visibility="visible" />
+                android:layout_gravity="center"
+                android:text=""
+                android:layout_marginStart="10dp"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -65,7 +65,7 @@
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="@dimen/padding5"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
@@ -89,7 +89,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="@dimen/padding5"
                 android:visibility="visible"
                 app:cardBackgroundColor="@color/white"
@@ -97,7 +97,7 @@
 
                 <ImageView
                     android:layout_width="29dp"
-                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/padding3"
                     android:padding="1dp"
@@ -118,10 +118,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:neumorph_backgroundColor="@color/white"
-        app:neumorph_insetBottom="@dimen/dimen_0dp"
-        app:neumorph_insetEnd="@dimen/dimen_1dp"
-        app:neumorph_insetStart="@dimen/dimen_1dp"
-        app:neumorph_insetTop="@dimen/dimen_1dp"
+        app:neumorph_insetBottom="0dp"
+        app:neumorph_insetEnd="1dp"
+        app:neumorph_insetStart="1dp"
+        app:neumorph_insetTop="1dp"
         app:neumorph_shadowColorDark="#BEF2F2F2"
         app:neumorph_shadowColorLight="#BEF2F2F2"
         app:neumorph_shapeType="pressed">
@@ -138,10 +138,10 @@
                 android:layout_height="wrap_content"
                 android:text="Applied filters :"
                 android:textAllCaps="true"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/location_theme"
-                android:textSize="@dimen/dimen_12dp"
-                android:layout_marginStart="@dimen/dimen_10dp">
+                android:textSize="12dp"
+                android:layout_marginStart="10dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -196,9 +196,8 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-
-
         </LinearLayout>
 
     </soup.neumorphism.NeumorphCardView>
+
 </LinearLayout>

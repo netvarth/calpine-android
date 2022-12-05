@@ -7,11 +7,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
-
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -24,13 +19,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -125,11 +123,11 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
     }
 
     @Override
-    public ActiveAppointmentAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.active_appointment_newrow, parent, false);
 
-        return new ActiveAppointmentAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
@@ -139,14 +137,14 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
 
         try {
             return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
+        } catch (ParseException e) {
             return new Date(0);
         }
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(final ActiveAppointmentAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final ActiveAppointment activelist = activeChekinList.get(position);
 
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProviderAccount().getBusinessName()));

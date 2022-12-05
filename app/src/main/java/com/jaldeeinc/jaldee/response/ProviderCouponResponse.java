@@ -1,11 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-import com.google.gson.annotations.SerializedName;
-import com.jaldeeinc.jaldee.model.BillModel;
-
 import java.io.Serializable;
 
-public class ProviderCouponResponse  implements Serializable {
+public class ProviderCouponResponse implements Serializable {
     long id;
     String name;
     double amount;
@@ -15,8 +12,6 @@ public class ProviderCouponResponse  implements Serializable {
     String couponCode;
     private CouponRules couponRules;
     private String termsConditions;
-
-
 
     public long getId() {
         return id;

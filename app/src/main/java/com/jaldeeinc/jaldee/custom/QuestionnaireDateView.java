@@ -7,12 +7,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import android.widget.DatePicker;
 import android.widget.TextView;
-
 
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.IServiceOption;

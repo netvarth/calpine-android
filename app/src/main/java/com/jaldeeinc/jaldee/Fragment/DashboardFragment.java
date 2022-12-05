@@ -807,7 +807,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         //SEARCH
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-        searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(androidx.appcompat.R.id.search_src_text);
+        //searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
         searchSrcTextView.setDropDownHeight(450);
@@ -1740,11 +1740,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private void checkPermissions() {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
+                Manifest.permission.ACCESS_FINE_LOCATION);
         List<String> listPermissionsNeeded = new ArrayList<>();
         if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
             Config.logV("Google Not Granted" + permissionLocation);
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
             if (!listPermissionsNeeded.isEmpty()) {
                /*requestPermissions(getActivity(),
                         listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/

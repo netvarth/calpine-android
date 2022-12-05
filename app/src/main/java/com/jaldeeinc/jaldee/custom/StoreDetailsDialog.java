@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -54,7 +53,6 @@ public class StoreDetailsDialog extends Dialog {
                 dismiss();
             }
         });
-
 
         if (storeDetails != null) {
             if (storeDetails.getFirstName() != null && storeDetails.getLastName() != null) {

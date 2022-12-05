@@ -8,16 +8,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
@@ -273,7 +272,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
         String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-        builder.setAmount(convertStringToDouble(amount))
+        builder.setAmount(String.valueOf(convertStringToDouble(amount)))
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 .setProductName(new Gson().toJson(checksumModel.getProductinfo()))

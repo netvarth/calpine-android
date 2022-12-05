@@ -3,21 +3,21 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.ServiceListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
-
 
 import java.util.ArrayList;
 

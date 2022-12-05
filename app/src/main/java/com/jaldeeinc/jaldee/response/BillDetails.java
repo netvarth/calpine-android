@@ -1,7 +1,5 @@
 package com.jaldeeinc.jaldee.response;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 public class BillDetails implements Serializable {

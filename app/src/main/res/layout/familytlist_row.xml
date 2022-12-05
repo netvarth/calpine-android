@@ -12,26 +12,6 @@
         android:layout_margin="@dimen/padding3"
         android:orientation="horizontal">
 
-       <!-- <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"/>
-
-            <TextView
-                android:id="@+id/gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding5"
-                android:text="Name"/>
-
-        </LinearLayout>-->
         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/name"
             android:layout_width="0dp"

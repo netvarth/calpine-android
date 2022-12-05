@@ -1,21 +1,17 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.FileProvider;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
-
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
-
 import android.view.View;
-
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;

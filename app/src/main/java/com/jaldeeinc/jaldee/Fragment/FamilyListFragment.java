@@ -3,18 +3,18 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.gson.Gson;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.FamilyListAdapter;
 import com.jaldeeinc.jaldee.callback.FamilyAdapterCallback;

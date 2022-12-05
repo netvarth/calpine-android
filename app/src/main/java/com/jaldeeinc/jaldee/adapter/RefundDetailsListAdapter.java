@@ -1,10 +1,5 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.response.RefundInformation;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,6 +8,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.response.RefundInformation;
 
 import java.util.ArrayList;
 
@@ -39,11 +39,11 @@ public class RefundDetailsListAdapter extends RecyclerView.Adapter<RefundDetails
     }
 
     @Override
-    public RefundDetailsListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.refund_details_list_raw, parent, false);
 
-        return new RefundDetailsListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     public int getItemViewType(int position) {
@@ -51,7 +51,7 @@ public class RefundDetailsListAdapter extends RecyclerView.Adapter<RefundDetails
     }
 
     @Override
-    public void onBindViewHolder(final RefundDetailsListAdapter.MyViewHolder myViewHolder, int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, int position) {
         int rowPos = position;
         if (rowPos == 0) {
             // Header Cells. Main Headings appear here

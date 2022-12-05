@@ -17,14 +17,14 @@
         android:fontFamily="@font/font_regular"
         android:gravity="center"
         android:textColor="@color/black7"
-        android:textSize="@dimen/dimen_22dp" />
+        android:textSize="22dp" />
 
     <TextView
         android:id="@+id/tv_day_calendar_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dimen_6dp"
+        android:layout_marginTop="6dp"
         android:fontFamily="@font/font_regular"
         android:textAllCaps="true"
         android:textColor="@color/black7"

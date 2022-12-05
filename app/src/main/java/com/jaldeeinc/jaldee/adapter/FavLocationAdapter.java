@@ -94,7 +94,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     SearchSetting searchSetting;
     String uniqueId,title,terminologys;
     ContactAdapterCallback contactAdapterCallback;
-    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology, ContactAdapterCallback contactAdapterCallback,List<ScheduleList> mScheduleList ) {
+    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting, String uniqueID, String title, String terminology, ContactAdapterCallback contactAdapterCallback, List<ScheduleList> mScheduleList ) {
         this.mContext = mContext;
         this.mQueueList = mQueueList;
         this.mFavList=mFavList;
@@ -110,12 +110,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
 
     @Override
-    public FavLocationAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favloclist_row, parent, false);
 
 
-        return new FavLocationAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
     private static Date dateCompareOne;
@@ -123,12 +123,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
         try {
             return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
+        } catch (ParseException e) {
             return new Date(0);
         }
     }
     @Override
-    public void onBindViewHolder(final FavLocationAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final QueueList queueList = mQueueList.get(position);
         final ScheduleList scheduleList = mScheduleList.get(position);
 
@@ -374,53 +374,6 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         }
                     }
                 }
-
-
-
-
-
-//                if (queueList.getNextAvailableQueue() != null){
-//                    if (queueList.getNextAvailableQueue().isWaitlistEnabled()) {
-//                        if (mFavList.get(i).getOnlinePresence() != null) {
-//                            if (mFavList.get(i).getOnlinePresence().equals("true")) {
-//                                if (queueList.getNextAvailableQueue() != null && queueList.getNextAvailableQueue().isAvailableToday()) {
-//                                    if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
-//                                        if ((formattedDate.trim().equalsIgnoreCase(queueList.getNextAvailableQueue().getAvailableDate()))) {
-//                                            if (mFavList.get(i).isOnlineCheckin()) {
-//                                                myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-//                                                myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
-//                                            } else {
-//                                                myViewHolder.btn_checkin.setVisibility(View.GONE);
-//                                            }
-//                                        } else if (date1.compareTo(date2) < 0) {
-//                                            myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-//                                            // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-////                                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-////                                            myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
-////                                            myViewHolder.btn_checkin.setEnabled(false);
-//                                        }
-//                                    } else {
-//                                        myViewHolder.btn_checkin.setVisibility(View.GONE);
-//                                    }
-//                                } else {
-//                                    myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-//                                }
-//
-//                            } else {
-//                                myViewHolder.btn_checkin.setVisibility(View.GONE);
-//                            }
-//                        } else {
-//                            myViewHolder.btn_checkin.setVisibility(View.GONE);
-//                        }
-//                    } else {
-//                        myViewHolder.btn_checkin.setVisibility(View.GONE);
-//                    }
-//            }
-//
-
-
-
-
                 if(mScheduleList.size()>0){
 
                     if(mFavList.get(i).getOnlinePresence().equals("true")){
@@ -543,7 +496,6 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         myViewHolder.recycleview_contact.setVisibility(View.GONE);
                     }
                 }
-
             }
         }
 
@@ -706,19 +658,19 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
 
     }
-    public void disableCheckinButton(FavLocationAdapter.MyViewHolder myViewHolder) {
+    public void disableCheckinButton(MyViewHolder myViewHolder) {
         myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
         myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
         myViewHolder.btn_checkin.setEnabled(false);
         myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
 
     }
-    public void disableCheckinFeature (FavLocationAdapter.MyViewHolder myViewHolder) {
+    public void disableCheckinFeature (MyViewHolder myViewHolder) {
         disableCheckinButton(myViewHolder);
         myViewHolder.btn_checkin.setVisibility(View.GONE);
 
     }
-    public void enableCheckinButton(FavLocationAdapter.MyViewHolder myViewHolder) {
+    public void enableCheckinButton(MyViewHolder myViewHolder) {
         myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.location_theme));
         myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.white));
         myViewHolder.btn_checkin.setEnabled(true);

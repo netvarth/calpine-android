@@ -59,7 +59,7 @@
                         android:layout_gravity="left"
                         android:background="@drawable/input_border_rectblue_bg"
                         android:gravity="center"
-                        android:layout_marginStart="@dimen/dimen_8dp"
+                        android:layout_marginStart="8dp"
                         android:padding="@dimen/padding3"
                         android:text="Add New Member"
                         android:textColor="@color/title_consu"

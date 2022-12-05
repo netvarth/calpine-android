@@ -46,7 +46,7 @@ public class ResponseInteceptor implements Interceptor {
 
 
     @Override
-    public Response intercept(Interceptor.Chain chain) throws IOException {
+    public Response intercept(Chain chain) throws IOException {
 
         Request original = chain.request();
 
@@ -106,7 +106,7 @@ public class ResponseInteceptor implements Interceptor {
         if (response.code() == 405) {  //Maintanance mode
             response.close();
             Config.logV(" ERROR  405 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            Intent intent = new Intent(context, MaintananceActivity.class);
+                Intent intent = new Intent(context, MaintananceActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(intent);
         }

@@ -1,8 +1,5 @@
 package com.jaldeeinc.jaldee.response;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 public class CheckInServiceAvailability implements Serializable {
@@ -16,25 +13,6 @@ public class CheckInServiceAvailability implements Serializable {
     private String serviceTime;
 
     public CheckInServiceAvailability() {
-    }
-
-    public CheckInServiceAvailability(String availableDate, int personAhead, String calculationMode, boolean showToken, int id, String queueWaitingTime) {
-        this.availableDate = availableDate;
-        this.personAhead = personAhead;
-        this.calculationMode = calculationMode;
-        this.showToken = showToken;
-        this.id = id;
-        this.queueWaitingTime = queueWaitingTime;
-    }
-
-    public CheckInServiceAvailability(String availableDate, int personAhead, String calculationMode, boolean showToken, int id, String queueWaitingTime, String serviceTime) {
-        this.availableDate = availableDate;
-        this.personAhead = personAhead;
-        this.calculationMode = calculationMode;
-        this.showToken = showToken;
-        this.id = id;
-        this.queueWaitingTime = queueWaitingTime;
-        this.serviceTime = serviceTime;
     }
 
 

@@ -28,7 +28,6 @@ public class CatalogSchedule implements Serializable {
 
     }
 
-
     public CatalogSchedule(String weekly, String startDate, CatalogTerminator catLogTerminator, ArrayList<CatalogTimeSlot> catLogTimeSlotsList) {
         Weekly = weekly;
         this.startDate = startDate;

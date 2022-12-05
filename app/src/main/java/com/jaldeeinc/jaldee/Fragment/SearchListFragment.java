@@ -12,13 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -42,12 +35,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.MoreFilterAdapter;
-import com.jaldeeinc.jaldee.adapter.PaginationAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
@@ -88,7 +88,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -113,7 +112,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     ProgressBar progressBar;
     LinearLayoutManager linearLayoutManager;
-    PaginationAdapter pageadapter;
     SearchResultsAdapter searchResultsAdapter;
     ArrayList<SearchViewDetail> mSpecializationList;
 

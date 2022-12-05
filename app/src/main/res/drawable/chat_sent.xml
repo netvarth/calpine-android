@@ -2,6 +2,6 @@
 <!--  res/drawable/rounded_edittext.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
     <solid android:color="@color/sender_color" />
-    <corners android:radius="@dimen/dimen_10dp" />
+    <corners android:radius="10dp" />
 
 </shape>

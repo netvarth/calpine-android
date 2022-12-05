@@ -5,15 +5,15 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_curved"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_25dp">
+    android:paddingBottom="25dp">
 
     <ImageView
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:padding="@dimen/padding5"
         android:src="@drawable/close"
         app:tint="@color/gray" />
@@ -22,27 +22,27 @@
         android:id="@+id/ownerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="@dimen/padding3"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginEnd="10dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:text=""
         android:textColor="@color/dark_black"
-        android:textSize="@dimen/dimen_18dp" />
+        android:textSize="18dp" />
 
     <LinearLayout
         android:id="@+id/ll_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ownerName"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/address"
             app:tint="@color/dark_blue" />
@@ -52,9 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:textSize="14dp" />
     </LinearLayout>
 
@@ -63,13 +63,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_address"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/call_icon"
             app:tint="@color/dark_blue" />
@@ -79,11 +79,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:autoLink="phone"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -91,13 +91,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_address"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/call_icon"
             app:tint="@color/dark_blue" />
@@ -107,11 +107,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:autoLink="phone"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -119,13 +119,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_alternatePhoneNumber"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/emailicon_sized"
             app:tint="@color/dark_blue" />
@@ -135,11 +135,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:autoLink="email"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -147,13 +147,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_emailId"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/emailicon_sized"
             app:tint="@color/dark_blue" />
@@ -163,11 +163,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:autoLink="email"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -175,25 +175,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_alternateEmailId"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
-            android:src="@drawable/whatsapp"/>
+            android:src="@drawable/whatsappicon_sized"/>
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/whatsAppNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:autoLink="email"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

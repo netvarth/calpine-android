@@ -1104,9 +1104,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                         if (checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
                                             ivteleService.setVisibility(View.VISIBLE);
                                             if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                                ivteleService.setImageResource(R.drawable.zoom);
+                                                ivteleService.setImageResource(R.drawable.zoomicon_sized);
                                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                                ivteleService.setImageResource(R.drawable.googlemeet);
+                                                ivteleService.setImageResource(R.drawable.googlemeet_sized);
                                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                                 if (checkInInfo.getService().getVirtualServiceType() != null && checkInInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                                     ivteleService.setImageResource(R.drawable.whatsapp_videoicon);

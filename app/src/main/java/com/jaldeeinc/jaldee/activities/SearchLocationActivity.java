@@ -9,14 +9,15 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.HomeSearchFragment;
@@ -343,7 +344,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     }
     public void showForceUpdateDialog() {
 
-        android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
         alertDialog.setTitle("Jaldee update required ");
         alertDialog.setMessage(" This version of Jaldee is no longer supported. Please update to the latest version.");
         alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {

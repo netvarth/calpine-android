@@ -3,18 +3,17 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -55,15 +54,15 @@ public class MultipleFamilyMemberAdapter extends RecyclerView.Adapter<MultipleFa
     }
 
     @Override
-    public MultipleFamilyMemberAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.name_familytlist_row, parent, false);
 
-        return new MultipleFamilyMemberAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final MultipleFamilyMemberAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final FamilyArrayModel familylist = familyList.get(position);
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         if (familylist.getId() == consumerId) {

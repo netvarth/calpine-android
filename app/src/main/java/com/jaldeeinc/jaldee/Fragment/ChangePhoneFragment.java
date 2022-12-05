@@ -3,21 +3,9 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.hbb20.CountryCodePicker;
-import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.response.ProfileModel;
-
-import android.os.Bundle;
-
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +15,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import okhttp3.ResponseBody;

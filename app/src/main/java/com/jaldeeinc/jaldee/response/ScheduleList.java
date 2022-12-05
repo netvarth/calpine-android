@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.NextAvailableSchedule;
 
 import java.io.Serializable;

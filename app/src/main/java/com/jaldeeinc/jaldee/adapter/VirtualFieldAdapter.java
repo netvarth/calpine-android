@@ -1,19 +1,17 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 
@@ -34,7 +32,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
     Context context;
     int mSizeshown;
 
-    public VirtualFieldAdapter(List<SearchVirtualFields> virtualFieldList, Context context,int mSizeshown) {
+    public VirtualFieldAdapter(List<SearchVirtualFields> virtualFieldList, Context context, int mSizeshown) {
         this.virtualFieldList = virtualFieldList;
         this.context = context;
         this.mSizeshown=mSizeshown;
@@ -42,7 +40,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
     }
 
     @Override
-    public VirtualFieldAdapter.VirtualFieldAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VirtualFieldAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.virtuallist_listrow, parent, false);
         VirtualFieldAdapterViewHolder gvh = new VirtualFieldAdapterViewHolder(queueView);

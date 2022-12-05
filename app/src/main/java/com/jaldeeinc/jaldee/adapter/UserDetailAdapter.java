@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
@@ -78,7 +77,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     private SearchViewDetail providerInfo;
 
 
-    public UserDetailAdapter(Context mContext, ArrayList<DepartmentUserSearchModel> userDetails, SearchAWsResponse mSearchAWSResponse, ArrayList<SearchDepartmentServices> mDepartmentsList, String terminology, SearchLocationAdpterCallback mInterface, ArrayList<SearchCheckInMessage> mSearchmCheckMessageList) {
+    public UserDetailAdapter(Context mContext, ArrayList<DepartmentUserSearchModel> userDetails,
+                             SearchAWsResponse mSearchAWSResponse, ArrayList<SearchDepartmentServices> mDepartmentsList,
+                             String terminology, SearchLocationAdpterCallback mInterface, ArrayList<SearchCheckInMessage> mSearchmCheckMessageList) {
 
         this.context = mContext;
         this.userDetails = userDetails;
@@ -93,15 +94,15 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
     @NonNull
     @Override
-    public UserDetailAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.user_detail, parent, false);
-        return new UserDetailAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserDetailAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         DepartmentUserSearchModel departmentUserSearchModel = userDetails.get(position);
 
@@ -122,8 +123,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         for (int i = 0; i < mCheckInMessage.size(); i++) {
             holder.tv_checkin.setVisibility(View.GONE);
-            //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
-//                Config.logV("Locationttt-----kkkk###########@@@@@@" + searchLoclist.getId());
             Config.logV("Locationttt-----aaaa###########@@@@@@" + mCheckInMessage.get(i).getmAllSearch_checkIn().size());
             if (terminology != null) {
                 String firstWord = "You have ";
@@ -215,7 +214,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         holder.txt_diffdate_expand.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
@@ -237,12 +236,12 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
-                context.startActivity(iCheckIn);
+                context.startActivity(iCheckIn);*/
             }
         });
         holder.txt_diffdate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
@@ -264,14 +263,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
-                context.startActivity(iCheckIn);
+                context.startActivity(iCheckIn);*/
             }
         });
 
 
         holder.btn_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iCheckIn.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
@@ -292,13 +291,13 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
-                context.startActivity(iCheckIn);
+                context.startActivity(iCheckIn);*/
             }
         });
 
         holder.btn_checkin_expand.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {/*
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iCheckIn.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
@@ -319,7 +318,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
-                context.startActivity(iCheckIn);
+                context.startActivity(iCheckIn);*/
             }
         });
         holder.btn_appointments.setOnClickListener(new View.OnClickListener() {

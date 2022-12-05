@@ -5,8 +5,8 @@
     android:layout_height="100dp"
     android:background="@drawable/curved_save"
     android:backgroundTint="@color/white"
-    android:paddingStart="@dimen/dimen_25dp"
-    android:paddingEnd="@dimen/dimen_25dp">
+    android:paddingStart="25dp"
+    android:paddingEnd="25dp">
 
     <LinearLayout
         android:id="@+id/ll_camera"
@@ -18,8 +18,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/dimen_35dp"
-            android:layout_height="@dimen/dimen_35dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@drawable/camera_icon"
             app:tint="@color/title_color">
 
@@ -30,17 +30,17 @@
             android:layout_height="wrap_content"
             android:text="Camera"
             android:textColor="@color/title_color"
-            android:textSize="@dimen/dimen_15dp">
+            android:textSize="15dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="@dimen/dimen_1dp"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@color/light_gray">
 
     </LinearLayout>
@@ -55,10 +55,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/dimen_35dp"
-            android:layout_height="@dimen/dimen_35dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:src="@drawable/icon_attachments_active_new"
-            android:layout_marginBottom="@dimen/dimen_4dp"
+            android:layout_marginBottom="4dp"
             app:tint="@color/title_color">
 
         </ImageView>
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:text="Gallery"
             android:textColor="@color/title_color"
-            android:textSize="@dimen/dimen_15dp">
+            android:textSize="15dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 

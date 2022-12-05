@@ -53,15 +53,15 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
 
     @NonNull
     @Override
-    public ProviderCouponsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.couponview, viewGroup, false);
-        return new ProviderCouponsAdapter.ViewHolder(v);
+        return new ViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ProviderCouponsAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         final ProviderCouponResponse couponResponse = itemsList.get(position);
 

@@ -2,10 +2,8 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -14,15 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ISelectLocation;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.CheckInServiceAdapter;
 import com.jaldeeinc.jaldee.adapter.LocationsAdapter;
-import com.jaldeeinc.jaldee.adapter.ParkingModel;
-import com.jaldeeinc.jaldee.adapter.LAmenitiesListingAdapter;
 import com.jaldeeinc.jaldee.response.SearchLocation;
-import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LocationsDialog extends Dialog implements ISelectLocation {
 
@@ -48,7 +41,6 @@ public class LocationsDialog extends Dialog implements ISelectLocation {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.locations_list);
-
 
         tvTitle = findViewById(R.id.tv_title);
         cvCancel = findViewById(R.id.cv_cancel);

@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.ContactModel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

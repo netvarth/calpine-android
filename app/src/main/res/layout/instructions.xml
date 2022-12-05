@@ -8,8 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:layout_marginStart="@dimen/dimen_15dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp">
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:id="@+id/tv_postInfoTitle"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/close"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginEnd="15dp"
             android:layout_alignParentEnd="true"
             app:tint="@color/title_grey_light">
 
@@ -43,10 +43,10 @@
         android:layout_height="wrap_content"
         android:textIsSelectable="true"
         android:autoLink="web|phone"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginBottom="@dimen/dimen_25dp">
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="25dp">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 

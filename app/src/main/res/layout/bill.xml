@@ -104,7 +104,7 @@
                             android:id="@+id/txtdate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:layout_marginStart="5dp"
                             android:layout_weight="1"
                             android:maxLines="1"
                             android:singleLine="true"
@@ -160,7 +160,7 @@
                         android:id="@+id/ll_providerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginTop="10dp"
                         android:visibility="gone">
 
                         <TextView
@@ -179,7 +179,7 @@
                             android:maxLines="1"
                             android:text=""
                             android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_15dp">
+                            android:textSize="15dp">
 
                         </TextView>
 
@@ -199,7 +199,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
                             android:drawableEnd="@drawable/icon_location_lightgray"
-                            android:drawablePadding="@dimen/dimen_5dp"
+                            android:drawablePadding="5dp"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
@@ -803,7 +803,7 @@
                         android:id="@+id/ll_jCash"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginTop="10dp"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -813,7 +813,7 @@
                             android:layout_height="match_parent"
                             android:buttonTint="@color/blue"
                             android:checked="true"
-                            android:padding="@dimen/dimen_0dp"
+                            android:padding="0dp"
                             android:text=""
                             android:textColor="@color/darker_gray"
                             android:textSize="@dimen/txtsize_12" />
@@ -854,6 +854,5 @@
             </androidx.cardview.widget.CardView>
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
-
 
 </LinearLayout>

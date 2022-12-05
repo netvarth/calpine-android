@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedProviderService;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
@@ -31,11 +32,9 @@ import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
@@ -200,7 +199,9 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             providerId = providerInfo.getId();
             if (providerInfo.getProfilePicture() != null) {
                 String url = providerInfo.getProfilePicture().getUrl();
-                PicassoTrustAll.getInstance(mContext).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                Glide.with(mContext).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).circleCrop().into(ivSpImage);
+
+                //PicassoTrustAll.getInstance(mContext).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
 
             } else {
                 ivSpImage.setImageResource(R.drawable.icon_noimage);

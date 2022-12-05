@@ -37,13 +37,13 @@ public class ShowCartItemServceOptnAdapter extends RecyclerView.Adapter<ShowCart
 
     @NonNull
     @Override
-    public ShowCartItemServceOptnAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item_servc_optns, parent, false);
-        return new ShowCartItemServceOptnAdapter.ViewHolder(v, false);
+        return new ViewHolder(v, false);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShowCartItemServceOptnAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         if (!isLoading) {
             float totalPrice = 0;
             ArrayList<AnswerLine> als = answerLine.getAnswerLines();
@@ -90,7 +90,7 @@ public class ShowCartItemServceOptnAdapter extends RecyclerView.Adapter<ShowCart
                 viewHolder.tv_itemDetailsPrice.setVisibility(View.INVISIBLE);
             }
         } else {
-            ShowCartItemServceOptnAdapter.ViewHolder skeletonViewHolder = (ShowCartItemServceOptnAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }

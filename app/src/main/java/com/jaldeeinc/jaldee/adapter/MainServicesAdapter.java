@@ -67,7 +67,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
     @NonNull
     @Override
-    public MainServicesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
 
         if (isLoading) {
@@ -82,7 +82,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MainServicesAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         if (!isLoading) {
             final DepServiceInfo depServiceInfo = servicesInfoList.get(position);
@@ -280,11 +280,11 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                             viewHolder.ivTeleService.setVisibility(View.VISIBLE);
                             if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("Zoom")) {
 
-                                viewHolder.ivTeleService.setImageResource(R.drawable.zoom);
+                                viewHolder.ivTeleService.setImageResource(R.drawable.zoomicon_sized);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
-                                viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
+                                viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet_sized);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (servicesInfoList.get(position).getVirtualServiceType() != null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")) {
@@ -438,7 +438,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
         } else {
 
-            MainServicesAdapter.ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

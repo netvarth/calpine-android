@@ -43,8 +43,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
     private IFilesInterface iFilesInterface;
     private String labelName = "";
 
-
-
     public FilesAdapter(ArrayList<KeyPairBoolData> fList, Context context, boolean isLoading, IFilesInterface iFilesInterface) {
         this.filesList = fList;
         this.context = context;
@@ -54,22 +52,22 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public FilesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new FilesAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_item, parent, false);
-            return new FilesAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FilesAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
 
@@ -162,7 +160,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
                         } else if (data.getType()!= null && data.getType().contains("audio")) {
 
                             Intent viewMediaIntent = new Intent();
-                            viewMediaIntent.setAction(android.content.Intent.ACTION_VIEW);
+                            viewMediaIntent.setAction(Intent.ACTION_VIEW);
                             viewMediaIntent.setDataAndType(Uri.parse(data.getImagePath()), "audio/*");
                             viewMediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             context.startActivity(viewMediaIntent);
@@ -250,7 +248,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
         } else {
 
-            FilesAdapter.ViewHolder skeletonViewHolder = (FilesAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 
@@ -259,7 +257,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
     private void playAudio(String imagePath) {
 
-        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent i = new Intent(Intent.ACTION_VIEW);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",new File(imagePath)), "audio/*");

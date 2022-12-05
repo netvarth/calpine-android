@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,21 +15,24 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ViewNotesDialog;
 import com.jaldeeinc.jaldee.response.ItemDetails;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
 
@@ -49,21 +53,21 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     @NonNull
     @Override
-    public OrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         if (isLoading) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shimmer, viewGroup, false);
-            return new OrdersAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.order_item, viewGroup, false);
-            return new OrdersAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final OrdersAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         if (!isLoading) {
             final ItemDetails orderItem = itemsList.get(position);
@@ -101,7 +105,28 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
                         viewHolder.bvImage.setVisibility(View.GONE);
                         viewHolder.shimmer.setVisibility(View.VISIBLE);
-                        PicassoTrustAll.getInstance(context).load(orderItem.getItemImagesList().get(i).getUrl()).into(viewHolder.bvImage, new Callback() {
+                        Glide.with(context)
+                                .load(orderItem.getItemImagesList().get(i).getUrl())
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        //on load failed
+                                        viewHolder.bvImage.setVisibility(View.VISIBLE);
+                                        Glide.with(context).load(R.drawable.icon_noimage).into(viewHolder.bvImage);
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        //on load success
+
+                                        viewHolder.shimmer.setVisibility(View.GONE);
+                                        viewHolder.bvImage.setVisibility(View.VISIBLE);
+                                        return false;
+                                    }
+                                })
+                                .into(viewHolder.bvImage);
+                        /*PicassoTrustAll.getInstance(context).load(orderItem.getItemImagesList().get(i).getUrl()).into(viewHolder.bvImage, new Callback() {
                             @Override
                             public void onSuccess() {
 
@@ -110,12 +135,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                             }
 
                             @Override
-                            public void onError() {
-
+                            public void onError(Exception e) {
                                 viewHolder.bvImage.setVisibility(View.VISIBLE);
                                 Glide.with(context).load(R.drawable.icon_noimage).into(viewHolder.bvImage);
                             }
-                        });
+                        });*/
                     }
 
                 }
@@ -128,7 +152,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
 
         } else {
-            OrdersAdapter.ViewHolder skeletonViewHolder = (OrdersAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }

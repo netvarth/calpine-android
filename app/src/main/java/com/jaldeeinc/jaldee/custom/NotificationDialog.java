@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.View;

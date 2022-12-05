@@ -2,16 +2,15 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.PaymentDetail;
@@ -95,12 +94,12 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
                     ivIcon.setImageResource(R.drawable.icon_checkin);
                 }
             } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Appointment")) {
-                ivIcon.setImageResource(R.drawable.appt_icon);
+                ivIcon.setImageResource(R.drawable.icon_appt);
             } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Donation")) {
                 ivIcon.setImageResource(R.drawable.icon_donate);
                 ivIcon.setColorFilter(getContext().getResources().getColor(R.color.location_theme));
             } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Order")){
-                ivIcon.setImageResource(R.drawable.order_icon);
+                ivIcon.setImageResource(R.drawable.icon_order);
             }
         } else {
             ivIcon.setVisibility(View.GONE);

@@ -18,15 +18,10 @@ import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
-import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.DataGrid;
-import com.jaldeeinc.jaldee.model.DataGridAnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.response.Questionnaire;
@@ -92,20 +87,20 @@ public class CartItemServceOptnAdapter extends RecyclerView.Adapter<CartItemServ
         }
     }
     @Override
-    public CartItemServceOptnAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new CartItemServceOptnAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item_servc_optns, parent, false);
-            return new CartItemServceOptnAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartItemServceOptnAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         if (!isLoading) {
             float totalPrice = 0;
             ArrayList<AnswerLine> als = answerLine.getAnswerLines();
@@ -176,7 +171,7 @@ public class CartItemServceOptnAdapter extends RecyclerView.Adapter<CartItemServ
             }
 
         } else {
-            CartItemServceOptnAdapter.ViewHolder skeletonViewHolder = (CartItemServceOptnAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }

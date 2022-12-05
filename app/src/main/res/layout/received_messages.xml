@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="@dimen/dimen_8dp"
+    android:layout_margin="8dp"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,10 +21,10 @@
         android:textSize="@dimen/txtsize_12"
         android:layout_gravity="start"
         android:gravity="start"
-        android:padding="@dimen/dimen_10dp"
+        android:padding="10dp"
         android:autoLink="web|phone"
         android:textIsSelectable="true"
-        android:layout_marginEnd="@dimen/dimen_8dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/dark_black">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -35,7 +35,7 @@
             android:orientation="horizontal"
             android:id="@+id/attach_receiv"
             android:gravity="start"
-            android:padding="@dimen/dimen_10dp"
+            android:padding="10dp"
             android:layout_gravity="start"
             android:visibility="gone"
             android:background="@color/white">
@@ -45,7 +45,7 @@
                 android:layout_height="60dp"
                 android:id="@+id/img_receiv1"
                 app:srcCompat="@drawable/icon_noimage"
-                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginRight="5dp"
                 android:visibility="gone">
 
             </ImageView>
@@ -55,7 +55,7 @@
                 android:layout_height="60dp"
                 android:id="@+id/img_receiv2"
                 app:srcCompat="@drawable/icon_noimage"
-                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginRight="5dp"
                 android:visibility="gone">
 
             </ImageView>
@@ -67,23 +67,14 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:textColor="@color/dark_black"
-                android:layout_marginRight="@dimen/dimen_5dp"
-                android:textSize="@dimen/dimen_12sp"
+                android:layout_marginRight="5dp"
+                android:textSize="12sp"
                 android:visibility="gone">
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
 
         </LinearLayout>
     </LinearLayout>
-
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/recyclerImage"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:nestedScrollingEnabled="false"-->
-<!--        android:scrollbars="horizontal" />-->
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,7 +88,7 @@
             android:text=""
             android:textSize="@dimen/txtsize_10"
             android:layout_marginTop="@dimen/padding3"
-            android:layout_marginEnd="@dimen/dimen_8dp">
+            android:layout_marginEnd="8dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic>
 
@@ -109,14 +100,10 @@
             android:textSize="@dimen/txtsize_10"
             android:layout_marginTop="@dimen/padding3"
             android:textColor="@color/location_theme"
-            android:layout_marginEnd="@dimen/dimen_8dp">
+            android:layout_marginEnd="8dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     </LinearLayout>
-
-
-
-
 
 </LinearLayout>

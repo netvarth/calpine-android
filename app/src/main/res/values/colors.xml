@@ -5,6 +5,21 @@
     <color name="colorAccent">#3BCCA5</color>
     <color name="text_hint_color">#cfcfcf</color>
 
+    <color name="active_text">#3c3329</color>
+    <color name="light_grey">#d3d3d3</color>
+    <color name="neomorph_background_color">#F1F3F6</color>
+    <color name="opaque_black">#666666</color>
+    <color name="darker_gray">#8c8c8c</color>
+    <color name="payumoney_text_color">#575757</color>
+    <color name="transparent">#00ffffff</color>
+    <color name="light_gray">#CCCCCC</color>
+    <color name="gray_444444">#444444</color>
+    <color name="inactive_text">#d0cbc6</color>
+    <color name="cb_dark_blue_button">#094774</color>
+    <color name="error_strip">#e74040</color>
+    <color name="payumoney_white">#FFFFFF</color>
+
+
     <color name="app_background">#ffffff</color>
     <color name="light_background">#C9DDFF</color>
     <color name="coolBlue">#DBEEF3</color>
@@ -82,7 +97,7 @@
     <color name="green">#28a745</color>
     <color name="arrived_green">#79e688</color>
     <color name="orange">#fd7e14</color>
-    <color name="purple">#673AB7</color>
+    <color name="button_gray">#cbcbcb</color>
 
     <color name="department_search_results">#f0f0f5</color>
 
@@ -92,6 +107,7 @@
     <color name="location_theme">#0B1F84</color>
     <color name="donation_theme">#FDD219</color>
     <color name="new_light_background">#f1f0f0</color>
+    <color name="cb_errorRed">#e40000</color>
 
     <color name="chat_background">#EEF2F9</color>
 
@@ -193,8 +209,10 @@
     <color name="green3">#2BBF79</color>
     <color name="green4">#228B22</color>
 
-
-
+    <color name="purple">#673AB7</color>
+    <color name="lightpurple">#7d64e6</color>
+    <color name="purple_200">#CE93D8</color>
+    <color name="purple_700">#7B1FA2</color>
 
     <color name="white1">#59F0F2F6</color>
 
@@ -206,8 +224,10 @@
     <color name="grey">#7a7a7a</color>
     <color name="lightGrey">#aaaaaa</color>
     <color name="veryLightGrey">#f0f0f0</color>
-    <color name="lightpurple">#7d64e6</color>
     <color name="darkyellow">#ffee00</color>
+    <color name="teal_200">#80CBC4</color>
+
+
 
 
 

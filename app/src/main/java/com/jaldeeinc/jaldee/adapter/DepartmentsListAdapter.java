@@ -1,13 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.model.SearchListModel;
@@ -37,7 +37,7 @@ public class DepartmentsListAdapter extends RecyclerView.Adapter<DepartmentsList
     String from,businessName;
     HashMap<String, List<SearchListModel>> mdepartmentMap;
 
-    public DepartmentsListAdapter(ArrayList<SearchDepartment> mDepartmentList, Context mContext,String from, String businessName) {
+    public DepartmentsListAdapter(ArrayList<SearchDepartment> mDepartmentList, Context mContext, String from, String businessName) {
         this.mContext = mContext;
         this.mDepartmentList = mDepartmentList;
         this.from = from;
@@ -51,14 +51,14 @@ public class DepartmentsListAdapter extends RecyclerView.Adapter<DepartmentsList
     }
 
     @Override
-    public DepartmentsListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.departmentlist_row, parent, false);
 
-        return new DepartmentsListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
     @Override
-    public void onBindViewHolder(final DepartmentsListAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final SearchDepartment departmentsList = mDepartmentList.get(position);
 //        int count = 0;
 //        count = mdepartmentMap.get(departmentsList.getDepartmentCode()).size();

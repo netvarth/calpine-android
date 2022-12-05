@@ -1,42 +1,34 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
-import com.jaldeeinc.jaldee.Interface.IActions;
-import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
-import com.jaldeeinc.jaldee.R;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.View;
-import android.view.Window;
-import android.widget.LinearLayout;
-import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
+import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
+import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.TodayOrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.OrderActionsDialog;
-import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 public class OrdersHistoryActivity extends AppCompatActivity implements ISelectedOrder {
 

@@ -4,23 +4,27 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.MediaTypeAndExtention;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
-import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
 
@@ -96,20 +100,39 @@ public class CustomPageAdapter extends PagerAdapter {
             Glide.with(mContext).load(R.drawable.icon_text).fitCenter().into(imageView);
 
         } else {
-            PicassoTrustAll.getInstance(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
+            Glide.with(mContext)
+                    .load(url)
+                    .fitCenter()
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            //on load failed
+                            Glide.with(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+
+                            return false;
+                        }
+                    })
+                    .into(imageView);
+            /*PicassoTrustAll.getInstance(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
                 @Override
                 public void onSuccess() {
 
                 }
 
                 @Override
-                public void onError() {
+                public void onError(Exception e) {
 
                     PicassoTrustAll.getInstance(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
 
                 }
 
-            });
+            });*/
         }
 
         cv_download.setOnClickListener(new View.OnClickListener() {

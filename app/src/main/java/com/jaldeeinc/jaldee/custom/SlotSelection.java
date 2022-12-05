@@ -119,9 +119,12 @@ public class SlotSelection extends Dialog implements ITimeSlot {
             @Override
             public void onClick(View v) {
 
-                DatePickerDialog da = new DatePickerDialog(context, R.style.Base_Theme_AppCompat_Light_Dialog, date, myCalendar
+                DatePickerDialog da = new DatePickerDialog(context, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
+                /*DatePickerDialog da = new DatePickerDialog(context, R.style.Base_Theme_AppCompat_Light_Dialog, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));*/
 
                 da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 da.show();

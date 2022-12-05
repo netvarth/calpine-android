@@ -4,32 +4,34 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="250dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:padding="16dp">
+
         <TextView
             android:id="@+id/mTitle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Success"
-            android:textSize="@dimen/dimen_16sp"
-            android:textColor="@color/dark_blue"
             android:textAlignment="center"
-            android:visibility="gone"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/dark_blue"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:fontFamily="@font/font_medium"
             android:id="@+id/mMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/txtsize_14"
             android:layout_marginTop="15dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu erat tincidunt lacus fermentum rutrum."
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="@dimen/txtsize_14" />
 
 
         <RelativeLayout
@@ -37,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_30dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/curved_button"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
@@ -51,8 +53,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:paddingLeft="3dp"
-                android:visibility="gone"
-                android:src="@mipmap/ynw_logo">
+                android:src="@mipmap/ynw_logo"
+                android:visibility="gone">
 
             </ImageView>
 
@@ -60,14 +62,14 @@
                 android:id="@+id/buttonOk"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="OK"
-                android:textAllCaps="true"
+                android:layout_toRightOf="@id/login_img_ok"
                 android:paddingStart="@dimen/padding20"
                 android:paddingTop="6dp"
                 android:paddingRight="@dimen/padding20"
-                android:layout_toRightOf="@id/login_img_ok"
-                android:textSize="@dimen/txtsize_12"
-                android:textColor="@color/white" />
+                android:text="OK"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txtsize_12" />
         </RelativeLayout>
 
     </LinearLayout>

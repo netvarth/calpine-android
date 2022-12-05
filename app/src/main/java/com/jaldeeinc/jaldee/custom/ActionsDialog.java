@@ -328,7 +328,6 @@ public class ActionsDialog extends Dialog {
 
                 }
 
-
             } else if (bookings.getCheckInInfo() != null) {
 
                 // about reschedule option
@@ -1656,7 +1655,6 @@ public class ActionsDialog extends Dialog {
         });
     }
 
-
     private void ApiRatingApp(final String accountID, final String UUID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1824,7 +1822,6 @@ public class ActionsDialog extends Dialog {
             }
         });
     }
-
 
     private void hideView(View view) {
         GridLayout gridLayout = (GridLayout) view.getParent();

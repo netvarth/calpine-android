@@ -13,14 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.ShowCartItemServceOptnAdapter;
 import com.jaldeeinc.jaldee.adapter.ShowCartServiceOptionItemsAdapter;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
-import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

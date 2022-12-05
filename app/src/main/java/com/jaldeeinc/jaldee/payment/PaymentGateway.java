@@ -201,7 +201,6 @@ public class PaymentGateway {
             e.printStackTrace();
         }
 
-
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<WalletCheckSumModel> call = apiService.generateHashWallet(body);
 

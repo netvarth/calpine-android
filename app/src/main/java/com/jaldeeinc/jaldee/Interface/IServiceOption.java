@@ -2,9 +2,7 @@ package com.jaldeeinc.jaldee.Interface;
 
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
-import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 
 import java.util.HashMap;

@@ -36,16 +36,16 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
     }
 
     @Override
-    public QueuesAdapter.QueuesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public QueuesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.timeslots, parent, false);
-        QueuesAdapter.QueuesAdapterViewHolder gvh = new QueuesAdapter.QueuesAdapterViewHolder(queueView);
+        QueuesAdapterViewHolder gvh = new QueuesAdapterViewHolder(queueView);
         return gvh;
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(final QueuesAdapter.QueuesAdapterViewHolder myViewHolder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(final QueuesAdapterViewHolder myViewHolder, @SuppressLint("RecyclerView") final int position) {
         final QueueTimeSlotModel queue = queuesList.get(position);
         String displayQueueTime = queuesList.get(position).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queuesList.get(position).getQueueSchedule().getTimeSlots().get(0).geteTime();
         myViewHolder.tvTimeSlot.setText(displayQueueTime);

@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp"
-    android:layout_marginTop="@dimen/dimen_10dp"
+    android:layout_marginTop="10dp"
     android:background="@drawable/coupon_dotted_boarder">
 
     <LinearLayout
@@ -23,12 +23,12 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="@dimen/dimen_50dp"
+                android:minWidth="50dp"
                 android:padding="@dimen/padding2"
                 android:gravity="center"
-                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:layout_marginEnd="15dp"
                 android:ellipsize="end"
-                android:maxLines="@integer/int_1"
+                android:maxLines="1"
                 android:text=""
                 android:background="@color/unclaimed"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -48,8 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingTop="@dimen/padding2"
-                android:paddingRight="@dimen/dimen_10dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:paddingRight="10dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 android:src="@drawable/icon_info_32"
                 android:visibility="gone"/>

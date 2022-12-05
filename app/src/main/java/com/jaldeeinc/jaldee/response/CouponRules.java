@@ -11,8 +11,6 @@ public class CouponRules implements Serializable {
     private long startDate;
     private long endDate;
 
-
-
     public int getMaxProviderUseLimit() {
         return maxProviderUseLimit;
     }

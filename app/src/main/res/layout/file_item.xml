@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/dimen_8dp"
-    android:paddingBottom="@dimen/dimen_8dp"
-    android:paddingStart="@dimen/dimen_5dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/ll_upload"
         android:layout_width="200dp"
-        android:layout_height="@dimen/dimen_35dp"
+        android:layout_height="35dp"
         android:gravity="center"
         android:background="@drawable/border">
 
@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:text="Upload Aadhar card"
             android:ellipsize="end"
-            android:layout_marginStart="@dimen/dimen_5dp"
-            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:maxLines="1">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -35,23 +35,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_15dp">
+            android:layout_marginStart="15dp">
 
             <ImageView
                 android:id="@+id/iv_file"
-                android:layout_width="@dimen/dimen_80dp"
-                android:layout_height="@dimen/dimen_35dp">
+                android:layout_width="80dp"
+                android:layout_height="35dp">
 
             </ImageView>
 
             <ImageView
                 android:id="@+id/iv_close"
-                android:layout_width="@dimen/dimen_15dp"
-                android:layout_height="@dimen/dimen_15dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:src="@drawable/close"
                 android:visibility="gone"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_10dp">
+                android:layout_marginStart="10dp">
 
             </ImageView>
 

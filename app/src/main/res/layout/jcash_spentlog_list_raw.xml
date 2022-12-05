@@ -14,9 +14,9 @@
         android:layout_weight="1"
         android:background="@drawable/jcash_spentlist_table_content_cell_bg"
         android:gravity="center_vertical"
-        android:padding="@dimen/dimen_4dp"
+        android:padding="4dp"
         android:text=""
-        android:textSize="@dimen/dimen_16sp" />
+        android:textSize="16sp" />
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_amount_spent_or_refunded"
@@ -26,9 +26,9 @@
         android:layout_weight="1"
         android:background="@drawable/jcash_spentlist_table_content_cell_bg"
         android:gravity="center_vertical"
-        android:padding="@dimen/dimen_4dp"
+        android:padding="4dp"
         android:text=""
-        android:textSize="@dimen/dimen_16sp" />
+        android:textSize="16sp" />
 
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -39,8 +39,8 @@
         android:layout_weight="1"
         android:background="@drawable/jcash_spentlist_table_content_cell_bg"
         android:gravity="center_vertical"
-        android:padding="@dimen/dimen_4dp"
+        android:padding="4dp"
         android:text=""
-        android:textSize="@dimen/dimen_16sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>

@@ -3,7 +3,7 @@
 
     <item
         android:drawable="@drawable/telegram_icon"
-        android:width="@dimen/dimen_20dp"
+        android:width="20dp"
         android:height="13dp"
 
         />

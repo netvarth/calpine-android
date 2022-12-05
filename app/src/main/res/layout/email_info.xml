@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/dimen_20dp"
-        android:layout_marginRight="@dimen/dimen_20dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="match_parent"
@@ -28,10 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/txtsize_10"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="10dp"
             android:paddingTop="@dimen/padding5"
             android:paddingBottom="@dimen/padding3"
-            android:textSize="@dimen/dimen_15sp"
+            android:textSize="15sp"
             android:background="@drawable/edittext_color"
             android:hint="Enter your Mail Id"
             android:textColor="@color/title_grey"/>
@@ -43,7 +43,7 @@
         android:id="@+id/error_mesg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_18dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="@dimen/padding5"
         android:text="* This field is manditory"
         android:textSize="@dimen/txtsize_12"
@@ -58,7 +58,7 @@
         android:layout_height="@dimen/padding40"
         android:layout_marginTop="@dimen/padding20"
         android:layout_marginBottom="@dimen/padding25"
-        android:textSize="@dimen/dimen_12sp"
+        android:textSize="12sp"
         android:textColor="@color/white"
         android:text="OK"
         android:textAllCaps="false"

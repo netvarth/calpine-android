@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.Fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,26 +11,21 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.TelegramNotificationSettingsResponse;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import okhttp3.internal.http.HttpHeaders;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

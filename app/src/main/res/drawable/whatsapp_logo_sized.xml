@@ -3,8 +3,8 @@
 
     <item
         android:drawable="@drawable/whatsapp_logo"
-        android:width="@dimen/dimen_20dp"
-        android:height="@dimen/dimen_15dp"
+        android:width="20dp"
+        android:height="15dp"
 
         />
 

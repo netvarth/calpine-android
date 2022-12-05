@@ -6,8 +6,6 @@
 
     <solid android:color="#0D3E4A59"/>
 
-
-
     <padding
         android:left="@dimen/default_padding"
         android:top="@dimen/default_padding"

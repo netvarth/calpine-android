@@ -1,13 +1,10 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,17 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ISelectLocation;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
-import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 
 import java.util.ArrayList;
-
-import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.ViewHolder> {
 
@@ -43,14 +33,14 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
 
     @NonNull
     @Override
-    public LocationsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.locations_item, viewGroup, false);
-        return new LocationsAdapter.ViewHolder(v);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final LocationsAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         if (locationList != null) {
             viewHolder.tvLocation.setText(locationList.get(position).getAddress());

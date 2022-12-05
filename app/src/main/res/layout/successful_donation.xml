@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding5"
-            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:layout_marginBottom="25dp"
             android:text="Thank you for donating"
             android:textColor="@color/title_color">
 
@@ -42,9 +42,9 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="25dp"
             android:text="@string/donation_quote"
             android:textColor="@color/black"
             android:textSize="@dimen/txtsize_14">
@@ -71,11 +71,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:layout_marginStart="@dimen/dimen_8dp"
-            android:layout_marginTop="@dimen/dimen_8dp"
-            android:layout_marginEnd="@dimen/dimen_8dp"
-            android:layout_marginBottom="@dimen/dimen_8dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:background="#EDEDED">
 
         </LinearLayout>
@@ -273,7 +273,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_15dp">
+            android:layout_marginTop="15dp">
 
             <LinearLayout
                 android:id="@+id/ll_postInfo"
@@ -289,11 +289,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/dimen_8dp"
+                    android:layout_margin="8dp"
                     android:layout_weight="0.6"
                     android:background="@drawable/default_border"
                     android:orientation="vertical"
-                    android:padding="@dimen/dimen_8dp">
+                    android:padding="8dp">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/tv_postInfoTitle"

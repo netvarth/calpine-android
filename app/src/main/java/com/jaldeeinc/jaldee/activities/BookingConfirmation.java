@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -27,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -38,9 +40,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.Contents;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -95,7 +95,9 @@ public class BookingConfirmation extends AppCompatActivity {
         providerLogoUrl = i.getStringExtra("providerLogoUrl");
 
         if (providerLogoUrl != null && !providerLogoUrl.trim().isEmpty()) {
-            PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(iv_serviceIcon);
+            Glide.with(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).circleCrop().into(iv_serviceIcon);
+
+           // PicassoTrustAll.getInstance(mContext).load(providerLogoUrl).placeholder(R.drawable.service_avatar).error(R.drawable.service_avatar).transform(new CircleTransform()).fit().into(iv_serviceIcon);
         }
 
         if (email != null && !email.trim().isEmpty()) {
@@ -204,6 +206,7 @@ public class BookingConfirmation extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void UpdateCheckinMainUI(ActiveCheckIn activeCheckInInfo) throws ParseException {
 
 
@@ -497,11 +500,11 @@ public class BookingConfirmation extends AppCompatActivity {
                 public void onClick(View view) {
 
                     if (activeCheckInInfo != null && activeCheckInInfo.getCheckinEncId() != null) {
-                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                         sharingIntent.setType("text/html");
                         String statusUrl = Constants.URL + "status/" + activeCheckInInfo.getCheckinEncId();
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your CheckIn/Token status link");
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Share your CheckIn/Token status link");
+                        sharingIntent.putExtra(Intent.EXTRA_TEXT, statusUrl);
                         startActivity(Intent.createChooser(sharingIntent, "Share via"));
                     }
                 }
@@ -619,6 +622,7 @@ public class BookingConfirmation extends AppCompatActivity {
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
         call.enqueue(new Callback<ActiveCheckIn>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
                 if (mDialog.isShowing())
@@ -1009,11 +1013,11 @@ public class BookingConfirmation extends AppCompatActivity {
                 public void onClick(View view) {
 
                     if (activeAppointmentInfo != null && activeAppointmentInfo.getAppointmentEncId() != null) {
-                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                         sharingIntent.setType("text/html");
                         String statusUrl = Constants.URL + "status/" + activeAppointmentInfo.getAppointmentEncId();
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your Appointment status link");
-                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Share your Appointment status link");
+                        sharingIntent.putExtra(Intent.EXTRA_TEXT, statusUrl);
                         startActivity(Intent.createChooser(sharingIntent, "Share via"));
                     }
 

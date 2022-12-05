@@ -9,7 +9,7 @@ public class RazorpayModel {
     String status;
     String txnid;
 
-    public RazorpayModel (PaymentData paymentData) {
+    public RazorpayModel(PaymentData paymentData) {
         this.razorpay_order_id = paymentData.getOrderId();
         this.razorpay_payment_id = paymentData.getPaymentId();
         this.razorpay_signature =  paymentData.getSignature();

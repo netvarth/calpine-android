@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
@@ -70,15 +72,16 @@ public class JCashAvailableListAdapter extends RecyclerView.Adapter<JCashAvailab
     }
 
     @Override
-    public JCashAvailableListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.jcash_awards_view, parent, false);
 
-        return new JCashAvailableListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(final JCashAvailableListAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final JCash jCashReward = JCash.get(position);
         jCashIssueInfo = jCashReward.getjCashIssueInfo().getAsJsonObject();
         jCashSpendRulesInfo = jCashReward.getjCashSpendRulesInfo().getAsJsonObject();

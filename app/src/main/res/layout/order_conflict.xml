@@ -23,14 +23,14 @@
             android:layout_height="wrap_content"
             android:text="Items already in cart"
             android:textColor="@color/dark_black"
-            android:textSize="@dimen/dimen_16dp">
+            android:textSize="16dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="Your cart contains items from a different store. Would you like to reset your cart?"
             android:textColor="@color/title_color"
@@ -40,18 +40,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginTop="20dp"
             android:gravity="center">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_yes"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_40dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="0.5"
                 app:cardBackgroundColor="@color/dark_blue"
-                app:cardCornerRadius="@dimen/dimen_5dp"
-                app:cardElevation="@dimen/dimen_0dp">
+                app:cardCornerRadius="5dp"
+                app:cardElevation="0dp">
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:layout_width="wrap_content"
@@ -67,12 +67,12 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_no"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_40dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="0.5"
                 app:cardBackgroundColor="@color/spinnerbg"
-                app:cardCornerRadius="@dimen/dimen_5dp"
-                app:cardElevation="@dimen/dimen_0dp">
+                app:cardCornerRadius="5dp"
+                app:cardElevation="0dp">
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:layout_width="wrap_content"

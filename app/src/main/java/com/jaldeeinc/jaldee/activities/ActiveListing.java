@@ -1,10 +1,10 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.jaldeeinc.jaldee.Fragment.AppointmentMyJaldee;
 import com.jaldeeinc.jaldee.Fragment.CheckinsMyJaldee;

@@ -28,7 +28,6 @@ public class PaymentModeAdapter extends BaseAdapter {
     private int selectedPosition = -1;
     int row_index = -1;
 
-
     private FrameLayout cv_paymentMode;
     private LinearLayout ll_paymentMode;
     private LinearLayout ll_circle_shape;

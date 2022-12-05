@@ -4,26 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.net.Uri;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -102,16 +95,16 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     }
 
     @Override
-    public FavouriteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favlist_row, parent, false);
 
 
-        return new FavouriteAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final FavouriteAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final FavouriteModel favList = mFavList.get(position);
 
 
@@ -185,60 +178,6 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.ivMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
-//                dialog.setContentView(R.layout.reply);
-//                dialog.show();
-//
-//                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-//                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-//                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-//                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-//                txtsendmsg.setVisibility(View.VISIBLE);
-//                txtsendmsg.setText("Message to " + favList.getBusinessName());
-//                btn_send.setText("SEND");
-//
-//                edt_message.addTextChangedListener(new TextWatcher() {
-//                    @Override
-//                    public void afterTextChanged(Editable arg0) {
-//                        if (edt_message.getText().toString().length() > 0 && !edt_message.getText().toString().trim().isEmpty()) {
-//                            btn_send.setEnabled(true);
-//                            btn_send.setClickable(true);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-//                        } else {
-//                            btn_send.setEnabled(false);
-//                            btn_send.setClickable(false);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                    }
-//                });
-//
-//                btn_send.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        String modifyAccountID = String.valueOf(favList.getId());
-//                        callback.onMethodMessageCallback(modifyAccountID, edt_message.getText().toString(), dialog);
-//                        // ApiSearchViewTerminology(modifyAccountID);
-//                        //dialog.dismiss();
-//
-//                    }
-//                });
-//
-//                btn_cancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//
 
                 Intent intent = new Intent(mContext, ChatActivity.class);
                 intent.putExtra("name",favList.getBusinessName());

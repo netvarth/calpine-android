@@ -1,7 +1,5 @@
 package com.jaldeeinc.jaldee.response;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

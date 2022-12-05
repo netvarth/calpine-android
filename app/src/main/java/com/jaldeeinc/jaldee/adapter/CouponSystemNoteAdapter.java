@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.enums.CouponSystemNotes;
-import com.jaldeeinc.jaldee.response.CoupnResponse;
 
 import java.util.ArrayList;
 
@@ -34,13 +32,13 @@ public class CouponSystemNoteAdapter extends RecyclerView.Adapter<CouponSystemNo
     }
 
     @Override
-    public CouponSystemNoteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.coupon_systemnote_row, parent, false);
-        return new CouponSystemNoteAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final CouponSystemNoteAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final String systemNote = sytemNotes.get(position);
         myViewHolder.mSystemNote.setText(CouponSystemNotes.valueOf(systemNote).getSystemMsg());
     }

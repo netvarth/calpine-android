@@ -1,8 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-
-import static com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy.REQUEST_ID_MULTIPLE_PERMISSIONS;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -78,6 +75,8 @@ public class CheckinShareLocation extends AppCompatActivity implements
     // Tracks the bound state of the service.
     private boolean mBound = false;
 
+    public final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+
 
     Switch shareSwitch;
     TextView bicycleIcon, modeLabel, checkinMessage, tv_title,trackingText,shareText;
@@ -99,12 +98,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     String latValues, longValues, terminology, calcMode,queueStartTime,queueEndTime;
     String jaldeeDistance, from;
 
-
-
-
     // UI elements.
-
-
 
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -184,7 +178,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
         // Check if enabled and if not send user to the GPS settings
         if (!enabled) {
-            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
 
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

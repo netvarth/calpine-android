@@ -1,14 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
@@ -34,22 +33,22 @@ public class ServicesListAdapter extends RecyclerView.Adapter<ServicesListAdapte
             }
         }
 
-        public ServicesListAdapter(Context mContext, List<SearchService> mSearchDepartmentServicesList,SearchDepartmentServices departmentServices) {
+        public ServicesListAdapter(Context mContext, List<SearchService> mSearchDepartmentServicesList, SearchDepartmentServices departmentServices) {
             this.mContext = mContext;
             this.mSearchDepartmentServicesList = mSearchDepartmentServicesList;
             this.searchDepartmentServices = departmentServices;
         }
 
         @Override
-        public com.jaldeeinc.jaldee.adapter.ServicesListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.serviceslist_row, parent, false);
 
-            return new com.jaldeeinc.jaldee.adapter.ServicesListAdapter.MyViewHolder(itemView);
+            return new MyViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(final com.jaldeeinc.jaldee.adapter.ServicesListAdapter.MyViewHolder myViewHolder, final int position) {
+        public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
             final SearchService servicesList = mSearchDepartmentServicesList.get(position);
             String serviceName = servicesList.getName();
             if(servicesList.getDepartment() == searchDepartmentServices.getDepartmentId()){

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/dimen_45dp"
+    android:layout_height="45dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/padding3"
     app:cardCornerRadius="@dimen/padding5"
@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:text="05:59 PM - 06:56 PM"
         android:layout_gravity="center"
-        android:paddingStart="@dimen/dimen_20dp"
-        android:paddingEnd="@dimen/dimen_20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:textColor="@color/location_theme"
         android:textSize="12sp">
 

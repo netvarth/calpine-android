@@ -1,8 +1,9 @@
 
 package com.jaldeeinc.jaldee.Fragment;
 
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
+
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -36,6 +37,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -56,9 +65,7 @@ import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.ContactModel;
@@ -88,7 +95,6 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,20 +110,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 
 /**
@@ -656,7 +653,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if (from_user) {
                             tv_mImageViewTextnew.setVisibility(View.GONE);
                             if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                                PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                                Glide.with(mContext).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).circleCrop().into(mImgeProfile);
+                                //PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
                                 mImgeProfile.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -676,25 +674,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         } else {
                             apiSearchGallery(uniqueID);
                         }
-//                        if(homeUniqueId==null){
-
-//                        }else{
-//                            ApiSearchGallery(homeUniqueId);
-//                        }
                         ApiFavList(mSearchRespPass, claimable);
-//                        if (mProviderId != 0) {
-//                            APIServiceDepartments(mProviderId);
-//                        }
-//                        if(homeUniqueId==null){
-//                            ApiSearchViewLocation(uniqueID);
-////                            listProviders(uniqueID);
-//                        }else{
-
-//                            ApiSearchViewLocation(homeUniqueId);
-//                            listProviders(homeUniqueId);
-//                        }
-//                        listDoctorsByDepartment();
-//                        apiSearchViewSetting(uniqueID);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -992,12 +972,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             onMethodUsersClick(usersList, mBusinessDataList.getBusinessName(), userTerminology);
                                         }
                                     });
-//                                    RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-//                                    mRecycleDepartment.setVisibility(View.GONE);
-//                                    mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-//                                    usersAdapter.setFields(usersList,mBusinessDataList.getBusinessName());
-//                                    mRecycleDepartment.setAdapter(usersAdapter);
-//                                    usersAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
@@ -1115,24 +1089,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             }
                         }
                         aServiceList = response.body();
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
-//                            mService.setDepartmentName();Name(response.body().get(i).getName());
-//                            mService.setId(response.body().get(i).getId());
-//                            mService.setLivetrack(response.body().get(i).getLivetrack());
-//                            mService.setIsPrePayment(response.body().get(i).getIsPrePayment());
-//                            mService.setTotalAmount(response.body().get(i).getTotalAmount());
-//                            mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
-//                            mService.setServiceType(response.body().get(i).getServiceType());
-//                            mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
-//                            mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
-//                            mService.setInstructions(response.body().get(i).getInstructions());
-//                            mService.setCallingMode(response.body().get(i).getCallingMode());
-//                            mService.setValue(response.body().get(i).getValue());
-//                            LaServicesList.add(mService);
-//                        }
-//                        aServiceList.addAll(LaServicesList);
-                        // Department Section Starts
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1267,7 +1223,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }*/
             Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (mBusinessDataList.getLogo() != null) {
-                PicassoTrustAll.getInstance(context).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                Glide.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).circleCrop().into(mImgeProfile);
+
+                //PicassoTrustAll.getInstance(context).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
             } else {
                 //Toast.makeText(mContext, "There is no Profile Pic", Toast.LENGTH_SHORT).show();
                 // Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
@@ -1675,8 +1633,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             if (getBussinessData.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
                 tv_domain.setVisibility(View.GONE);
             } else {
-               // tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
-                  tv_domain.setText(getBussinessData.getServiceSubSector().getDisplayName());
+                // tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+                tv_domain.setText(getBussinessData.getServiceSubSector().getDisplayName());
             }
         }
         if (getBussinessData.getBusinessDesc() != null) {
@@ -1689,7 +1647,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
                     if (lineCount > 3) {
                         ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "..more", true);
-                    } else {
                     }
                     // Use lineCount here
                 }
@@ -2380,148 +2337,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         });
     }
 
-    //
-//    /**
-//     * To show departments and its doctors/services
-//     * @param uniqueID
-//     * @param mProviders // Department Users List
-//     */
-//    private void apiDepartmentServices(final String uniqueID, final ArrayList<SearchDepartmentServices> mProviders) {
-//        Log.i("apidepartment", "apidept1");
-//        ApiInterface apiService =
-//                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        Date currentTime = new Date();
-//        final SimpleDateFormat sdf = new SimpleDateFormat(
-//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        System.out.println("UTC time: " + sdf.format(currentTime));
-//        Call<ArrayList<SearchDepartmentServices>> call = apiService.getDepartmentServices(Integer.parseInt(uniqueID), sdf.format(currentTime));
-//        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
-//                try {
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getActivity(), mDialog);
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//                    if (response.code() == 200) {
-//                        mSearchDepartmentServices.clear();
-//                        String responses = new Gson().toJson(response.body());
-//                        Config.logV("Deapartnamesss---------------" + responses);
-//                        if (mProviders.size() > 0) {
-//                            for (int i = 0; i < response.body().size(); i++) {
-//                                departmentNameList.add(response.body().get(i).getDepartmentName());
-//                                departmentCodeList.add(response.body().get(i).getDepartmentCode());
-//                            }
-//                            mSearchDepartmentServices.addAll(response.body());
-//                            if (mSearchDepartmentServices != null) {
-//                                if (mSearchDepartmentServices.size() == 1) {
-//                                    departmentHeading.setVisibility(View.VISIBLE);
-//                                    departmentHeading.setText("Department (1)");
-//                                } else if (mSearchDepartmentServices.size() > 1) {
-//                                    departmentHeading.setVisibility(View.VISIBLE);
-//                                    departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
-//                                }
-//                            } else {
-//                                departmentHeading.setVisibility(View.GONE);
-//                            }
-//                            Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
-//                            Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
-//                            Config.logV("DepartmEntqweName --------------" + departmentNameList);
-//                            RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-//                            mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-//                            mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
-//                            mRecycleDepartment.setAdapter(mDepartmentAdapter);
-//                            mDepartmentAdapter.notifyDataSetChanged();
-//                        } else {
-//
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-//            }
-//        });
-//    }
-//    private void APIServiceDepartments(final int id) {
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//        Call<SearchDepartment> call = apiService.getDepartment(id);
-//        call.enqueue(new Callback<SearchDepartment>() {
-//            @Override
-//            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-//                try {
-//                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code----------Service---------------" + response.code());
-//                    if (response.code() == 200) {
-//                        String responses = new Gson().toJson(response.body());
-//                        Config.logV("Deapartnamesss---------------" + responses);
-//                        mSearchDepartments.addAll(response.body().getDepartments());
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-//                Config.logV("Fail---------------" + t.toString());
-//            }
-//        });
-//    }
-//    private void ApiDepartment(final int id) {
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        Call<SearchDepartment> call = apiService.getDepartment(id);
-//        call.enqueue(new Callback<SearchDepartment>() {
-//            @Override
-//            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-//                try {
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getActivity(), mDialog);
-//                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code----------Service---------------" + response.code());
-//                    if (response.code() == 200) {
-//                        mSearchDepartments.clear();
-//                        String responses = new Gson().toJson(response.body());
-//                        Config.logV("Deapartnamesss---------------" + responses);
-//                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
-//                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
-//                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
-//                        }
-//                        mSearchDepartments.addAll(response.body().getDepartments());
-//                        Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
-//                        Config.logV("DepartmEntqweName --------------" + departmentNameList);
-//                        RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-//                        mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-//                        mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
-//                        mRecycleDepartment.setAdapter(mDepartmentAdapter);
-//                        mDepartmentAdapter.notifyDataSetChanged();
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-//            }
-//        });
-//    }
     private void ApiSearchViewID(int mProviderid, ArrayList<String> ids) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -2545,11 +2360,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
                         if (response.code() == 200) {
                             mSearchQueueList = response.body();
-//                            if(homeUniqueId==null){
-//                                ApiSearchViewSetting(uniqueID);}
-//                            else {
-//                                ApiSearchViewSetting(homeUniqueId);
-//                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -2648,32 +2458,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             });
         }
     }
-//    private void apiFetchIdFromDeepLink(String customID) {
-//        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-//        Call<ResponseBody> call = apiService.getUniqueID(customID);
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                try {
-//                    if (response.code() == 200) {
-//                        homeUniqueId = response.body().string();
-//                        Log.i("sadf",homeUniqueId);
-//                        ApiJaldeeCoupan(homeUniqueId);
-//                        ApiJDN(homeUniqueId);
-//                        apiSearchViewTerminology(homeUniqueId);
-//                        apiSearchViewDetail(homeUniqueId, mSearchResp);
-////                        ApiSearchGallery(homeUniqueId);
-//                        ApiSearchVirtualFields(homeUniqueId);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//            }
-//        });
-//    }
 
     VirtualFieldAdapter mAdapter;
     SpecialisationAdapter sAdapter;
@@ -3151,7 +2935,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 favFlag = true;
                                 tv_fav.setVisibility(View.VISIBLE);
                                 tv_fav.setText("Favourite");
-                                tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
+                                tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_fill, 0, 0);
                             }
                         }
                         tv_fav.setOnClickListener(new View.OnClickListener() {
@@ -3252,7 +3036,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             emailIntent.putExtra(Intent.EXTRA_TEXT, "");
             try {
                 startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            } catch (android.content.ActivityNotFoundException ex) {
+            } catch (ActivityNotFoundException ex) {
                 Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
             }
         }

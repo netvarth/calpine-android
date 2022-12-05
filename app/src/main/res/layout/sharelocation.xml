@@ -39,9 +39,8 @@
             android:padding="@dimen/padding5"
             android:text="Jaldee Live Track"
             android:textColor="@color/black"
-            android:textSize="@dimen/dimen_16sp"
+            android:textSize="16sp"
             android:textStyle="bold"/>
-
 
         <pl.droidsonroids.gif.GifImageView
             android:layout_width="25dp"
@@ -91,17 +90,17 @@
             android:paddingTop="@dimen/padding3"
             android:paddingBottom="@dimen/padding3"
             android:textColor="#AAA"
-            android:textSize="@dimen/twelveScaled"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/trackingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:paddingLeft="@dimen/dimen_10dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:paddingRight="@dimen/dimen_10dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
             android:text="@string/make_sure_you_never_miss_your_turn"
             android:textColor="#AAA"
             android:textSize="@dimen/txtsize_hint_11"
@@ -120,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:padding="@dimen/dimen_10dp"
+                android:padding="10dp"
                 android:text="Track me and share my arrival time with Provider"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -129,7 +128,7 @@
             android:id="@+id/shareText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_10dp"
+            android:padding="10dp"
             android:textColor="#AAA"
             android:textSize="@dimen/txtsize_hint_11"
             android:textStyle="bold"
@@ -161,7 +160,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/app_background"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
@@ -176,7 +175,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginTop="5dp"
                     android:clickable="true"
                     android:gravity="center"
                     android:paddingLeft="@dimen/default_padding"
@@ -189,7 +188,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginTop="5dp"
                     android:clickable="true"
                     android:gravity="center"
                     android:paddingLeft="@dimen/default_padding"
@@ -215,7 +214,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding7"
-        android:layout_marginBottom="@dimen/dimen_60dp"
+        android:layout_marginBottom="60dp"
         android:layout_weight="0"
         android:background="@color/app_background"
         android:gravity="bottom"

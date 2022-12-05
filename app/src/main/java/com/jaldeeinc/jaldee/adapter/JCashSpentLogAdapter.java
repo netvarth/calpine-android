@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +41,11 @@ public class JCashSpentLogAdapter extends RecyclerView.Adapter<JCashSpentLogAdap
     }
 
     @Override
-    public JCashSpentLogAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.jcash_spentlog_list_raw, parent, false);
 
-        return new JCashSpentLogAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     public int getItemViewType(int position) {
@@ -54,7 +53,7 @@ public class JCashSpentLogAdapter extends RecyclerView.Adapter<JCashSpentLogAdap
     }
 
     @Override
-    public void onBindViewHolder(final JCashSpentLogAdapter.MyViewHolder myViewHolder, int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, int position) {
         int rowPos = position;
         if (rowPos == 0) {
             // Header Cells. Main Headings appear here

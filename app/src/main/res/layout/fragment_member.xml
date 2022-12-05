@@ -256,32 +256,32 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:drawableStart="@drawable/whatsapp_logo_sized"
-                                    android:padding="@dimen/dimen_5dp"
+                                    android:padding="5dp"
                                     android:text=" Whatsapp #"
                                     android:textColor="@color/dark_black"
-                                    android:textSize="@dimen/dimen_15sp" />
+                                    android:textSize="15sp" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/padding3"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="@dimen/dimen_5dp">
+                                    android:paddingLeft="5dp">
 
                                     <com.hbb20.CountryCodePicker
                                         android:id="@+id/Wccp"
                                         android:layout_width="0dp"
                                         android:layout_height="@dimen/padding40"
                                         android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/dimen_5dp"
-                                        android:layout_marginEnd="@dimen/dimen_5dp"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginEnd="5dp"
                                         android:layout_weight="0.22"
                                         android:background="@drawable/edittext_color"
                                         android:visibility="visible"
                                         app:ccp_autoDetectCountry="true"
                                         app:ccp_showFlag="false"
                                         app:ccp_showNameCode="false"
-                                        app:ccp_textSize="@dimen/dimen_15dp"
+                                        app:ccp_textSize="15dp"
                                         android:gravity="center"/>
 
 
@@ -289,7 +289,7 @@
                                         android:id="@+id/edtWhtsAppNumber"
                                         android:layout_width="0dp"
                                         android:layout_height="@dimen/padding40"
-                                        android:layout_marginLeft="@dimen/dimen_5dp"
+                                        android:layout_marginLeft="5dp"
                                         android:layout_weight="0.78"
                                         android:background="@drawable/edittext_color"
                                         android:hint="Enter Whatsapp Number"
@@ -297,7 +297,7 @@
                                         android:maxLength="10"
                                         android:paddingStart="@dimen/padding5"
                                         android:textColor="@color/black"
-                                        android:textSize="@dimen/dimen_15sp"
+                                        android:textSize="15sp"
                                         app:tint="@color/spinnerbg" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -312,39 +312,39 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:drawableStart="@drawable/telegram_icon_sized"
-                                    android:padding="@dimen/dimen_5dp"
+                                    android:padding="5dp"
                                     android:text=" Telegram #"
                                     android:textColor="@color/dark_black"
-                                    android:textSize="@dimen/dimen_15sp" />
+                                    android:textSize="15sp" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/padding3"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="@dimen/dimen_5dp">
+                                    android:paddingLeft="5dp">
 
                                     <com.hbb20.CountryCodePicker
                                         android:id="@+id/Tccp"
                                         android:layout_width="0dp"
                                         android:layout_height="@dimen/padding40"
                                         android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/dimen_5dp"
-                                        android:layout_marginEnd="@dimen/dimen_5dp"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginEnd="5dp"
                                         android:layout_weight="0.22"
                                         android:background="@drawable/edittext_color"
                                         android:visibility="visible"
                                         app:ccp_autoDetectCountry="true"
                                         app:ccp_showFlag="false"
                                         app:ccp_showNameCode="false"
-                                        app:ccp_textSize="@dimen/dimen_15dp"
+                                        app:ccp_textSize="15dp"
                                         android:gravity="center"/>
 
                                     <EditText
                                         android:id="@+id/edtTelegram"
                                         android:layout_width="0dp"
                                         android:layout_height="@dimen/padding40"
-                                        android:layout_marginLeft="@dimen/dimen_5dp"
+                                        android:layout_marginLeft="5dp"
                                         android:layout_weight="0.78"
                                         android:background="@drawable/edittext_color"
                                         android:hint="Enter Telegram Number"
@@ -352,7 +352,7 @@
                                         android:maxLength="10"
                                         android:paddingStart="@dimen/padding5"
                                         android:textColor="@color/black"
-                                        android:textSize="@dimen/dimen_15sp"
+                                        android:textSize="15sp"
                                         app:tint="@color/spinnerbg" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -361,7 +361,7 @@
                                 android:id="@+id/error_mesg"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_70dp"
+                                android:layout_marginStart="70dp"
                                 android:layout_marginBottom="@dimen/padding3"
                                 android:text="* This field is mandatory"
                                 android:textColor="@color/red"
@@ -379,22 +379,22 @@
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="@dimen/dimen_5dp"
+                                    android:padding="5dp"
                                     android:text="Email"
                                     android:textColor="@color/dark_black"
-                                    android:textSize="@dimen/dimen_15sp" />
+                                    android:textSize="15sp" />
 
                                 <EditText
                                     android:id="@+id/edtMail"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/padding40"
-                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_marginLeft="5dp"
                                     android:background="@drawable/edittext_color"
                                     android:hint="Enter your Email"
                                     android:inputType="textEmailAddress"
-                                    android:paddingLeft="@dimen/dimen_5dp"
+                                    android:paddingLeft="5dp"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/dimen_15sp"
+                                    android:textSize="15sp"
                                     app:tint="@color/gray" />
                             </LinearLayout>
 
@@ -402,7 +402,7 @@
                                 android:id="@+id/errormesg"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_70dp"
+                                android:layout_marginStart="70dp"
                                 android:text="* This field is mandatory"
                                 android:textColor="@color/red"
                                 android:textSize="@dimen/txtsize_12"

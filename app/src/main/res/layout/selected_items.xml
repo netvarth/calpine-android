@@ -6,12 +6,12 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_curved"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_30dp">
+    android:paddingBottom="30dp">
 
     <LinearLayout
-        android:layout_width="@dimen/dimen_60dp"
-        android:layout_height="@dimen/dimen_5dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_width="60dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:backgroundTint="@color/light_grey"
         android:background="@drawable/curved_save">
@@ -22,20 +22,20 @@
     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:text="Your Orders"
         android:textColor="@color/dark_black"
-        android:textSize="@dimen/dimen_16dp">
+        android:textSize="16dp">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,13 +47,13 @@
                 android:id="@+id/rv_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_2dp"
+                android:layout_marginTop="2dp"
                 android:scrollbars="vertical"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="@+id/Id_const_layout"
                 app:layout_constraintEnd_toEndOf="@+id/Id_const_layout"
                 app:layout_constraintHeight_max="250dp"
-                app:layout_constraintHeight_min="@dimen/dimen_50dp"
+                app:layout_constraintHeight_min="50dp"
                 app:layout_constraintStart_toStartOf="@+id/Id_const_layout"
                 app:layout_constraintTop_toTopOf="@+id/Id_const_layout">
 
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -73,14 +73,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_red"
-                android:paddingStart="@dimen/dimen_10dp"
-                android:paddingTop="@dimen/dimen_8dp"
-                android:paddingEnd="@dimen/dimen_10dp"
-                android:paddingBottom="@dimen/dimen_8dp"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
                 android:text="Clear Cart"
-                android:layout_marginEnd="@dimen/dimen_30dp"
+                android:layout_marginEnd="30dp"
                 android:textColor="@color/dark_blue"
-                android:textSize="@dimen/dimen_15dp">
+                android:textSize="15dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -91,14 +91,14 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_red"
                 android:backgroundTint="@color/dark_blue"
-                android:paddingStart="@dimen/dimen_10dp"
-                android:paddingTop="@dimen/dimen_8dp"
-                android:paddingEnd="@dimen/dimen_10dp"
-                android:paddingBottom="@dimen/dimen_8dp"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
                 android:text="Continue"
-                android:layout_marginEnd="@dimen/dimen_30dp"
+                android:layout_marginEnd="30dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/dimen_15dp">
+                android:textSize="15dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

@@ -33,7 +33,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
-import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.Questions;
@@ -696,10 +695,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
     }
 
-    @Override
-    public void SelectedPincodeLocation(PincodeLocationsResponse selectedPincodeLocation) {
-
-    }
 
     private void ApiGetOneTimeQNR() {
 

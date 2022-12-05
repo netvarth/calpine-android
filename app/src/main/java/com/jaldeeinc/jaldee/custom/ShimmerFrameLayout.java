@@ -10,6 +10,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -17,7 +18,7 @@ import com.jaldeeinc.jaldee.R;
 
 /**
  * Shimmer is an Android library that provides an easy way to add a shimmer effect to any {@link
- * android.view.View}. It is useful as an unobtrusive loading indicator, and was originally
+ * View}. It is useful as an unobtrusive loading indicator, and was originally
  * developed for Facebook Home.
  *
  * <p>Find more examples and usage instructions over at: facebook.github.io/shimmer-android

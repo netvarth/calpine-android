@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.jaldeeinc.jaldee">
-
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for checking whether wifi is enabled -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        <application
+            android:allowBackup="true"
+            android:dataExtractionRules="@xml/data_extraction_rules"
+            android:fullBackupContent="@xml/backup_rules"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.Revamp_rebuild1"
+            tools:targetApi="31" />-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission
         android:name="android.permission.RECEIVE_SMS"
         tools:node="remove" />
@@ -21,12 +30,6 @@
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -52,34 +55,128 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup, android:usesCleartextTraffic"
+        tools:targetApi="33">
+        <activity android:name=".activities.ActiveListing" />
         <activity
-            android:name=".activities.ServiceOptionActivity"
-            android:exported="false" />
+            android:name=".activities.AddMemberChekin"
+            android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.MultipleAppointmentConfirmation"
-            android:exported="false" />
+            android:name=".activities.AppointmentActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ReleasedQNRActivity"
-            android:exported="false" />
+            android:name=".activities.BillActivity"
+            android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.JaldeeWalletActivity"
+            android:name=".activities.BookingConfirmation"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.BookingDetails" />
+        <activity
+            android:name=".activities.CartActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.ChatActivity" />
+        <activity
+            android:name=".activities.CheckInActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CheckInDetails" />
+        <activity
+            android:name=".activities.CheckinFamilyMember"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.CheckinShareLocation"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.CheckinShareLocationAppointment"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.CheckoutItemsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.CheckoutListActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CouponActivity" />
+        <activity
+            android:name=".activities.CustomQuestionnaire"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.DonationActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.EditProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.FilterActivity"
+            android:screenOrientation="unspecified" />
+        <activity android:name=".activities.HistoryActivity" />
+        <activity
+            android:name=".activities.Home"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="FCM_PLUGIN_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ItemDetailAcitvity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ItemsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.JaldeeCashActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.AudioActivity" />
         <activity
-            android:name=".activities.VideoActivity"
+            android:name=".activities.JaldeeWalletActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.JdnActivity" />
+        <activity android:name=".activities.LinkRedirectionActivity" />
+        <activity
+            android:name=".activities.Login"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.MaintananceActivity"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.MultipleAppointmentConfirmation"
+            android:exported="false" />
+        <activity android:name=".activities.MyPaymentsActivity" />
+        <activity
+            android:name=".activities.OrderConfirmation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.DonationReconfirmation"
+            android:name=".activities.OrderDetailActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.OrdersHistoryActivity" />
         <activity
-            android:name=".activities.UpdateQuestionnaire"
-            android:screenOrientation="portrait" />
+            android:name=".activities.Password"
+            android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.ImageActivity"
+            android:name=".activities.PaymentActivity"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.PaymentDetail"
+            android:screenOrientation="unspecified"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".payment.PayUMoneyWebview"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.ProviderDetailActivity"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ReconfirmationActivity"
@@ -88,91 +185,37 @@
             android:name=".activities.ReconfirmationMultipleApptActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CustomQuestionnaire"
+            android:name=".activities.Register"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.ReleasedQNRActivity"
+            android:exported="false" />
+        <activity android:name=".activities.RescheduleActivity" />
+        <activity android:name=".activities.RescheduleCheckinActivity" />
+        <activity
+            android:name=".activities.ResetOtp"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.SearchLocationActivity"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.SearchResultsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.WebViewActivity"
-            android:screenOrientation="portrait" />
+            android:name=".activities.SearchServiceActivity"
+            android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.EditProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ViewAttachmentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.CheckoutListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.OrderDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.OrderConfirmation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.CheckoutItemsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.CartActivity"
-            android:screenOrientation="portrait" />
+            android:name=".activities.ServiceOptionActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.ShowCartServiceOption"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ItemDetailAcitvity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ItemsActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.OrdersHistoryActivity" />
-        <activity android:name=".activities.MyPaymentsActivity" />
-        <activity android:name=".activities.JdnActivity" />
-        <activity
-            android:name=".activities.SearchResultsActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.CheckInDetails" />
-        <activity android:name=".activities.ChatActivity" />
-        <activity android:name=".activities.BookingDetails" />
-        <activity android:name=".activities.HistoryActivity" />
-        <activity
-            android:name=".activities.TestActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.RescheduleCheckinActivity" />
-        <activity android:name=".activities.RescheduleActivity" />
-        <activity
-            android:name=".activities.DonationActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.CheckInActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.AppointmentActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.MoreInfoActivity"
-            android:theme="@style/MyMaterialTheme.NoActionBar" />
-        <activity
-            android:name=".activities.UserDetailActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ProviderDetailActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.BookingConfirmation"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.ActiveListing" />
-        <activity android:name=".activities.LinkRedirectionActivity" />
-        <activity android:name=".activities.NotificationActivity" />
-        <activity android:name=".activities.CouponFirstActivity" />
-        <activity android:name=".activities.CouponActivity" />
+            android:name=".activities.Signup"
+            android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.Splash"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="unspecified">
             <intent-filter>
@@ -197,101 +240,78 @@
                 android:value=".activities.Home" />
         </activity>
         <activity
-            android:name=".activities.Register"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.MaintananceActivity"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.AppointmentDate"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.Donation"
-            android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.Signup"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.VerifyOtp"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.Password"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.Home"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="FCM_PLUGIN_ACTIVITY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".payment.PayUMoneyWebview"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.Login"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.ResetOtp"
-            android:screenOrientation="unspecified" />
-        <activity
             android:name=".activities.SwipeGalleryImage"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.FilterActivity"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.SearchServiceActivity"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.SearchLocationActivity"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.CheckIn"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.PaymentDetail"
-            android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.CheckinShareLocation"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.CheckinShareLocationAppointment"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.PaymentActivity"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.CheckinFamilyMember"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.CheckinFamilyMemberDonation"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.MessageActivity"
-            android:screenOrientation="unspecified" />
-        <activity
-            android:name=".activities.AddMemberChekin"
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.TermsOfUse"
             android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.BillActivity"
+            android:name=".activities.UpdateQuestionnaire"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.UserDetailActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.VerifyOtp"
             android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.VideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ViewAttachmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.WebViewActivity"
+            android:screenOrientation="portrait" />
+
+
+        <!--for razorpay payment  set export value as per razorpay integration https://razorpay.com/docs/payments/payment-gateway/android-integration/standard/troubleshooting-faqs/-->
+        <receiver
+            android:name="com.razorpay.RzpTokenReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="rzp.device_token.share" />
+            </intent-filter>
+        </receiver>
+        <activity
+            android:name="com.razorpay.CheckoutActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@style/CheckoutTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <data
+                    android:host="rzp.io"
+                    android:scheme="io.rzp" />
+            </intent-filter>
+        </activity>
+        <!--for razorpay payment  set export value as per razorpay integration https://razorpay.com/docs/payments/payment-gateway/android-integration/standard/troubleshooting-faqs/-->
+        <activity
+            android:name="com.payu.custombrowser.PreLollipopPaymentsActivity"
+            android:exported="true">
+            <intent-filter>
+                <data android:scheme="${applicationId}.success" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="${applicationId}.failure" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".service.MyFirebaseMessagingService"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -308,6 +328,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
     </application>
 
 </manifest>

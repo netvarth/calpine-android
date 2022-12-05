@@ -368,9 +368,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     String emailId;
     String whatsappCountryCode;
     String whatsappNumber;
-
     String providerName;
-
     String conmrFName;
     String conmrLName;
 
@@ -459,11 +457,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             public void onClick(View v) {
 
                 if (sharingId != null) {
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                     sharingIntent.setType("text/html");
                     String shareBody = Constants.URL + sharingId;
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ServiceProvider details");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "ServiceProvider details");
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
 
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 }
@@ -603,8 +601,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
                                     shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                                     String shareBody = Constants.URL + sharingId;
-                                    shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ServiceProvider details");
-                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "ServiceProvider details");
+                                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
                                     startActivity(Intent.createChooser(shareIntent, "share via"));
 
                                 }
@@ -3367,47 +3365,4 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         }
         return queueobj;
     }
-    /*JSONObject providersList1 = new ArrayList<ProviderUserModel>();
-
-    private void ApiGetUserByLocation(int locationId, int uniqueId) {
-        int consumerID = SharedPreference.getInstance(ProviderDetailActivity.this).getIntValue("consumerId", 0);
-
-        ApiInterface apiService =
-                ApiClient.getClient(ProviderDetailActivity.this).create(ApiInterface.class);
-
-        final Dialog mDialog = Config.getProgressDialog(ProviderDetailActivity.this, ProviderDetailActivity.this.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<JSONObject> call = apiService.getUserss(locationId, uniqueId);
-
-        call.enqueue(new Callback<ArrayList<JSONObject>>() {
-            @Override
-            public void onResponse(Call<ArrayList<JSONObject>> call, Response<JSONObject> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code user-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        providersList1 = response.body();
-                        if (providersList1 != null) {
-
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-            }
-        });
-    }*/
 }

@@ -14,17 +14,17 @@
         <LinearLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60dp"
+            android:layout_height="60dp"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:paddingEnd="@dimen/dimen_10dp">
+            android:paddingEnd="10dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_back"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
 
@@ -46,12 +46,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/cv_back"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginStart="15dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text=""
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_18dp">
+                android:textSize="18dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -69,10 +69,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:neumorph_backgroundColor="@color/white"
-                app:neumorph_insetBottom="@dimen/dimen_0dp"
-                app:neumorph_insetEnd="@dimen/dimen_1dp"
-                app:neumorph_insetStart="@dimen/dimen_1dp"
-                app:neumorph_insetTop="@dimen/dimen_1dp"
+                app:neumorph_insetBottom="0dp"
+                app:neumorph_insetEnd="1dp"
+                app:neumorph_insetStart="1dp"
+                app:neumorph_insetTop="1dp"
                 app:neumorph_shadowColorDark="#BEF2F2F2"
                 app:neumorph_shadowColorLight="#BEF2F2F2"
                 app:neumorph_shapeType="pressed">
@@ -101,11 +101,11 @@
             android:layout_width="200dp"
             android:layout_height="@dimen/padding45"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/padding5"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             app:cardBackgroundColor="@color/location_theme"
             app:cardCornerRadius="@dimen/padding3">
 
@@ -121,14 +121,14 @@
                     android:layout_gravity="center"
                     android:text="Add"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/dimen_18sp">
+                    android:textSize="18sp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
                 <ImageView
                     android:id="@+id/iv_next"
-                    android:layout_width="@dimen/dimen_15dp"
-                    android:layout_height="@dimen/dimen_16sp"
+                    android:layout_width="15dp"
+                    android:layout_height="16sp"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/txtsize_10"
                     android:src="@drawable/add"

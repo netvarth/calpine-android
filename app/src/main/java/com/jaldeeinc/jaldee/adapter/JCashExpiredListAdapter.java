@@ -1,12 +1,14 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
@@ -28,7 +30,7 @@ import java.util.Date;
 
 public class JCashExpiredListAdapter extends RecyclerView.Adapter<JCashExpiredListAdapter.MyViewHolder> {
     Context mContext;
-    ArrayList<com.jaldeeinc.jaldee.response.JCashExpired> jCashExpireds;
+    ArrayList<JCashExpired> jCashExpireds;
     JsonObject jCashIssueInfo, jCashSpendRulesInfo;
     JCashSpentLogDialog jCashSpentLogDialog;
     ArrayList<JCashSpentDetails> listJCashSpentDetails = new ArrayList<JCashSpentDetails>();
@@ -59,15 +61,16 @@ public class JCashExpiredListAdapter extends RecyclerView.Adapter<JCashExpiredLi
     }
 
     @Override
-    public JCashExpiredListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.jcash_awards_view, parent, false);
 
-        return new JCashExpiredListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(final JCashExpiredListAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final JCashExpired jCashExpiredReward = jCashExpireds.get(position);
 
         myViewHolder.rlLayout.animate().alpha(0.5f);

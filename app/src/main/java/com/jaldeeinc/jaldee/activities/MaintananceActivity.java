@@ -13,7 +13,7 @@ import com.jaldeeinc.jaldee.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MaintananceActivity  extends AppCompatActivity {
+public class MaintananceActivity extends AppCompatActivity {
 
     @BindView(R.id.cv_submit)
     CardView cv_submit;

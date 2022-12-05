@@ -6,9 +6,6 @@ import android.preference.PreferenceManager;
 
 import com.jaldeeinc.jaldee.R;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 public class Utilss {
 
     static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_locaction_updates";

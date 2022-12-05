@@ -24,7 +24,7 @@ public class CustomDialog extends Dialog {
     String mynw_level;
     String providername;
 
-    public CustomDialog(Context a, String ynw_level,String providername) {
+    public CustomDialog(Context a, String ynw_level, String providername) {
         super(a);
         // TODO Auto-generated constructor stub
         this.c = a;

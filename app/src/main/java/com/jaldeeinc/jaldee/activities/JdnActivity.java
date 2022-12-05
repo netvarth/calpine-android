@@ -1,7 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -18,11 +18,6 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.Provider;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +31,6 @@ public class JdnActivity extends AppCompatActivity {
     TextView discount, maxvalue, note;
     Context mContext;
     private Provider providerResponse = new Provider();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

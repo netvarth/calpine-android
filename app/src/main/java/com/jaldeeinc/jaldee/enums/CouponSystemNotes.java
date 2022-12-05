@@ -31,7 +31,7 @@ public enum CouponSystemNotes {
     //PROVIDER_COUPON_NOT_APPLICABLE_COUPON_BASED_ON(COUPON_NOT_VALID);
 
     private String systemMessage;
-    private CouponSystemNotes (final String restriction) {
+    private CouponSystemNotes(final String restriction) {
         this.systemMessage = restriction;
     }
 

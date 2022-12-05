@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -20,7 +19,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
-import com.jaldeeinc.jaldee.service.LocationUpdatesService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import okhttp3.ResponseBody;
@@ -32,7 +30,7 @@ import retrofit2.Response;
  * Created by sharmila on 12/7/18.
  */
 
-public class LogouFragment  extends RootFragment {
+public class LogouFragment extends RootFragment {
 
     Context mContext;
 

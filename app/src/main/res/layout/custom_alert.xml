@@ -34,7 +34,7 @@
             android:background="@color/view_border"
             android:paddingTop="@dimen/padding5"
             android:paddingBottom="@dimen/padding5"
-            android:paddingStart="@dimen/dimen_15dp"
+            android:paddingStart="15dp"
             android:text="Jaldee Verified"
             android:textColor="@color/title_color"
             android:textSize="@dimen/txtsize_14" />
@@ -47,7 +47,7 @@
             android:layout_marginBottom="@dimen/default_padding"
             android:paddingTop="@dimen/padding5"
             android:paddingBottom="@dimen/padding5"
-            android:paddingStart="@dimen/dimen_15dp"
+            android:paddingStart="15dp"
             android:text="Distance"
             android:textColor="@color/title_color"
             android:textSize="@dimen/txtsize_title" />

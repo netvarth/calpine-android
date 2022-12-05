@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:paddingEnd="@dimen/dimen_20dp"
+        android:paddingEnd="20dp"
         android:src="@drawable/close"
         android:visibility="gone">
 
@@ -18,13 +18,13 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:fontFamily="@font/font_regular"
         android:letterSpacing="0.02"
         android:text="Check your status"
         android:textColor="@color/location_theme"
-        android:textSize="@dimen/dimen_16dp">
+        android:textSize="16dp">
 
     </TextView>
 
@@ -50,25 +50,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/qr_code_container"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="@dimen/dimen_20dp"
-            android:layout_height="@dimen/dimen_20dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
             android:src="@drawable/download" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:gravity="center"
             android:fontFamily="@font/font_regular"
             android:letterSpacing="0.02"
             android:text="Save to Gallery"
             android:textColor="@color/grey1"
-            android:textSize="@dimen/dimen_16dp" />
+            android:textSize="16dp" />
 
     </LinearLayout>
 

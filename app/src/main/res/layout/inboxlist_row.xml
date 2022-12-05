@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_5dp">
+    android:paddingBottom="5dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding3"
-        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="@dimen/padding3"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="10dp"
@@ -55,14 +55,14 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_5dp">
+                android:layout_marginTop="5dp">
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:id="@+id/txt_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding5"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_toLeftOf="@id/rl_count"
                     android:autoLink="web"
                     android:ellipsize="end"
@@ -72,8 +72,8 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_count"
-                    android:layout_width="@dimen/dimen_20dp"
-                    android:layout_height="@dimen/dimen_20dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/rounded_green_bg"
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/dimen_14dp">
+                        android:textSize="14dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -109,7 +109,7 @@
         android:layout_marginRight="@dimen/padding20"
         android:background="@drawable/roundedrect_shade"
         android:backgroundTint="@color/special_background"
-        android:elevation="@dimen/dimen_5dp"
+        android:elevation="5dp"
 
         />
 

@@ -47,13 +47,13 @@
 
         <ImageView
             android:id="@+id/iv_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginEnd="10dp"
             android:padding="@dimen/padding5"
-            android:src="@drawable/close"
+            android:src="@drawable/new_close"
             app:tint="@color/white">
 
         </ImageView>
@@ -66,7 +66,7 @@
         android:layout_margin="@dimen/padding5"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_5dp">
+        android:padding="5dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon_noimage" />
@@ -89,7 +89,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
-                android:textSize="@dimen/dimen_25dp"
+                android:textSize="25dp"
                 android:text="+1"
                 android:visibility="gone"/>
 
@@ -105,9 +105,9 @@
             android:id="@+id/txtservice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginRight="5dp"
             android:fontFamily="@font/font_bold"
             android:text=""
             android:textColor="@color/title_grey"
@@ -119,10 +119,10 @@
             android:id="@+id/txtdescVal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_5dp"
-            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:justificationMode="inter_word"
             android:letterSpacing="0.03"
             android:lineSpacingExtra="@dimen/padding3"
@@ -136,10 +136,10 @@
             android:id="@+id/txt_payment_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_5dp"
-            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:justificationMode="inter_word"
             android:letterSpacing="0.03"
             android:lineSpacingExtra="@dimen/padding3"
@@ -152,9 +152,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp">
+            android:layout_marginRight="5dp">
 
             <LinearLayout
                 android:id="@+id/Lprice"
@@ -186,7 +186,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/dimen_2dp"
+                        android:layout_marginTop="2dp"
                         android:gravity="center"
                         android:text="200"
                         android:textColor="@color/title_grey"
@@ -201,7 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="5dp"
                     android:text="Tax Applicable"
                     android:textSize="10sp"
                     android:visibility="gone">
@@ -242,7 +242,7 @@
                         android:id="@+id/txtduration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_2dp"
+                        android:layout_marginTop="2dp"
                         android:fontFamily="@font/font_bold"
                         android:gravity="center"
                         android:text="200"
@@ -258,14 +258,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding5"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginRight="5dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/Lminvalue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="@dimen/padding40"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -284,7 +284,7 @@
                     android:id="@+id/txtminValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_2dp"
+                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/font_bold"
                     android:gravity="center"
                     android:text="200"
@@ -297,7 +297,7 @@
                 android:id="@+id/Lmaxvalue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -315,7 +315,7 @@
                     android:id="@+id/txtmaxvalue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_2dp"
+                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/font_bold"
                     android:gravity="center"
                     android:text="200"
@@ -330,7 +330,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding5"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -348,7 +348,7 @@
                 android:id="@+id/txtmultiples"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_2dp"
+                android:layout_marginTop="2dp"
                 android:fontFamily="@font/font_bold"
                 android:gravity="center"
                 android:text="2"
@@ -361,10 +361,10 @@
             android:id="@+id/Lprepayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
-            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">

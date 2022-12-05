@@ -1,8 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.jaldeeinc.jaldee.Interface.IFilterOptions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.KeyValue;
-import com.jaldeeinc.jaldee.model.Domain_Spinner;
 
 import java.util.ArrayList;
 
@@ -38,7 +35,7 @@ public class SubDomainAdapter extends RecyclerView.Adapter<SubDomainAdapter.View
         this.list = list;
     }
 
-    public SubDomainAdapter(Context context, ArrayList<KeyValue> list,String subDomain) {
+    public SubDomainAdapter(Context context, ArrayList<KeyValue> list, String subDomain) {
         this.context = context;
         this.list = list;
         this.selectedSubDomain = subDomain;
@@ -46,22 +43,22 @@ public class SubDomainAdapter extends RecyclerView.Adapter<SubDomainAdapter.View
 
     @NonNull
     @Override
-    public SubDomainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new SubDomainAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.domain_layout, parent, false);
-            return new SubDomainAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SubDomainAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
 
@@ -83,7 +80,7 @@ public class SubDomainAdapter extends RecyclerView.Adapter<SubDomainAdapter.View
 
         } else {
 
-            SubDomainAdapter.ViewHolder skeletonViewHolder = (SubDomainAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

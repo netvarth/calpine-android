@@ -48,15 +48,15 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
 
     @NonNull
     @Override
-    public CheckBoxAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.checkboxes_item, parent, false);
-        return new CheckBoxAdapter.ViewHolder(v);
+        return new ViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CheckBoxAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         final QuestionnaireCheckbox checkbox = checkboxList.get(position);
 

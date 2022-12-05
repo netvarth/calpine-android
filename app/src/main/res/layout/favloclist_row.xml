@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:layout_marginLeft="@dimen/dimen_2dp"
+            android:layout_marginLeft="2dp"
             android:text="Open Now"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/txtsize_10"
@@ -59,7 +59,7 @@
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:padding="@dimen/padding7"
-        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:layout_marginLeft="5dp"
         android:id="@+id/qmessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:padding="@dimen/padding7"
-        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:layout_marginLeft="5dp"
         android:id="@+id/txt_peopleahead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -130,8 +130,8 @@
 
     <TextView
         android:padding="@dimen/padding5"
-        android:layout_marginLeft="@dimen/dimen_2dp"
-        android:layout_marginRight="@dimen/dimen_2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:id="@+id/txt_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/btnappointments"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@color/location_theme"

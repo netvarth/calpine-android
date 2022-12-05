@@ -14,10 +14,10 @@
         android:layout_weight="1"
         android:background="@drawable/jcash_spentlist_table_content_cell_bg"
         android:gravity="center"
-        android:padding="@dimen/dimen_4dp"
+        android:padding="4dp"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="@dimen/dimen_14sp" />
+        android:textSize="14sp" />
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_refund_mode"
@@ -27,10 +27,10 @@
         android:layout_weight="1"
         android:background="@drawable/jcash_spentlist_table_content_cell_bg"
         android:gravity="center"
-        android:padding="@dimen/dimen_4dp"
+        android:padding="4dp"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="@dimen/dimen_14sp" />
+        android:textSize="14sp" />
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_refund_amount"
@@ -40,9 +40,9 @@
         android:layout_weight="1"
         android:background="@drawable/jcash_spentlist_table_content_cell_bg"
         android:gravity="center"
-        android:padding="@dimen/dimen_4dp"
+        android:padding="4dp"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="@dimen/dimen_14sp" />
+        android:textSize="14sp" />
 
 </LinearLayout>

@@ -1,18 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.model.CommonFilterEnum;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by sharmila on 13/11/18.

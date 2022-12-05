@@ -1,8 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.os.Build;
-import android.telecom.Conference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +22,7 @@ import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 public class ServiceOptionDataGridAdapter extends RecyclerView.Adapter<ServiceOptionDataGridAdapter.ViewHolder> {
     ArrayList<DataGrid> gridList = new ArrayList<>();
@@ -46,15 +39,15 @@ public class ServiceOptionDataGridAdapter extends RecyclerView.Adapter<ServiceOp
 
     @NonNull
     @Override
-    public ServiceOptionDataGridAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_option_grid_item, parent, false);
-        return new ServiceOptionDataGridAdapter.ViewHolder(v, false);
+        return new ViewHolder(v, false);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ServiceOptionDataGridAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         final DataGrid gridObj = gridList.get(position);
         ArrayList<GridColumnAnswerLine> datagridListColumns = gridObj.getDataGridListColumn();

@@ -7,16 +7,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:paddingEnd="10dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="16dp"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding5"
-                android:src="@mipmap/img_back_arrow"
+                android:src="@drawable/img_back_arrow"
                 app:tint="@color/dark_blue">
 
             </ImageView>
@@ -37,13 +37,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/dimen_18dp"
-            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="5dp"
             android:letterSpacing="0.03"
             android:text="Cart"
             android:textAllCaps="true"
             android:textColor="@color/dark_black"
-            android:textSize="@dimen/dimen_16dp">
+            android:textSize="16dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -56,13 +56,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/cv_itemsCart"
-        android:layout_marginTop="@dimen/dimen_60dp"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="-10dp"
         app:neumorph_backgroundColor="@color/grey14"
-        app:neumorph_insetBottom="@dimen/dimen_0dp"
-        app:neumorph_insetEnd="@dimen/dimen_1dp"
-        app:neumorph_insetStart="@dimen/dimen_1dp"
-        app:neumorph_insetTop="@dimen/dimen_1dp"
+        app:neumorph_insetBottom="0dp"
+        app:neumorph_insetEnd="1dp"
+        app:neumorph_insetStart="1dp"
+        app:neumorph_insetTop="1dp"
         app:neumorph_shadowColorDark="#BEF2F2F2"
         app:neumorph_shadowColorLight="#BEF2F2F2"
         app:neumorph_shapeType="pressed">
@@ -85,7 +85,7 @@
                 android:id="@+id/ll_noItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_50dp"
+                android:layout_marginTop="50dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -103,7 +103,7 @@
                     android:layout_gravity="center"
                     android:text="No items in your cart."
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textSize="15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
@@ -117,17 +117,17 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_itemsCart"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_65dp"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:visibility="visible"
         app:cardBackgroundColor="@color/special_background"
-        app:cardElevation="@dimen/dimen_50dp">
+        app:cardElevation="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_10dp">
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
 
 
             <LinearLayout
@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="vertical">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -149,7 +149,7 @@
                         android:layout_gravity="center"
                         android:text="SubTotal"
                         android:textColor="@color/location_theme"
-                        android:textSize="@dimen/dimen_12dp">
+                        android:textSize="12dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -174,10 +174,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_marginStart="8dp"
                             android:text=""
                             android:textColor="@color/dark_blue"
-                            android:textSize="@dimen/dimen_16dp"
+                            android:textSize="16dp"
                             android:visibility="gone">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -190,10 +190,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="@dimen/dimen_1dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/light_grey">
 
             </LinearLayout>
@@ -211,22 +211,22 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     app:cardBackgroundColor="@color/dark_blue"
-                    app:cardCornerRadius="@dimen/dimen_10dp"
-                    app:cardElevation="@dimen/dimen_5dp">
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="5dp">
 
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_15dp"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="10dp"
                         android:letterSpacing="0.03"
                         android:text="CHECKOUT"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/dimen_16dp">
+                        android:textSize="16dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

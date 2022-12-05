@@ -19,7 +19,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
-import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.ItemDetails;
@@ -41,16 +40,16 @@ public class ShowCartServiceOptionItemsAdapter extends RecyclerView.Adapter<Show
 
     @NonNull
     @Override
-    public ShowCartServiceOptionItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item, parent, false);
-        return new ShowCartServiceOptionItemsAdapter.ViewHolder(v, false);
+        return new ViewHolder(v, false);
 
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShowCartServiceOptionItemsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         final ItemDetails itemDetail = itemsList.get(position);
         viewHolder.numberButton.setVisibilityOfAddRemoveButtons(false);
         viewHolder.numberButton.setNumber(String.valueOf(itemDetail.getQuantity()));

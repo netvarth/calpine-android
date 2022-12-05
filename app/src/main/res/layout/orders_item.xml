@@ -16,10 +16,10 @@
 
         <ImageView
             android:id="@+id/iv_bookingType"
-            android:layout_width="@dimen/dimen_50dp"
-            android:layout_height="@dimen/dimen_50dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dimen_10dp">
+            android:layout_marginStart="10dp">
 
         </ImageView>
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/padding3"
-            android:layout_marginTop="@dimen/dimen_12dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="@dimen/txtsize_12"
             android:orientation="vertical">
             <!--<androidx.cardview.widget.CardView
@@ -52,7 +52,7 @@
                     android:padding="@dimen/padding3"
                     android:text="Info Needed"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/dimen_10dp"
+                    android:textSize="10dp"
                     android:textStyle="bold"
                     android:visibility="visible"
                     android:layout_gravity="center">
@@ -72,14 +72,14 @@
                     android:id="@+id/tv_spName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_10dp"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="5"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:text=""
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_18sp">
+                    android:textSize="18sp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -109,7 +109,7 @@
                             android:paddingBottom="@dimen/padding3"
                             android:text="Info Needed"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/dimen_10dp"
+                            android:textSize="10dp"
                             android:textStyle="bold"
                             android:visibility="visible">
 
@@ -130,13 +130,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:paddingStart="@dimen/dimen_8dp"
+                            android:paddingStart="8dp"
                             android:paddingTop="@dimen/padding3"
-                            android:paddingEnd="@dimen/dimen_2dp"
+                            android:paddingEnd="2dp"
                             android:paddingBottom="@dimen/padding3"
                             android:text=""
                             android:textColor="@color/white"
-                            android:textSize="@dimen/dimen_10dp"
+                            android:textSize="10dp"
                             android:textStyle="bold"
                             android:visibility="visible">
 
@@ -151,13 +151,13 @@
                 android:id="@+id/tv_providerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text=""
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_16sp"
+                android:textSize="16sp"
                 android:visibility="gone">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -165,7 +165,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="@dimen/padding3"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -174,7 +174,7 @@
                     android:id="@+id/iv_serviceIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:layout_marginEnd="5dp"
                     android:text="Order # :">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -187,7 +187,7 @@
                     android:maxLines="2"
                     android:text=""
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_16sp">
+                    android:textSize="16sp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -206,7 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="@dimen/padding3"
                     android:text="Quantity : ">
 
@@ -218,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding3"
                     android:layout_marginTop="@dimen/padding3"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
+                    android:layout_marginEnd="40dp"
                     android:layout_toRightOf="@+id/tv_quantity"
                     android:text=""
                     android:textColor="@color/location_theme"
@@ -232,9 +232,9 @@
                 android:id="@+id/tv_dateAndTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="@dimen/padding3"
-                android:layout_marginEnd="@dimen/dimen_40dp"
+                android:layout_marginEnd="40dp"
                 android:text=""
                 android:textColor="@color/location_theme"
                 android:textSize="14dp">
@@ -251,9 +251,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="@dimen/padding3"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
+                    android:layout_marginEnd="40dp"
                     android:text=""
                     android:textColor="@color/colorAccent"
                     android:textSize="14dp"
@@ -265,8 +265,8 @@
                     android:layout_width="30dp"
                     android:layout_height="15dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/more"
                     android:visibility="visible"
                     app:tint="@color/title_color">

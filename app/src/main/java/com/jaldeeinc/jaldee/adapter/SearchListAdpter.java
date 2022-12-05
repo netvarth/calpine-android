@@ -4,22 +4,9 @@ package com.jaldeeinc.jaldee.adapter;
  * Created by sharmila on 18/7/18.
  */
 
-import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-
-import androidx.fragment.app.Fragment;
-
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -29,16 +16,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
-
-import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.LanLong;
 import com.jaldeeinc.jaldee.model.ListCell;
+
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 
 public class SearchListAdpter extends BaseAdapter implements Filterable {

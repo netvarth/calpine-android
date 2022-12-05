@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.response;
 
-import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 
 public class DepServiceInfo {

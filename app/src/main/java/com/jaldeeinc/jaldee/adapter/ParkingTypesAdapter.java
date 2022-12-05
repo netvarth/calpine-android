@@ -1,12 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -23,7 +24,7 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
     int msize;
 
 
-    public ParkingTypesAdapter(List<ParkingModel> horizontaltypeList, Context context,int size) {
+    public ParkingTypesAdapter(List<ParkingModel> horizontaltypeList, Context context, int size) {
         this.horizontaltypeList = horizontaltypeList;
         this.context = context;
         this.msize=size;
@@ -31,15 +32,15 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
     }
 
     @Override
-    public ParkingTypesAdapter.ParkingTypesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ParkingTypesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_typelist, parent, false);
-        ParkingTypesAdapter.ParkingTypesAdapterViewHolder gvh = new ParkingTypesAdapter.ParkingTypesAdapterViewHolder(queueView);
+        ParkingTypesAdapterViewHolder gvh = new ParkingTypesAdapterViewHolder(queueView);
         return gvh;
     }
 
     @Override
-    public void onBindViewHolder(ParkingTypesAdapter.ParkingTypesAdapterViewHolder holder, final int position) {
+    public void onBindViewHolder(ParkingTypesAdapterViewHolder holder, final int position) {
 
 
         if(horizontaltypeList.size()>0){

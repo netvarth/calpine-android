@@ -64,14 +64,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/padding40"
                         android:layout_gravity="bottom"
-                        android:layout_marginLeft="@dimen/dimen_5dp"
-                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1.5"
                         android:visibility="visible"
                         app:ccp_autoDetectCountry="true"
                         app:ccp_showFlag="false"
                         app:ccp_showNameCode="false"
-                        app:ccp_textSize="@dimen/dimen_14sp" />
+                        app:ccp_textSize="14sp" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/text_input_phone"

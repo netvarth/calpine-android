@@ -3,12 +3,14 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentTransaction;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.WorkingModel;
@@ -32,12 +34,13 @@ public class WorkingHourFragment extends RootFragment {
 
     Context mContext;
 
-    TextView txt_workinghr_mon,txt_workinghr_tue,txt_workinghr_wed,txt_workinghr_thu,txt_workinghr_fri,txt_workinghr_sat,txt_workinghr_sun;
-    ArrayList<WorkingModel> workingHrList=new ArrayList<>();
-    String txtdataMon="",txtdataTue="",txtdataWed="",txtdataThu="",txtdataFri="",txtdataSat="",txtdataSun="";
-    TextView tv_Monday,tv_Tuesday,tv_Wednesday,tv_Thursay,tv_Friday,tv_Saturday,tv_Sunday;
+    TextView txt_workinghr_mon, txt_workinghr_tue, txt_workinghr_wed, txt_workinghr_thu, txt_workinghr_fri, txt_workinghr_sat, txt_workinghr_sun;
+    ArrayList<WorkingModel> workingHrList = new ArrayList<>();
+    String txtdataMon = "", txtdataTue = "", txtdataWed = "", txtdataThu = "", txtdataFri = "", txtdataSat = "", txtdataSun = "";
+    TextView tv_Monday, tv_Tuesday, tv_Wednesday, tv_Thursay, tv_Friday, tv_Saturday, tv_Sunday;
     TextView tv_subtitle;
-    String title,uniqueid;
+    String title, uniqueid;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,33 +49,39 @@ public class WorkingHourFragment extends RootFragment {
 
         mContext = getActivity();
         Bundle bundle = this.getArguments();
-         txtdataMon="";txtdataTue="";txtdataWed="";txtdataThu="";txtdataFri="";txtdataSat="";txtdataSun="";
+        txtdataMon = "";
+        txtdataTue = "";
+        txtdataWed = "";
+        txtdataThu = "";
+        txtdataFri = "";
+        txtdataSat = "";
+        txtdataSun = "";
         if (bundle != null) {
-            workingHrList = (ArrayList<WorkingModel>)getArguments().getSerializable("workinghrlist");
-            title=bundle.getString("title", "");
-            uniqueid=bundle.getString("uniqueID", "");
+            workingHrList = (ArrayList<WorkingModel>) getArguments().getSerializable("workinghrlist");
+            title = bundle.getString("title", "");
+            uniqueid = bundle.getString("uniqueID", "");
         }
 
 
-        Config.logV("Working Hrs------------------"+workingHrList.size());
+        Config.logV("Working Hrs------------------" + workingHrList.size());
 
-        tv_subtitle=(TextView)row.findViewById(R.id.txttitle) ;
-        txt_workinghr_mon=(TextView)row.findViewById(R.id.txt_workinghr_mon);
-        txt_workinghr_tue=(TextView)row.findViewById(R.id.txt_workinghr_tue);
-        txt_workinghr_wed=(TextView)row.findViewById(R.id.txt_workinghr_wed);
-        txt_workinghr_thu=(TextView)row.findViewById(R.id.txt_workinghr_thu);
-        txt_workinghr_fri=(TextView)row.findViewById(R.id.txt_workinghr_fri);
-        txt_workinghr_sat=(TextView)row.findViewById(R.id.txt_workinghr_sat);
-        txt_workinghr_sun=(TextView)row.findViewById(R.id.txt_workinghr_sun);
+        tv_subtitle = (TextView) row.findViewById(R.id.txttitle);
+        txt_workinghr_mon = (TextView) row.findViewById(R.id.txt_workinghr_mon);
+        txt_workinghr_tue = (TextView) row.findViewById(R.id.txt_workinghr_tue);
+        txt_workinghr_wed = (TextView) row.findViewById(R.id.txt_workinghr_wed);
+        txt_workinghr_thu = (TextView) row.findViewById(R.id.txt_workinghr_thu);
+        txt_workinghr_fri = (TextView) row.findViewById(R.id.txt_workinghr_fri);
+        txt_workinghr_sat = (TextView) row.findViewById(R.id.txt_workinghr_sat);
+        txt_workinghr_sun = (TextView) row.findViewById(R.id.txt_workinghr_sun);
 
 
-        tv_Monday=(TextView)row.findViewById(R.id.txtMonday);
-        tv_Tuesday=(TextView)row.findViewById(R.id.txtTuesday);
-        tv_Wednesday=(TextView)row.findViewById(R.id.txtWednesday);
-        tv_Thursay=(TextView)row.findViewById(R.id.txtThursday);
-        tv_Friday=(TextView)row.findViewById(R.id.txtFriday);
-        tv_Saturday=(TextView)row.findViewById(R.id.txtSaturday);
-        tv_Sunday=(TextView)row.findViewById(R.id.txtSunday);
+        tv_Monday = (TextView) row.findViewById(R.id.txtMonday);
+        tv_Tuesday = (TextView) row.findViewById(R.id.txtTuesday);
+        tv_Wednesday = (TextView) row.findViewById(R.id.txtWednesday);
+        tv_Thursay = (TextView) row.findViewById(R.id.txtThursday);
+        tv_Friday = (TextView) row.findViewById(R.id.txtFriday);
+        tv_Saturday = (TextView) row.findViewById(R.id.txtSaturday);
+        tv_Sunday = (TextView) row.findViewById(R.id.txtSunday);
 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -94,7 +103,7 @@ public class WorkingHourFragment extends RootFragment {
 
                 SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
-                bundle.putString("uniqueID",uniqueid);
+                bundle.putString("uniqueID", uniqueid);
                 pfFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -110,44 +119,44 @@ public class WorkingHourFragment extends RootFragment {
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
 
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // what do you want here
-               getFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
             }
         });
         tv_title.setText("Working Hours");
 
-        for(int i=0;i<workingHrList.size();i++){
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Monday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataMon+=workingHrList.get(i).getTime_value()+"\n";
+        for (int i = 0; i < workingHrList.size(); i++) {
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Monday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataMon += workingHrList.get(i).getTime_value() + "\n";
             }
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Tuesday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataTue+=workingHrList.get(i).getTime_value()+"\n";
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Tuesday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataTue += workingHrList.get(i).getTime_value() + "\n";
             }
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Wednesday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataWed+=workingHrList.get(i).getTime_value()+"\n";
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Wednesday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataWed += workingHrList.get(i).getTime_value() + "\n";
             }
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Thursday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataThu+=workingHrList.get(i).getTime_value()+"\n";
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Thursday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataThu += workingHrList.get(i).getTime_value() + "\n";
             }
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Friday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataFri+=workingHrList.get(i).getTime_value()+"\n";
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Friday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataFri += workingHrList.get(i).getTime_value() + "\n";
             }
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Saturday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataSat+=workingHrList.get(i).getTime_value()+"\n";
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Saturday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataSat += workingHrList.get(i).getTime_value() + "\n";
             }
-            if(workingHrList.get(i).getDay().equalsIgnoreCase("Sunday")){
-                if(workingHrList.get(i).getTime_value()!=null)
-                txtdataSun+=workingHrList.get(i).getTime_value()+"\n";
+            if (workingHrList.get(i).getDay().equalsIgnoreCase("Sunday")) {
+                if (workingHrList.get(i).getTime_value() != null)
+                    txtdataSun += workingHrList.get(i).getTime_value() + "\n";
             }
 
         }
@@ -157,96 +166,91 @@ public class WorkingHourFragment extends RootFragment {
         Date d = new Date();
         String dayOfTheWeek = sdf.format(d);
 
-       if(dayOfTheWeek.equalsIgnoreCase("Sunday")) {
-           txt_workinghr_sun.setTextColor(mContext.getResources().getColor(R.color.title_grey));
-           tv_Sunday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
-           txt_workinghr_sun.setTypeface(tyface1);
-       }
+        if (dayOfTheWeek.equalsIgnoreCase("Sunday")) {
+            txt_workinghr_sun.setTextColor(mContext.getResources().getColor(R.color.title_grey));
+            tv_Sunday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
+            txt_workinghr_sun.setTypeface(tyface1);
+        }
 
-        if(dayOfTheWeek.equalsIgnoreCase("Saturday")) {
+        if (dayOfTheWeek.equalsIgnoreCase("Saturday")) {
             txt_workinghr_sat.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             tv_Saturday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             txt_workinghr_sat.setTypeface(tyface1);
         }
-        if(dayOfTheWeek.equalsIgnoreCase("Monday")) {
+        if (dayOfTheWeek.equalsIgnoreCase("Monday")) {
             txt_workinghr_mon.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             tv_Monday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             txt_workinghr_mon.setTypeface(tyface1);
         }
-        if(dayOfTheWeek.equalsIgnoreCase("Tuesday")) {
+        if (dayOfTheWeek.equalsIgnoreCase("Tuesday")) {
             txt_workinghr_tue.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             tv_Tuesday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             txt_workinghr_tue.setTypeface(tyface1);
         }
-        if(dayOfTheWeek.equalsIgnoreCase("Wednesday")) {
+        if (dayOfTheWeek.equalsIgnoreCase("Wednesday")) {
             txt_workinghr_wed.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             tv_Wednesday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             txt_workinghr_wed.setTypeface(tyface1);
         }
-        if(dayOfTheWeek.equalsIgnoreCase("Thursday")) {
+        if (dayOfTheWeek.equalsIgnoreCase("Thursday")) {
             txt_workinghr_thu.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             tv_Thursay.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             txt_workinghr_thu.setTypeface(tyface1);
         }
-        if(dayOfTheWeek.equalsIgnoreCase("Friday")) {
+        if (dayOfTheWeek.equalsIgnoreCase("Friday")) {
             txt_workinghr_fri.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             tv_Friday.setTextColor(mContext.getResources().getColor(R.color.title_grey));
             txt_workinghr_fri.setTypeface(tyface1);
         }
 
 
-
-        if(!txtdataSun.equalsIgnoreCase("")) {
+        if (!txtdataSun.equalsIgnoreCase("")) {
             txt_workinghr_sun.setText(txtdataSun);
-        }else{
-            txt_workinghr_sun.setText("CLOSED"+"\n");
+        } else {
+            txt_workinghr_sun.setText("CLOSED" + "\n");
         }
 
-        if(!txtdataMon.equalsIgnoreCase("")) {
+        if (!txtdataMon.equalsIgnoreCase("")) {
             txt_workinghr_mon.setText(txtdataMon);
-        }else{
-            txt_workinghr_mon.setText("CLOSED"+"\n");
+        } else {
+            txt_workinghr_mon.setText("CLOSED" + "\n");
         }
 
 
-        if(!txtdataTue.equalsIgnoreCase("")) {
+        if (!txtdataTue.equalsIgnoreCase("")) {
             txt_workinghr_tue.setText(txtdataTue);
-        }else{
-            txt_workinghr_tue.setText("CLOSED"+"\n");
+        } else {
+            txt_workinghr_tue.setText("CLOSED" + "\n");
         }
 
-        if(!txtdataWed.equalsIgnoreCase("")) {
+        if (!txtdataWed.equalsIgnoreCase("")) {
             txt_workinghr_wed.setText(txtdataWed);
-        }else{
-            txt_workinghr_wed.setText("CLOSED"+"\n");
+        } else {
+            txt_workinghr_wed.setText("CLOSED" + "\n");
         }
 
-        if(!txtdataThu.equalsIgnoreCase("")) {
+        if (!txtdataThu.equalsIgnoreCase("")) {
             txt_workinghr_thu.setText(txtdataThu);
-        }else {
+        } else {
 
-            txt_workinghr_thu.setText("CLOSED"+"\n");
+            txt_workinghr_thu.setText("CLOSED" + "\n");
         }
 
 
-
-        if(!txtdataFri.equalsIgnoreCase("")) {
+        if (!txtdataFri.equalsIgnoreCase("")) {
             txt_workinghr_fri.setText(txtdataFri);
-        }else {
+        } else {
 
-            txt_workinghr_fri.setText("CLOSED"+"\n");
+            txt_workinghr_fri.setText("CLOSED" + "\n");
         }
 
 
-        if(!txtdataSat.equalsIgnoreCase("")) {
+        if (!txtdataSat.equalsIgnoreCase("")) {
             txt_workinghr_sat.setText(txtdataSat);
-        }else {
+        } else {
 
-            txt_workinghr_sat.setText("CLOSED"+"\n");
+            txt_workinghr_sat.setText("CLOSED" + "\n");
         }
-
-
-
 
 
         return row;

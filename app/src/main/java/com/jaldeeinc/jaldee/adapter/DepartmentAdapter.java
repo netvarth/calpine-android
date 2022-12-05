@@ -1,18 +1,16 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.model.SearchListModel;
-
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
 
@@ -65,7 +63,7 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final DepartmentAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         final SearchDepartmentServices searchDepartmentServices = mSearchDepartmentServices.get(position);
         int count = mSearchDepartmentServices.get(position).getUsers().size();
         String terminology = "";

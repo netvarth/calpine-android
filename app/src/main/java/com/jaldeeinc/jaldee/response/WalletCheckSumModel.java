@@ -5,7 +5,6 @@ public class WalletCheckSumModel {
     boolean isJCashPaymentSucess;
     boolean isGateWayPaymentNeeded;
 
-
     public CheckSumModel getResponse() {
         return response;
     }

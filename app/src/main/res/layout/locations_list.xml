@@ -12,8 +12,8 @@
         android:text="Locations"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
         android:textColor="@color/location_theme">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
@@ -29,14 +29,13 @@
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="@dimen/txtsize_10"
-        android:layout_marginTop="@dimen/dimen_12dp"
+        android:layout_marginTop="12dp"
         android:layout_below="@id/hint">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -46,7 +45,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/rv_list"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="@dimen/padding30"
         android:layout_alignParentEnd="true">
 
@@ -55,10 +54,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="@dimen/padding15"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="@dimen/padding20"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             app:cardBackgroundColor="@color/spinnerbg"
             app:cardElevation="@dimen/padding3">
 
@@ -85,10 +84,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="@dimen/padding15"
-            android:layout_marginEnd="@dimen/dimen_40dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="10dp"
             android:clickable="false"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginBottom="10dp"
             app:cardBackgroundColor="@color/spinnerbg"
             app:cardElevation="@dimen/padding3">
 
@@ -100,7 +99,7 @@
                 android:layout_marginTop="@dimen/padding5"
                 android:layout_marginEnd="@dimen/txtsize_10"
                 android:layout_marginBottom="@dimen/padding5"
-                android:paddingBottom="@dimen/dimen_1dp"
+                android:paddingBottom="1dp"
                 android:textSize="@dimen/txtsize_14"
                 android:textColor="@color/white">
 

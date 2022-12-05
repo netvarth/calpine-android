@@ -8,9 +8,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jaldeeinc.jaldee.R
 
-
-
-
 fun showUIDialog(context: Context, title: String, message: String?, success: () -> Unit) {
     val dialog = Dialog(context)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

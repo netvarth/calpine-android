@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.service;
 
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,12 +11,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
@@ -29,10 +26,6 @@ import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
 
 import java.util.Random;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BasicNotification {
 

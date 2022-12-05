@@ -11,11 +11,11 @@
     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:text=""
         android:textColor="@color/dark_black"
-        android:textSize="@dimen/dimen_16dp">
+        android:textSize="16dp">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -46,9 +46,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:letterSpacing="0.04"
-                android:lineSpacingExtra="@dimen/dimen_4dp"
+                android:lineSpacingExtra="4dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_16dp">
+                android:textSize="16dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 

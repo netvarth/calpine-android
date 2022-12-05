@@ -4,9 +4,9 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/dimen_12dp"
+    android:layout_marginLeft="12dp"
     android:layout_marginTop="@dimen/default_padding"
-    android:layout_marginRight="@dimen/dimen_12dp"
+    android:layout_marginRight="12dp"
     android:layout_marginBottom="-6dp"
     android:background="@color/grey14"
     app:cardCornerRadius="10dp">
@@ -23,17 +23,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dimen_2dp"
+            android:paddingBottom="2dp"
             android:weightSum="10">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_image"
-                android:layout_width="@dimen/dimen_50dp"
-                android:layout_height="@dimen/dimen_50dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/dimen_20dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
                 android:elevation="1dp"
                 android:visibility="visible"
                 app:cardCornerRadius="40dp">
@@ -42,7 +42,7 @@
                     android:id="@+id/iv_item_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dimen_2dp"
+                    android:padding="2dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_item" />
             </androidx.cardview.widget.CardView>
@@ -51,9 +51,9 @@
                 android:id="@+id/ll_7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_20dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
-                android:layout_marginRight="@dimen/dimen_20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -89,18 +89,18 @@
                     android:id="@+id/tv_item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/font_semibold"
                     android:text="₹ 0"
                     android:textColor="@color/black3"
-                    android:textSize="@dimen/dimen_10dp" />
+                    android:textSize="10dp" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/dimen_18dp"
+            android:layout_marginTop="18dp"
             android:background="@color/grey12"
             android:orientation="vertical" />
 
@@ -108,8 +108,8 @@
             android:id="@+id/rl_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_25dp"
-            android:layout_marginRight="@dimen/dimen_25dp">
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/ll_4"
@@ -128,8 +128,8 @@
                     <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_12dp"
-                        android:layout_marginBottom="@dimen/dimen_12dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
                         android:scrollbarStyle="outsideOverlay">
 
                         <LinearLayout
@@ -147,14 +147,14 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_8dp"
-                                    android:layout_marginTop="@dimen/dimen_8dp"
-                                    android:layout_marginEnd="@dimen/dimen_8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
                                     android:fontFamily="@font/font_regular"
                                     android:gravity="center"
                                     android:text="Please provide us with little more information to complete your booking"
                                     android:textColor="@color/dark_black"
-                                    android:textSize="@dimen/dimen_14dp"
+                                    android:textSize="14dp"
                                     android:visibility="gone">
 
                                 </TextView>>
@@ -178,9 +178,9 @@
                                     android:background="@color/white"
                                     android:gravity="right"
                                     android:orientation="horizontal"
-                                    android:paddingTop="@dimen/dimen_12dp"
-                                    android:paddingRight="@dimen/dimen_10dp"
-                                    android:paddingBottom="@dimen/dimen_12dp">
+                                    android:paddingTop="12dp"
+                                    android:paddingRight="10dp"
+                                    android:paddingBottom="12dp">
 
                                     <TextView
                                         android:id="@+id/tv_totalprice"
@@ -189,7 +189,7 @@
                                         android:fontFamily="@font/font_semibold"
                                         android:text="Price ₹ 0"
                                         android:textColor="@color/blue1"
-                                        android:textSize="@dimen/dimen_12dp" />
+                                        android:textSize="12dp" />
 
                                 </LinearLayout>
 
@@ -198,7 +198,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginTop="@dimen/dimen_30dp"
+                                    android:layout_marginTop="30dp"
                                     android:gravity="center_horizontal"
                                     android:orientation="horizontal"
                                     android:weightSum="5">
@@ -207,12 +207,12 @@
                                         android:id="@+id/cv_submit"
                                         android:layout_width="0dp"
                                         android:layout_height="@dimen/padding45"
-                                        android:layout_marginStart="@dimen/dimen_10dp"
-                                        android:layout_marginEnd="@dimen/dimen_10dp"
-                                        android:layout_marginBottom="@dimen/dimen_30dp"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:layout_marginBottom="30dp"
                                         android:layout_weight="2"
                                         app:cardBackgroundColor="@color/blue3"
-                                        app:cardCornerRadius="@dimen/dimen_8dp">
+                                        app:cardCornerRadius="8dp">
 
                                         <LinearLayout
                                             android:layout_width="wrap_content"
@@ -227,7 +227,7 @@
                                                 android:fontFamily="@font/font_semibold"
                                                 android:text="DONE"
                                                 android:textColor="@color/white"
-                                                android:textSize="@dimen/dimen_14sp">
+                                                android:textSize="14sp">
 
                                             </TextView>
 
@@ -249,7 +249,6 @@
                     android:alpha="0.5"
                     android:visibility="gone" />
             </androidx.cardview.widget.CardView>
-
 
         </RelativeLayout>
 

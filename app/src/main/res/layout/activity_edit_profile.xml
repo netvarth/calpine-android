@@ -148,7 +148,7 @@
                                     android:id="@+id/txtphoneChange"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/dimen_14sp"
+                                    android:layout_marginLeft="14sp"
                                     android:layout_marginTop="@dimen/padding7"
                                     android:text="@string/change_mobile"
                                     android:textColor="@color/title_consu"
@@ -158,9 +158,9 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dimen_2dp"
+                                android:layout_marginTop="2dp"
                                 android:drawableStart="@drawable/icon_bulb"
-                                android:drawablePadding="@dimen/dimen_5dp"
+                                android:drawablePadding="5dp"
                                 android:text="Use &quot;Change Mobile&quot; option to edit the Mobile number"
                                 android:textColor="@color/sec_title_grey"
                                 android:textSize="@dimen/txtsize_10" />
@@ -329,25 +329,25 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:drawableStart="@drawable/whatsapp_logo_sized"
-                                android:padding="@dimen/dimen_5dp"
+                                android:padding="5dp"
                                 android:text=" Whatsapp #"
                                 android:textColor="@color/dark_black"
-                                android:textSize="@dimen/dimen_15sp" />
+                                android:textSize="15sp" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding3"
                                 android:orientation="horizontal"
-                                android:paddingLeft="@dimen/dimen_5dp">
+                                android:paddingLeft="5dp">
 
                                 <com.hbb20.CountryCodePicker
                                     android:id="@+id/Wccp"
                                     android:layout_width="0dp"
                                     android:layout_height="@dimen/padding40"
                                     android:layout_gravity="center"
-                                    android:layout_marginLeft="@dimen/dimen_5dp"
-                                    android:layout_marginEnd="@dimen/dimen_5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginEnd="5dp"
                                     android:layout_weight="0.22"
                                     android:background="@drawable/edittext_color"
                                     android:gravity="center"
@@ -355,14 +355,14 @@
                                     app:ccp_autoDetectCountry="true"
                                     app:ccp_showFlag="false"
                                     app:ccp_showNameCode="false"
-                                    app:ccp_textSize="@dimen/dimen_15dp" />
+                                    app:ccp_textSize="15dp" />
 
 
                                 <EditText
                                     android:id="@+id/edtWhtsAppNumber"
                                     android:layout_width="0dp"
                                     android:layout_height="@dimen/padding40"
-                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_marginLeft="5dp"
                                     android:layout_weight="0.78"
                                     android:background="@drawable/edittext_color"
                                     android:hint="Enter Whatsapp Number"
@@ -370,7 +370,7 @@
                                     android:maxLength="10"
                                     android:paddingStart="@dimen/padding5"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/dimen_15sp"
+                                    android:textSize="15sp"
                                     app:tint="@color/spinnerbg" />
                             </LinearLayout>
                         </LinearLayout>
@@ -385,25 +385,25 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:drawableStart="@drawable/telegram_icon_sized"
-                                android:padding="@dimen/dimen_5dp"
+                                android:padding="5dp"
                                 android:text=" Telegram #"
                                 android:textColor="@color/dark_black"
-                                android:textSize="@dimen/dimen_15sp" />
+                                android:textSize="15sp" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding3"
                                 android:orientation="horizontal"
-                                android:paddingLeft="@dimen/dimen_5dp">
+                                android:paddingLeft="5dp">
 
                                 <com.hbb20.CountryCodePicker
                                     android:id="@+id/Tccp"
                                     android:layout_width="0dp"
                                     android:layout_height="@dimen/padding40"
                                     android:layout_gravity="center"
-                                    android:layout_marginLeft="@dimen/dimen_5dp"
-                                    android:layout_marginEnd="@dimen/dimen_5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginEnd="5dp"
                                     android:layout_weight="0.22"
                                     android:background="@drawable/edittext_color"
                                     android:gravity="center"
@@ -411,13 +411,13 @@
                                     app:ccp_autoDetectCountry="true"
                                     app:ccp_showFlag="false"
                                     app:ccp_showNameCode="false"
-                                    app:ccp_textSize="@dimen/dimen_15dp" />
+                                    app:ccp_textSize="15dp" />
 
                                 <EditText
                                     android:id="@+id/edtTelegram"
                                     android:layout_width="0dp"
                                     android:layout_height="@dimen/padding40"
-                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_marginLeft="5dp"
                                     android:layout_weight="0.78"
                                     android:background="@drawable/edittext_color"
                                     android:hint="Enter Telegram Number"
@@ -425,7 +425,7 @@
                                     android:maxLength="10"
                                     android:paddingStart="@dimen/padding5"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/dimen_15sp"
+                                    android:textSize="15sp"
                                     app:tint="@color/spinnerbg" />
                             </LinearLayout>
                         </LinearLayout>
@@ -448,8 +448,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:layout_marginTop="@dimen/dimen_20dp"
-                            android:layout_marginBottom="@dimen/dimen_20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
                             android:gravity="left"
                             android:orientation="horizontal"
                             android:weightSum="10">
@@ -467,7 +467,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_margin="@dimen/dimen_10dp"
+                                    android:layout_margin="10dp"
                                     android:fontFamily="@font/font_regular"
                                     android:gravity="center"
                                     android:text="Delete Your Account"

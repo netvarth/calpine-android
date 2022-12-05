@@ -107,7 +107,7 @@
                             android:layout_marginBottom="@dimen/padding2"
                             android:textColor="@color/white"
                             android:textStyle="bold"
-                            android:textSize="@dimen/dimen_10dp">
+                            android:textSize="10dp">
 
                         </TextView>
 
@@ -153,29 +153,29 @@
                         android:id ="@+id/serviceicon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_marginRight="5dp"
                         android:visibility="gone"
 
                         />
-                <TextView
-                    android:id="@+id/txt_service"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="Root Canal for Melvin"
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_12" />
+                    <TextView
+                        android:id="@+id/txt_service"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="Root Canal for Melvin"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12" />
                 </LinearLayout>
 
 
-                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_providerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_marginTop="@dimen/dimen_4dp"
+                android:layout_marginTop="4dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -186,16 +186,16 @@
 
                 </TextView>
 
-            <TextView
-                android:id="@+id/tv_providerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="@color/title_grey">
+                <TextView
+                    android:id="@+id/tv_providerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/title_grey">
 
-            </TextView>
+                </TextView>
 
             </LinearLayout>
 
@@ -237,38 +237,38 @@
 
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/layout_token"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="@dimen/padding5"-->
-<!--                android:background="@color/app_background"-->
-<!--                android:orientation="vertical">-->
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/layout_token"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="@dimen/padding5"-->
+            <!--                android:background="@color/app_background"-->
+            <!--                android:orientation="vertical">-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/time_queue"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="0.5"-->
-<!--                    android:gravity="left"-->
-<!--                    android:text="Queue"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:visibility="gone"/>-->
+            <!--                <TextView-->
+            <!--                    android:id="@+id/time_queue"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="0.5"-->
+            <!--                    android:gravity="left"-->
+            <!--                    android:text="Queue"-->
+            <!--                    android:textColor="@color/title_grey"-->
+            <!--                    android:textSize="@dimen/txtsize_12"-->
+            <!--                    android:visibility="gone"/>-->
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/partySize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/app_background"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/partySize"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
                     <TextView
                         android:id="@+id/txt_token"
@@ -283,91 +283,91 @@
                         android:textSize="11sp" />
 
 
-                        <TextView
-                            android:id="@+id/txt_partysizevalue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:text="Party size"
-                            android:layout_marginTop="9dp"
-                            android:layout_weight="0.5"
-                            android:textColor="@color/title_grey"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:visibility="gone"/>
-
-
-                    </LinearLayout>
-
-
                     <TextView
-                        android:id="@+id/txt_batchName"
+                        android:id="@+id/txt_partysizevalue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:text="Batch"
+                        android:text="Party size"
                         android:layout_marginTop="9dp"
+                        android:layout_weight="0.5"
                         android:textColor="@color/title_grey"
                         android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/txt_batchName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Batch"
+                    android:layout_marginTop="9dp"
+                    android:textColor="@color/title_grey"
+                    android:textSize="11sp"
+                    android:visibility="gone"
+                    />
+
+
+
+
+
+                <LinearLayout
+                    android:id="@+id/amountDue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    android:layout_marginTop="9dp"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/txt_prepaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:textColor="#4DE2FF"
+                        android:textSize="11sp"
+                        android:layout_gravity="left"
                         android:visibility="gone"
                         />
 
-
-
-
-
-                    <LinearLayout
-                        android:id="@+id/amountDue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="1"
-                        android:layout_marginTop="9dp"
-                        android:visibility="gone">
-                        <TextView
-                            android:id="@+id/txt_prepaid"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:textColor="#4DE2FF"
-                            android:textSize="11sp"
-                            android:layout_gravity="left"
-                            android:visibility="gone"
-                            />
-
-                        <TextView
-                            android:visibility="gone"
-                            android:id="@+id/txt_amtdue"
-                            android:layout_width="0dp"
-                            android:layout_marginTop="9dp"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/title_grey"
-                            android:textSize="11sp"
-                            android:layout_weight="0.5"
-                            android:layout_gravity="right"/>
-
-                    </LinearLayout>
-
-<!--                    <View-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="1dp"-->
-<!--                        android:layout_marginTop="@dimen/padding5"-->
-<!--                        android:background="@color/view_border">-->
-
-<!--                    </View>-->
-
                     <TextView
-                        android:id="@+id/txt_personahead"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:visibility="gone"
+                        android:id="@+id/txt_amtdue"
+                        android:layout_width="0dp"
                         android:layout_marginTop="9dp"
-                        android:text="person"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12"
-                        android:visibility="gone"/>
+                        android:textSize="11sp"
+                        android:layout_weight="0.5"
+                        android:layout_gravity="right"/>
+
                 </LinearLayout>
-<!--            </LinearLayout>-->
+
+                <!--                    <View-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="1dp"-->
+                <!--                        android:layout_marginTop="@dimen/padding5"-->
+                <!--                        android:background="@color/view_border">-->
+
+                <!--                    </View>-->
+
+                <TextView
+                    android:id="@+id/txt_personahead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="9dp"
+                    android:text="person"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="gone"/>
+            </LinearLayout>
+            <!--            </LinearLayout>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -377,26 +377,26 @@
                 android:visibility="gone"
                 android:weightSum="1">
 
-            <TextView
-                android:id="@+id/txt_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:textColor="@color/title_grey"
-                android:textSize="11sp"
-                android:visibility="visible"
-                android:layout_weight="0.5"/>
+                <TextView
+                    android:id="@+id/txt_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textColor="@color/title_grey"
+                    android:textSize="11sp"
+                    android:visibility="visible"
+                    android:layout_weight="0.5"/>
 
-            <TextView
-                android:id="@+id/txt_check_in_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="9dp"
-                android:layout_gravity="right"
-                android:textSize="11sp"
-                android:visibility="visible"
-                android:textStyle="bold"
-                android:layout_weight="0.5"/>
+                <TextView
+                    android:id="@+id/txt_check_in_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:layout_gravity="right"
+                    android:textSize="11sp"
+                    android:visibility="visible"
+                    android:textStyle="bold"
+                    android:layout_weight="0.5"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/txt_status"
@@ -484,7 +484,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/dimen_5dp" />
+                        android:layout_marginLeft="5dp" />
 
                     <TextView
                         android:id="@+id/txt_travelmode_value"
@@ -502,8 +502,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:drawableLeft="@drawable/ic_directions_car_black_24dp"
-                        android:paddingLeft="@dimen/dimen_10dp"
-                        android:paddingRight="@dimen/dimen_10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone" />
@@ -514,8 +514,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:drawableLeft="@drawable/ic_directions_walk_black_24dp"
-                        android:paddingLeft="@dimen/dimen_10dp"
-                        android:paddingRight="@dimen/dimen_10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone" />
@@ -528,7 +528,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.1"
                         android:drawableLeft="@drawable/icon_edit"
-                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingLeft="10dp"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12" />
 
@@ -537,7 +537,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:padding="@dimen/dimen_10dp"
+                android:padding="10dp"
                 android:id="@+id/liveTrackLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -551,34 +551,34 @@
 
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/notEnableLoc"
-                    android:text=""
-                    android:layout_margin="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:layout_weight="0.6"
-                    android:visibility="gone"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/notEnableLoc"
+                        android:text=""
+                        android:layout_margin="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:layout_weight="0.6"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 
-                    <TextView
-                android:textStyle="bold"
-                android:id="@+id/recomEnableLoc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="5dp"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="11sp"
-                android:visibility="gone"
+                <TextView
+                    android:textStyle="bold"
+                    android:id="@+id/recomEnableLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:visibility="gone"
 
-                />
+                    />
                 <TextView
                     android:textStyle="bold"
                     android:layout_width="match_parent"
@@ -640,7 +640,7 @@
 
             <!--                        android:layout_width="wrap_content"-->
             <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:layout_marginLeft="5dp"-->
             <!--                        android:drawableLeft="@drawable/icon_edit"-->
             <!--                        android:textColor="@color/title_grey"-->
             <!--                        android:textSize="@dimen/txtsize_12" />-->
@@ -648,7 +648,7 @@
             <!--                    <TextView-->
             <!--                        android:layout_width="wrap_content"-->
             <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:layout_marginLeft="5dp"-->
             <!--                        android:drawableLeft="@drawable/car"-->
             <!--                        android:textColor="@color/title_grey"-->
             <!--                        android:textSize="@dimen/txtsize_12"-->
@@ -657,7 +657,7 @@
             <!--                    <TextView-->
             <!--                        android:layout_width="wrap_content"-->
             <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:layout_marginLeft="5dp"-->
             <!--                        android:drawableLeft="@drawable/walk"-->
             <!--                        android:textColor="@color/title_grey"-->
             <!--                        android:textSize="@dimen/txtsize_12"-->
@@ -667,7 +667,7 @@
             <!--                        android:id="@+id/travelCycle"-->
             <!--                        android:layout_width="wrap_content"-->
             <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:layout_marginLeft="5dp"-->
             <!--                        android:drawableLeft="@drawable/icon_cycle"-->
             <!--                        android:textColor="@color/title_grey"-->
             <!--                        android:textSize="@dimen/txtsize_12"-->
@@ -709,76 +709,76 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/app_background"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/icon_fav"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/icon_favourite_line"
-                    android:drawablePadding="2dp"
-                    android:gravity="center"
-                    android:minWidth="@dimen/dimen_60dp"
-                    android:layout_marginLeft="@dimen/padding5"
-                    android:text="Favourite"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:background="@color/app_background"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/icon_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding7"
-                    android:drawableTop="@drawable/icon_message_gray"
-                    android:drawablePadding="2dp"
-                    android:gravity="center"
-                    android:minWidth="@dimen/dimen_60dp"
-                    android:text="Message"
-                    android:textSize="@dimen/txtsize_12" />
+                    <TextView
+                        android:id="@+id/icon_fav"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/icon_favourite_line"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:minWidth="60dp"
+                        android:layout_marginLeft="@dimen/padding5"
+                        android:text="Favourite"
+                        android:textSize="@dimen/txtsize_12" />
 
-                <TextView
-                    android:id="@+id/icon_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding7"
-                    android:drawableTop="@drawable/icon_cancel_line"
-                    android:drawablePadding="2dp"
-                    android:gravity="center"
-                    android:minWidth="@dimen/dimen_60dp"
-                    android:text="Cancel"
-                    android:textSize="@dimen/txtsize_12" />
+                    <TextView
+                        android:id="@+id/icon_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding7"
+                        android:drawableTop="@drawable/icon_message_gray"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:minWidth="60dp"
+                        android:text="Message"
+                        android:textSize="@dimen/txtsize_12" />
 
-                <TextView
-                    android:id="@+id/icon_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding7"
-                    android:drawableTop="@drawable/icon_star_line"
-                    android:drawablePadding="2dp"
-                    android:gravity="center"
-                    android:minWidth="@dimen/dimen_60dp"
-                    android:text="Rate"
-                    android:visibility="gone"
-                    android:textSize="@dimen/txtsize_12" />
+                    <TextView
+                        android:id="@+id/icon_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding7"
+                        android:drawableTop="@drawable/icon_cancel_line"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:minWidth="60dp"
+                        android:text="Cancel"
+                        android:textSize="@dimen/txtsize_12" />
 
-                <TextView
-                    android:id="@+id/icon_bill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding7"
-                    android:drawableTop="@drawable/icon_receipt"
-                    android:drawablePadding="2dp"
-                    android:gravity="center"
-                    android:minWidth="@dimen/dimen_60dp"
-                    android:text="Bill"
-                    android:visibility="gone"
-                    android:textSize="@dimen/txtsize_12" />
+                    <TextView
+                        android:id="@+id/icon_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding7"
+                        android:drawableTop="@drawable/icon_star_line"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:minWidth="60dp"
+                        android:text="Rate"
+                        android:visibility="gone"
+                        android:textSize="@dimen/txtsize_12" />
+
+                    <TextView
+                        android:id="@+id/icon_bill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding7"
+                        android:drawableTop="@drawable/icon_receipt"
+                        android:drawablePadding="2dp"
+                        android:gravity="center"
+                        android:minWidth="60dp"
+                        android:text="Bill"
+                        android:visibility="gone"
+                        android:textSize="@dimen/txtsize_12" />
 
 
-            </LinearLayout>
+                </LinearLayout>
 
             </RelativeLayout>
 
@@ -788,11 +788,11 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:layout_centerInParent="true"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_5dp"
-                android:elevation="@dimen/dimen_10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:elevation="10dp"
                 android:layout_alignParentEnd="true"
                 card_view:cardCornerRadius="8dp"
                 card_view:cardBackgroundColor="@color/white">
@@ -803,10 +803,10 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_35dp"
-                        android:layout_height="@dimen/dimen_35dp"
-                        android:padding="@dimen/dimen_5dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="5dp"
+                        android:layout_marginEnd="10dp"
                         android:src="@drawable/google_meet">
 
                     </ImageView>
@@ -818,10 +818,10 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:letterSpacing="0.09"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp"
-                        android:paddingEnd="@dimen/dimen_5dp"
-                        android:textSize="@dimen/dimen_14sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingEnd="5dp"
+                        android:textSize="14sp"
                         android:textColor="#107867">
 
                     </TextView>
@@ -835,11 +835,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_5dp"
-                android:elevation="@dimen/dimen_10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:elevation="10dp"
                 android:layout_alignParentEnd="true"
                 card_view:cardCornerRadius="8dp"
                 card_view:cardBackgroundColor="@color/white">
@@ -850,12 +850,12 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_35dp"
-                        android:layout_height="@dimen/dimen_35dp"
-                        android:padding="@dimen/dimen_5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="5dp"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:src="@drawable/zoom">
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/zoom_meet">
 
                     </ImageView>
 
@@ -866,10 +866,10 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:letterSpacing="0.09"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp"
-                        android:paddingEnd="@dimen/dimen_5dp"
-                        android:textSize="@dimen/dimen_14sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingEnd="5dp"
+                        android:textSize="14sp"
                         android:textColor="#3A74FF">
 
                     </TextView>
@@ -884,11 +884,11 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:layout_centerInParent="true"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:elevation="@dimen/dimen_10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:elevation="10dp"
                 android:layout_alignParentEnd="true"
                 card_view:cardCornerRadius="8dp"
                 card_view:cardBackgroundColor="@color/white">
@@ -899,12 +899,12 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_35dp"
-                        android:layout_height="@dimen/dimen_35dp"
-                        android:padding="@dimen/dimen_5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="5dp"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:src="@drawable/whatsapp">
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/whatsapp_icon">
 
                     </ImageView>
 
@@ -915,10 +915,10 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:letterSpacing="0.09"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp"
-                        android:paddingEnd="@dimen/dimen_5dp"
-                        android:textSize="@dimen/dimen_14sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingEnd="5dp"
+                        android:textSize="14sp"
                         android:textColor="#3FA43F">
 
                     </TextView>
@@ -933,11 +933,11 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:layout_centerInParent="true"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:elevation="@dimen/dimen_10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:elevation="10dp"
                 android:layout_alignParentEnd="true"
                 card_view:cardCornerRadius="8dp"
                 card_view:cardBackgroundColor="@color/white">
@@ -948,11 +948,11 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_35dp"
-                        android:layout_height="@dimen/dimen_35dp"
-                        android:padding="@dimen/dimen_5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="5dp"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_marginEnd="10dp"
                         android:src="@drawable/phoneaudioicon">
 
                     </ImageView>
@@ -964,10 +964,10 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:letterSpacing="0.09"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp"
-                        android:paddingEnd="@dimen/dimen_5dp"
-                        android:textSize="@dimen/dimen_14sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingEnd="5dp"
+                        android:textSize="14sp"
                         android:textColor="#000000">
 
                     </TextView>

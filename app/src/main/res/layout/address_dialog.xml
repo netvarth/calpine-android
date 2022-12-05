@@ -6,23 +6,23 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_curved"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_30dp">
+    android:paddingBottom="30dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_35dp"
+        android:layout_height="35dp"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimen_15dp">
+        android:layout_marginTop="15dp">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_12dp"
+            android:layout_marginStart="12dp"
             android:text="Choose a delivery address"
             android:textColor="@color/dark_black"
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="15dp"
             android:visibility="visible">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -32,12 +32,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_12dp"
+            android:layout_marginStart="12dp"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="@dimen/dimen_15dp"
-                android:layout_height="@dimen/dimen_15dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center"
                 android:src="@drawable/left_icon">
 
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginStart="5dp"
                 android:text="Back"
                 android:textColor="@color/dark_blue"
                 android:textSize="14dp">
@@ -62,10 +62,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical"
-        android:paddingTop="@dimen/dimen_15dp">
+        android:paddingTop="15dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/Id_const_layout"
@@ -76,14 +76,14 @@
                 android:id="@+id/rv_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_2dp"
+                android:layout_marginTop="2dp"
                 android:scrollbars="vertical"
                 android:visibility="visible"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="@+id/Id_const_layout"
                 app:layout_constraintEnd_toEndOf="@+id/Id_const_layout"
                 app:layout_constraintHeight_max="250dp"
-                app:layout_constraintHeight_min="@dimen/dimen_50dp"
+                app:layout_constraintHeight_min="50dp"
                 app:layout_constraintStart_toStartOf="@+id/Id_const_layout"
                 app:layout_constraintTop_toTopOf="@+id/Id_const_layout">
 
@@ -123,12 +123,12 @@
                         android:id="@+id/et_firstName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimen_15dp"
+                        android:layout_marginEnd="15dp"
                         android:layout_weight="0.5"
                         android:backgroundTint="@color/light_grey"
                         android:hint="First name"
                         android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_15dp">
+                        android:textSize="15dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -136,12 +136,12 @@
                         android:id="@+id/et_lastName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_weight="0.5"
                         android:backgroundTint="@color/light_grey"
                         android:hint="Last name"
                         android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_15dp">
+                        android:textSize="15dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -152,11 +152,11 @@
                     android:id="@+id/et_areaAndFlat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginEnd="10dp"
                     android:backgroundTint="@color/light_grey"
                     android:hint="House no/ Building name, Area"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textSize="15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -164,11 +164,11 @@
                     android:id="@+id/et_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginEnd="10dp"
                     android:backgroundTint="@color/light_grey"
                     android:hint="City"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textSize="15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -176,13 +176,13 @@
                     android:id="@+id/et_pincode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginEnd="10dp"
                     android:backgroundTint="@color/light_grey"
                     android:hint="Pincode"
                     android:maxLength="10"
                     android:inputType="textPostalAddress"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textSize="15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -190,11 +190,11 @@
                     android:id="@+id/et_landmark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginEnd="10dp"
                     android:backgroundTint="@color/light_grey"
                     android:hint="Landmark"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textSize="15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -217,7 +217,7 @@
                             android:enabled="false"
                             android:backgroundTint="@color/light_grey"
                             android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_15dp">
+                            android:textSize="15dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -225,13 +225,13 @@
                             android:id="@+id/et_mobile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/dimen_15dp"
+                            android:layout_marginEnd="15dp"
                             android:backgroundTint="@color/light_grey"
                             android:hint="Mobile Number"
                             android:inputType="number"
                             android:maxLength="10"
                             android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_15dp">
+                            android:textSize="15dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -241,13 +241,13 @@
                         android:id="@+id/et_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_weight="0.5"
                         android:backgroundTint="@color/light_grey"
                         android:hint="Email Id"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_15dp">
+                        android:textSize="15dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -259,17 +259,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dimen_15dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/border_red"
                     android:backgroundTint="@color/dark_blue"
-                    android:paddingStart="@dimen/dimen_18dp"
-                    android:paddingTop="@dimen/dimen_8dp"
-                    android:paddingEnd="@dimen/dimen_18dp"
-                    android:paddingBottom="@dimen/dimen_8dp"
+                    android:paddingStart="18dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="8dp"
                     android:text="Save address"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textSize="15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -284,15 +284,15 @@
         android:id="@+id/ll_addNewAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:paddingStart="@dimen/dimen_15dp"
-        android:paddingTop="@dimen/dimen_15dp"
-        android:paddingBottom="@dimen/dimen_15dp">
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingStart="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <ImageView
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="center"
             android:src="@drawable/plus"
             app:tint="@color/dark_blue">
@@ -303,10 +303,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_18dp"
+            android:layout_marginStart="18dp"
             android:text="Add new address"
             android:textColor="@color/dark_blue"
-            android:textSize="@dimen/dimen_15dp">
+            android:textSize="15dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 

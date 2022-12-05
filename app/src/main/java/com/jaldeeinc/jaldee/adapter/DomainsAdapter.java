@@ -1,8 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.jaldeeinc.jaldee.Interface.IFilterOptions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.KeyValue;
-import com.jaldeeinc.jaldee.model.Domain_Spinner;
 
 import java.util.ArrayList;
 
@@ -37,7 +34,7 @@ public class DomainsAdapter extends RecyclerView.Adapter<DomainsAdapter.ViewHold
         this.list = list;
     }
 
-    public DomainsAdapter(Context context, ArrayList<KeyValue> list,String domain) {
+    public DomainsAdapter(Context context, ArrayList<KeyValue> list, String domain) {
         this.context = context;
         this.list = list;
         this.selectedDomain = domain;
@@ -46,22 +43,22 @@ public class DomainsAdapter extends RecyclerView.Adapter<DomainsAdapter.ViewHold
 
     @NonNull
     @Override
-    public DomainsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
-            return new DomainsAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.domain_layout, parent, false);
-            return new DomainsAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DomainsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
 
@@ -83,7 +80,7 @@ public class DomainsAdapter extends RecyclerView.Adapter<DomainsAdapter.ViewHold
 
         } else {
 
-            DomainsAdapter.ViewHolder skeletonViewHolder = (DomainsAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

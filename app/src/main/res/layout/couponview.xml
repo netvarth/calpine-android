@@ -52,8 +52,8 @@
                             android:id="@+id/rl_cName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_15dp"
-                            android:layout_marginTop="@dimen/dimen_15dp">
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp">
 
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -62,7 +62,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Coupon Name"
                                 android:textColor="@color/dark_black"
-                                android:textSize="@dimen/dimen_18dp" />
+                                android:textSize="18dp" />
 
 
                             <LinearLayout
@@ -77,10 +77,10 @@
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:paddingStart="@dimen/dimen_10dp"
-                                    android:paddingTop="@dimen/dimen_4dp"
-                                    android:paddingEnd="@dimen/dimen_5dp"
-                                    android:paddingBottom="@dimen/dimen_4dp"
+                                    android:paddingStart="10dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingEnd="5dp"
+                                    android:paddingBottom="4dp"
                                     android:text="Signup Coupon"
                                     android:textColor="@color/dark_blue">
 
@@ -96,8 +96,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/rl_cName"
-                            android:layout_marginLeft="@dimen/dimen_15dp"
-                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginRight="20dp"
                             android:layout_marginBottom="5dp"
                             android:text="Description"
@@ -143,12 +143,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/couponTerms"
-                            android:layout_marginLeft="@dimen/dimen_15dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"
                             android:orientation="horizontal">
-
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewLight
                                 android:layout_width="wrap_content"
@@ -172,7 +171,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/termlayout"
-                            android:layout_marginLeft="@dimen/dimen_15dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"
@@ -207,7 +206,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/dimen_15dp"
+                                android:layout_marginLeft="15dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="horizontal">
 
@@ -234,12 +233,12 @@
 
                             <androidx.cardview.widget.CardView
                                 android:layout_width="150dp"
-                                android:layout_height="@dimen/dimen_35dp"
+                                android:layout_height="35dp"
                                 android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="@dimen/dimen_15dp"
-                                android:layout_marginBottom="@dimen/dimen_5dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_marginBottom="5dp"
                                 app:cardBackgroundColor="@color/special_background"
-                                app:cardCornerRadius="@dimen/dimen_10dp">
+                                app:cardCornerRadius="10dp">
 
                                 <RelativeLayout
                                     android:layout_width="match_parent"
@@ -251,25 +250,25 @@
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentStart="true"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginStart="@dimen/dimen_10dp"
+                                        android:layout_marginStart="10dp"
                                         android:layout_toStartOf="@id/iv_copy"
                                         android:text="Provider coupon"
                                         android:maxLines="1"
                                         android:ellipsize="end"
                                         android:textColor="@color/dark_blue"
-                                        android:textSize="@dimen/dimen_18dp">
+                                        android:textSize="18dp">
 
                                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
 
                                     <ImageView
                                         android:id="@+id/iv_copy"
-                                        android:layout_width="@dimen/dimen_20dp"
-                                        android:layout_height="@dimen/dimen_20dp"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
                                         android:layout_alignParentEnd="true"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginEnd="@dimen/dimen_10dp"
-                                        android:padding="@dimen/dimen_2dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:padding="2dp"
                                         android:src="@drawable/copy"
                                         app:tint="@color/dark_blue">
 
@@ -286,7 +285,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/couponTerms"
-                            android:layout_marginLeft="@dimen/dimen_15dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"

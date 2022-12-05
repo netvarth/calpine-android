@@ -20,19 +20,17 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-
 
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.jaldeeinc.jaldee.R;
 
 
-public class BorderImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class BorderImageView extends AppCompatImageView {
     public static final String TAG = "BorderImageView";
     private int mResource;
-    private static final ImageView.ScaleType[] sScaleTypeArray;
-    private ImageView.ScaleType mScaleType;
+    private static final ScaleType[] sScaleTypeArray;
+    private ScaleType mScaleType;
     private float mLeftTopCornerRadius;
     private float mRightTopCornerRadius;
     private float mLeftBottomCornerRadius;
@@ -47,7 +45,7 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
     public BorderImageView(Context context) {
         super(context);
         this.mResource = 0;
-        this.mScaleType = ImageView.ScaleType.FIT_CENTER;
+        this.mScaleType = ScaleType.FIT_CENTER;
         this.mLeftTopCornerRadius = 0.0F;
         this.mRightTopCornerRadius = 0.0F;
         this.mLeftBottomCornerRadius = 0.0F;
@@ -65,7 +63,7 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
     public BorderImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.mResource = 0;
-        this.mScaleType = ImageView.ScaleType.FIT_CENTER;
+        this.mScaleType = ScaleType.FIT_CENTER;
         this.mLeftTopCornerRadius = 0.0F;
         this.mRightTopCornerRadius = 0.0F;
         this.mLeftBottomCornerRadius = 0.0F;
@@ -109,11 +107,11 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
         this.invalidate();
     }
 
-    public ImageView.ScaleType getScaleType() {
+    public ScaleType getScaleType() {
         return this.mScaleType;
     }
 
-    public void setScaleType(ImageView.ScaleType scaleType) {
+    public void setScaleType(ScaleType scaleType) {
         super.setScaleType(scaleType);
         this.mScaleType = scaleType;
         this.updateDrawable();
@@ -121,14 +119,14 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
 
     public void setImageDrawable(Drawable drawable) {
         this.mResource = 0;
-        this.mDrawable = BorderImageView.SelectableRoundedCornerDrawable.fromDrawable(drawable, this.getResources());
+        this.mDrawable = SelectableRoundedCornerDrawable.fromDrawable(drawable, this.getResources());
         super.setImageDrawable(this.mDrawable);
         this.updateDrawable();
     }
 
     public void setImageBitmap(Bitmap bm) {
         this.mResource = 0;
-        this.mDrawable = BorderImageView.SelectableRoundedCornerDrawable.fromBitmap(bm, this.getResources());
+        this.mDrawable = SelectableRoundedCornerDrawable.fromBitmap(bm, this.getResources());
         super.setImageDrawable(this.mDrawable);
         this.updateDrawable();
     }
@@ -163,7 +161,7 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
                 }
             }
 
-            return BorderImageView.SelectableRoundedCornerDrawable.fromDrawable(d, this.getResources());
+            return SelectableRoundedCornerDrawable.fromDrawable(d, this.getResources());
         }
     }
 
@@ -171,11 +169,11 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
         try {
 
             if (this.mDrawable != null) {
-                ((BorderImageView.SelectableRoundedCornerDrawable) this.mDrawable).setScaleType(this.mScaleType);
-                ((BorderImageView.SelectableRoundedCornerDrawable) this.mDrawable).setCornerRadii(this.mRadii);
-                ((BorderImageView.SelectableRoundedCornerDrawable) this.mDrawable).setBorderWidth(this.mBorderWidth);
-                ((BorderImageView.SelectableRoundedCornerDrawable) this.mDrawable).setBorderColor(this.mBorderColor);
-                ((BorderImageView.SelectableRoundedCornerDrawable) this.mDrawable).setOval(this.isOval);
+                ((SelectableRoundedCornerDrawable) this.mDrawable).setScaleType(this.mScaleType);
+                ((SelectableRoundedCornerDrawable) this.mDrawable).setCornerRadii(this.mRadii);
+                ((SelectableRoundedCornerDrawable) this.mDrawable).setBorderWidth(this.mBorderWidth);
+                ((SelectableRoundedCornerDrawable) this.mDrawable).setBorderColor(this.mBorderColor);
+                ((SelectableRoundedCornerDrawable) this.mDrawable).setOval(this.isOval);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,7 +241,7 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
     }
 
     static {
-        sScaleTypeArray = new ImageView.ScaleType[]{ImageView.ScaleType.MATRIX, ImageView.ScaleType.FIT_XY, ImageView.ScaleType.FIT_START, ImageView.ScaleType.FIT_CENTER, ImageView.ScaleType.FIT_END, ImageView.ScaleType.CENTER, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.CENTER_INSIDE};
+        sScaleTypeArray = new ScaleType[]{ScaleType.MATRIX, ScaleType.FIT_XY, ScaleType.FIT_START, ScaleType.FIT_CENTER, ScaleType.FIT_END, ScaleType.CENTER, ScaleType.CENTER_CROP, ScaleType.CENTER_INSIDE};
     }
 
     static class SelectableRoundedCornerDrawable extends Drawable {
@@ -262,13 +260,13 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
         private boolean mOval = false;
         private float mBorderWidth = 0.0F;
         private ColorStateList mBorderColor = ColorStateList.valueOf(-16777216);
-        private ImageView.ScaleType mScaleType;
+        private ScaleType mScaleType;
         private Path mPath;
         private Bitmap mBitmap;
         private boolean mBoundsConfigured;
 
         public SelectableRoundedCornerDrawable(Bitmap bitmap, Resources r) {
-            this.mScaleType = ImageView.ScaleType.FIT_CENTER;
+            this.mScaleType = ScaleType.FIT_CENTER;
             this.mPath = new Path();
             this.mBoundsConfigured = false;
             this.mBitmap = bitmap;
@@ -290,13 +288,13 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
             this.mBorderPaint.setStrokeWidth(this.mBorderWidth);
         }
 
-        public static BorderImageView.SelectableRoundedCornerDrawable fromBitmap(Bitmap bitmap, Resources r) {
-            return bitmap != null ? new BorderImageView.SelectableRoundedCornerDrawable(bitmap, r) : null;
+        public static SelectableRoundedCornerDrawable fromBitmap(Bitmap bitmap, Resources r) {
+            return bitmap != null ? new SelectableRoundedCornerDrawable(bitmap, r) : null;
         }
 
         public static Drawable fromDrawable(Drawable drawable, Resources r) {
             if (drawable != null) {
-                if (drawable instanceof BorderImageView.SelectableRoundedCornerDrawable) {
+                if (drawable instanceof SelectableRoundedCornerDrawable) {
                     return drawable;
                 }
 
@@ -314,7 +312,7 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
 
                 Bitmap bm = drawableToBitmap(drawable);
                 if (bm != null) {
-                    return new BorderImageView.SelectableRoundedCornerDrawable(bm, r);
+                    return new SelectableRoundedCornerDrawable(bm, r);
                 }
 
 
@@ -364,18 +362,18 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
         private void configureBounds(Canvas canvas) {
             Rect clipBounds = canvas.getClipBounds();
             Matrix canvasMatrix = canvas.getMatrix();
-            if (ImageView.ScaleType.CENTER == this.mScaleType) {
+            if (ScaleType.CENTER == this.mScaleType) {
                 this.mBounds.set(clipBounds);
-            } else if (ImageView.ScaleType.CENTER_CROP == this.mScaleType) {
+            } else if (ScaleType.CENTER_CROP == this.mScaleType) {
                 this.applyScaleToRadii(canvasMatrix);
                 this.mBounds.set(clipBounds);
-            } else if (ImageView.ScaleType.FIT_XY == this.mScaleType) {
+            } else if (ScaleType.FIT_XY == this.mScaleType) {
                 Matrix m = new Matrix();
                 m.setRectToRect(this.mBitmapRect, new RectF(clipBounds), Matrix.ScaleToFit.FILL);
                 this.mBitmapShader.setLocalMatrix(m);
                 this.mBounds.set(clipBounds);
-            } else if (ImageView.ScaleType.FIT_START != this.mScaleType && ImageView.ScaleType.FIT_END != this.mScaleType && ImageView.ScaleType.FIT_CENTER != this.mScaleType && ImageView.ScaleType.CENTER_INSIDE != this.mScaleType) {
-                if (ImageView.ScaleType.MATRIX == this.mScaleType) {
+            } else if (ScaleType.FIT_START != this.mScaleType && ScaleType.FIT_END != this.mScaleType && ScaleType.FIT_CENTER != this.mScaleType && ScaleType.CENTER_INSIDE != this.mScaleType) {
+                if (ScaleType.MATRIX == this.mScaleType) {
                     this.applyScaleToRadii(canvasMatrix);
                     this.mBounds.set(this.mBitmapRect);
                 }
@@ -407,8 +405,8 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
             float newScaleX = this.mBounds.width() / (this.mBounds.width() + this.mBorderWidth + this.mBorderWidth);
             float newScaleY = this.mBounds.height() / (this.mBounds.height() + this.mBorderWidth + this.mBorderWidth);
             canvas.scale(newScaleX, newScaleY);
-            if (ImageView.ScaleType.FIT_START != this.mScaleType && ImageView.ScaleType.FIT_END != this.mScaleType && ImageView.ScaleType.FIT_XY != this.mScaleType && ImageView.ScaleType.FIT_CENTER != this.mScaleType && ImageView.ScaleType.CENTER_INSIDE != this.mScaleType && ImageView.ScaleType.MATRIX != this.mScaleType) {
-                if (ImageView.ScaleType.CENTER == this.mScaleType || ImageView.ScaleType.CENTER_CROP == this.mScaleType) {
+            if (ScaleType.FIT_START != this.mScaleType && ScaleType.FIT_END != this.mScaleType && ScaleType.FIT_XY != this.mScaleType && ScaleType.FIT_CENTER != this.mScaleType && ScaleType.CENTER_INSIDE != this.mScaleType && ScaleType.MATRIX != this.mScaleType) {
+                if (ScaleType.CENTER == this.mScaleType || ScaleType.CENTER_CROP == this.mScaleType) {
                     canvas.translate(-translateX / (newScaleX * scaleFactorX), -translateY / (newScaleY * scaleFactorY));
                     canvas.translate(-(this.mBounds.left - this.mBorderWidth), -(this.mBounds.top - this.mBorderWidth));
                 }
@@ -566,11 +564,11 @@ public class BorderImageView extends androidx.appcompat.widget.AppCompatImageVie
             this.mOval = oval;
         }
 
-        public ImageView.ScaleType getmScaleType(){
+        public ScaleType getmScaleType(){
             return this.mScaleType;
         }
 
-        public void setScaleType(ImageView.ScaleType scaleType){
+        public void setScaleType(ScaleType scaleType){
 
             if (scaleType != null)
             {

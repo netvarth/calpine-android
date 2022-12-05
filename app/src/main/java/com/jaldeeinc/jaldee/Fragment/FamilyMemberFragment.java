@@ -54,7 +54,7 @@ import retrofit2.Response;
 public class FamilyMemberFragment extends RootFragment {
     Context mContext;
     ImageView calenderclick;
-                                static EditText dob, edtTelegramNumber, edtWhtsAppNumber, et_email;
+    static EditText dob, edtTelegramNumber, edtWhtsAppNumber, et_email;
     TextInputEditText edtfirstname, edtmobileno;
     TextInputEditText lastname;
     RadioGroup gender;
@@ -549,8 +549,8 @@ public class FamilyMemberFragment extends RootFragment {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog  da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
+            DatePickerDialog  da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            //DatePickerDialog  da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
             return  da;
         }

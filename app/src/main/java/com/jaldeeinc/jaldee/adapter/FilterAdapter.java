@@ -3,8 +3,6 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -18,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -76,18 +76,18 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
     }
 
     @Override
-    public FilterAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.filter_row, parent, false);
 
-        return new FilterAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     ArrayList<String> passFormula = new ArrayList<>();
     ArrayList<String> keyFormula = new ArrayList<>();
 
     @Override
-    public void onBindViewHolder(final FilterAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final RefinedFilters filterList = mFilterList.get(position);
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),

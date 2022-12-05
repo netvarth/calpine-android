@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
@@ -79,15 +78,15 @@ public class ServiceListDetailAdapter extends RecyclerView.Adapter<ServiceListDe
     }
 
     @Override
-    public ServiceListDetailAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.servicelist_row, parent, false);
 
-        return new ServiceListDetailAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ServiceListDetailAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final SearchService serviceList = mServiceList.get(position);
         String serviceName = serviceList.getName();
 //        if (serviceList.getDepartment() != 0 && mSearchDepartmentList != null) {
@@ -98,17 +97,17 @@ public class ServiceListDetailAdapter extends RecyclerView.Adapter<ServiceListDe
         try{
             if(serviceList.getServiceType()!=null && serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
                 if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
+                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
                 }
                 else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
+                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
                 }
                 else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
                     if(serviceList.getVirtualCallingModes().get(0).getVirtualServiceType()!=null && serviceList.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
                         myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon,0,0,0);
                     }
                     else {
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
                     }
                 }
                 else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){

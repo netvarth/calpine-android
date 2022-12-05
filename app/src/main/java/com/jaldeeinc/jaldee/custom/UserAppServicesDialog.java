@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.common.Config;
@@ -141,8 +142,10 @@ public class UserAppServicesDialog extends Dialog {
             if (searchService.getServicegallery().size() > 0) {
                 i_servicegallery.setVisibility(View.VISIBLE);
                 try {
-                    PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
-                    PicassoTrustAll.getInstance(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    Glide.with(context).load(searchService.getServicegallery().get(0).getUrl()).fitCenter().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+
+//                    PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
+//                    PicassoTrustAll.getInstance(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

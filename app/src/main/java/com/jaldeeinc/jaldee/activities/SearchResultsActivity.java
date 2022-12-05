@@ -1,14 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -30,14 +21,20 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Fragment.HomeSearchFragment;
 import com.jaldeeinc.jaldee.Interface.IClearFilter;
-import com.jaldeeinc.jaldee.Interface.IFilterOptions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.FilterChipsAdapter;
-import com.jaldeeinc.jaldee.adapter.MoreFilterAdapter;
-import com.jaldeeinc.jaldee.adapter.PaginationAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchFiltersAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
@@ -49,7 +46,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FilterChips;
 import com.jaldeeinc.jaldee.model.LanLong;
@@ -63,7 +59,6 @@ import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
@@ -85,7 +80,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
     private Context mContext;
     String query, url;
     RecyclerView mRecySearchDetail;
-    MoreFilterAdapter mMoreAdapter;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     List<QueueList> mQueueList = new ArrayList<>();
     ArrayList<ScheduleList> mScheduleList = new ArrayList<>();
@@ -93,15 +87,11 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     ProgressBar progressBar;
     LinearLayoutManager linearLayoutManager;
-    PaginationAdapter pageadapter;
     SearchResultsAdapter searchResultsAdapter;
-    ArrayList<SearchViewDetail> mSpecializationList;
 
     private int PAGE_START = 0;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private boolean fromBusinessId = false;
-    private boolean fromBusinessname = false;
     // limiting to 5 for this tutorial, since total pages in actual API is very large. Feel free to modify.
     private int TOTAL_PAGES = 0;
     private int currentPage = PAGE_START;
@@ -170,7 +160,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
     CardView cvDistance, cvJaldeeVerified, cvBack;
     CustomTextViewBoldItalic tvDistance, tvJaldeeVerified;
     //    private Filters filtersDialog;
-    private IFilterOptions iFilterOptions;
     private RecyclerView rvFilters, rvAppliedFilters;
     RecyclerView rvChips;
     private CustomTextViewMedium tvApplyFilters;

@@ -37,14 +37,12 @@
             android:background="@color/spinnerbg"
             android:orientation="vertical">
 
-
-
             <LinearLayout
                 android:id="@+id/jdn_Discount_Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding15">
 

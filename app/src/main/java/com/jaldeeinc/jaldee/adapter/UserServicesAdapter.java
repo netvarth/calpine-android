@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.ISelectedProviderService;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -30,7 +31,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -66,7 +66,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
     @NonNull
     @Override
-    public UserServicesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.shimmer, parent, false);
@@ -81,7 +81,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserServicesAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
             final DepServiceInfo depServiceInfo = servicesInfoList.get(position);
@@ -97,7 +97,9 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                 viewHolder.tvServiceType.setVisibility(View.GONE);
                 viewHolder.ivMore.setVisibility(View.GONE);
                 if (servicesInfoList.get(position).getProviderImage() != null) {
-                    PicassoTrustAll.getInstance(context).load(servicesInfoList.get(position).getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
+                    Glide.with(context).load(servicesInfoList.get(position).getProviderImage()).fitCenter().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
+
+                    //PicassoTrustAll.getInstance(context).load(servicesInfoList.get(position).getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
 
                 } else {
                     viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
@@ -268,11 +270,11 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                             viewHolder.ivTeleService.setVisibility(View.VISIBLE);
                             if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("Zoom")) {
 
-                                viewHolder.ivTeleService.setImageResource(R.drawable.zoom);
+                                viewHolder.ivTeleService.setImageResource(R.drawable.zoomicon_sized);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
-                                viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
+                                viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet_sized);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (servicesInfoList.get(position).getVirtualServiceType() != null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")) {
@@ -400,7 +402,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
         } else {
 
-            UserServicesAdapter.ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 

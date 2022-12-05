@@ -34,14 +34,14 @@ public class ServiceOptionListAdapter extends RecyclerView.Adapter<ServiceOption
 
     @NonNull
     @Override
-    public ServiceOptionListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.radio_service_option_list, parent, false);
-        return new ServiceOptionListAdapter.ViewHolder(v);
+        return new ViewHolder(v);
 
     }
     @Override
-    public void onBindViewHolder(@NonNull ServiceOptionListAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         final QuestionnaireCheckbox checkbox = questionnaireCheckboxes.get(position);
         viewHolder.radioButton.setVisibility(View.VISIBLE);
         viewHolder.radioButton.setText(checkbox.getText());

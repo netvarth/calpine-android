@@ -249,7 +249,7 @@ public class ServiceOptionGridView extends LinearLayout implements IDataGrid {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = (int) (metrics.widthPixels * 1);
         serviceOptionrepeatSameDialog.setCancelable(false);
-        serviceOptionrepeatSameDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+        serviceOptionrepeatSameDialog.getWindow().setLayout(width, LayoutParams.WRAP_CONTENT);
         serviceOptionrepeatSameDialog.getWindow().setGravity(Gravity.BOTTOM);
         ImageView iv_close = serviceOptionrepeatSameDialog.findViewById(R.id.iv_close);
         LinearLayout ll_Add_new = serviceOptionrepeatSameDialog.findViewById(R.id.ll_Add_new);
@@ -260,13 +260,13 @@ public class ServiceOptionGridView extends LinearLayout implements IDataGrid {
         TextView tv_total_price = serviceOptionrepeatSameDialog.findViewById(R.id.tv_total_price);
         LinearLayout llDivider = serviceOptionrepeatSameDialog.findViewById(R.id.ll_divider);
         serviceOptionrepeatSameDialog.show();
-        iv_close.setOnClickListener(new View.OnClickListener() {
+        iv_close.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 serviceOptionrepeatSameDialog.cancel();
             }
         });
-        ll_Add_new.setOnClickListener(new View.OnClickListener() {
+        ll_Add_new.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 llAdd.performClick();
@@ -274,7 +274,7 @@ public class ServiceOptionGridView extends LinearLayout implements IDataGrid {
 
             }
         });
-        ll_repeat_same.setOnClickListener(new View.OnClickListener() {
+        ll_repeat_same.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 

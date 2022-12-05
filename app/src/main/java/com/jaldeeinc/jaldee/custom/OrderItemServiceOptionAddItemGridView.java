@@ -1,31 +1,9 @@
 package com.jaldeeinc.jaldee.custom;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,10 +12,8 @@ import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailPageItemsAdapter;
-import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
 import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
-import com.jaldeeinc.jaldee.adapter.ServiceOptionDataGridAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.DataGrid;
@@ -51,10 +27,6 @@ import com.jaldeeinc.jaldee.response.Questions;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

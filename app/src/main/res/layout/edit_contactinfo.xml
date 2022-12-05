@@ -44,16 +44,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_5dp"
+            android:padding="5dp"
             android:text="Booking alerts and communications send to"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
 
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -63,7 +63,7 @@
             android:paddingLeft="@dimen/padding5"
             android:text="* All fields are mandatory"
             android:textColor="@color/red"
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="15dp"
             android:visibility="invisible">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -74,23 +74,23 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingRight="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:text="Phone"
-                android:textSize="@dimen/dimen_15sp" />
+                android:textSize="15sp" />
 
             <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
                 android:id="@+id/et_code"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_marginLeft="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="0.2"
                 android:background="@drawable/edittext_color"
                 android:cursorVisible="false"
@@ -101,7 +101,7 @@
                 android:paddingStart="@dimen/padding3"
                 android:paddingEnd="@dimen/padding3"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 android:visibility="visible"
                 app:tint="@color/spinnerbg" />
 
@@ -109,7 +109,7 @@
                 android:id="@+id/et_phone"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="0.8"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
@@ -117,7 +117,7 @@
                 android:maxLength="10"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 app:tint="@color/spinnerbg" />
         </LinearLayout>
 
@@ -127,28 +127,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingRight="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:text="Email"
-                android:textSize="@dimen/dimen_15sp" />
+                android:textSize="15sp" />
 
             <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
                 android:id="@+id/et_mail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/padding40"
-                android:layout_marginLeft="@dimen/dimen_8dp"
+                android:layout_marginLeft="8dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter your Email"
                 android:inputType="textEmailAddress"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 app:tint="@color/gray" />
         </LinearLayout>
 
@@ -160,9 +160,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding45"
         android:layout_marginStart="@dimen/padding15"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="@dimen/padding15"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginBottom="20dp"
         app:cardBackgroundColor="@color/dark_blue"
         app:cardCornerRadius="@dimen/padding3">
 

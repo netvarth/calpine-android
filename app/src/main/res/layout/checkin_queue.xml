@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/dimen_10dp"
+    android:layout_marginTop="10dp"
     android:background="@color/white"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/dimen_30dp"
+        android:layout_marginBottom="30dp"
         android:background="@android:color/white">
 
         <com.jaldeeinc.jaldee.singlerowcalendar.DatePickerTimeline
@@ -36,7 +36,7 @@
             android:fontFamily="@font/font_medium"
             android:text="SELECT A DATE"
             android:textColor="@color/black"
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="15dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,11 +44,11 @@
             android:id="@+id/tvSelectedCalendarDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/lightGrey"
-            android:textSize="@dimen/dimen_16dp"
+            android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCalendarDate"
             app:layout_constraintStart_toEndOf="@+id/tvSelectedCalendarDate"
             app:layout_constraintTop_toTopOf="@+id/tvSelectedCalendarDate" />
@@ -57,7 +57,7 @@
             android:id="@+id/btn_calendar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/icon_calendar2"
             app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCalendarDate"
@@ -124,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -137,7 +137,7 @@
             android:letterSpacing="0.1"
             android:text=""
             android:textColor="@color/appoint_theme"
-            android:textSize="@dimen/dimen_30sp">
+            android:textSize="30sp">
 
         </TextView>
 
@@ -151,7 +151,7 @@
             android:letterSpacing="0.1"
             android:text=""
             android:textColor="@color/appoint_theme"
-            android:textSize="@dimen/dimen_18sp">
+            android:textSize="18sp">
 
         </TextView>
 
@@ -176,9 +176,9 @@
         android:id="@+id/rv_queues"
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding60"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:visibility="visible">
 
     </com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView>
@@ -241,7 +241,7 @@
             android:id="@+id/ll_bigLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -259,7 +259,7 @@
                 android:id="@+id/tv_peopleHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_4dp"
+                android:layout_marginStart="4dp"
                 android:fontFamily="@font/font_medium"
                 android:text=""
                 android:textColor="@color/title_color"
@@ -271,7 +271,7 @@
                 android:id="@+id/tv_slash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/font_thin"
                 android:text="/"
                 android:textSize="50dp">
@@ -283,7 +283,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginStart="8dp"
                 android:visibility="gone">
 
                 <TextView
@@ -301,7 +301,7 @@
                     android:id="@+id/tv_minutesHint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_4dp"
+                    android:layout_marginStart="4dp"
                     android:fontFamily="@font/font_medium"
                     android:text=""
                     android:textColor="@color/title_color"
@@ -315,7 +315,7 @@
                 android:id="@+id/tv_serviceTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/font_medium"
                 android:text=""
                 android:textColor="@color/title_color"

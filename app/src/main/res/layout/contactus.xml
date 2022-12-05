@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:paddingLeft="@dimen/dimen_20dp"
+                android:paddingLeft="20dp"
                 android:text="Reach us at:"
                 android:textColor="@color/sec_title_grey"
                 android:textSize="@dimen/txtsize_hint"
@@ -79,8 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:paddingLeft="@dimen/dimen_20dp">
+                android:layout_marginTop="10dp"
+                android:paddingLeft="20dp">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -91,7 +91,7 @@
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="5dp"
                     android:text="Email  :  "
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_hint" />
@@ -111,7 +111,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/default_padding"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dimen_20dp">
+                android:paddingLeft="20dp">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -122,7 +122,7 @@
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="5dp"
                     android:text="Support  :  +91 "
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_hint" />
@@ -144,7 +144,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/default_padding"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dimen_20dp">
+                android:paddingLeft="20dp">
 
                 <ImageView
                     android:layout_width="20dp"

@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/rl_tlbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:background="@color/white">
 
         <androidx.cardview.widget.CardView
@@ -18,7 +18,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="16dp"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding5"
-                android:src="@mipmap/img_back_arrow"
+                android:src="@drawable/img_back_arrow"
                 app:tint="@color/dark_blue" />
 
         </androidx.cardview.widget.CardView>
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_tlbar"
-        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginTop="5dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -58,10 +58,10 @@
             android:id="@+id/tv_selct_ur_wallet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_16dp"
-            android:layout_marginRight="@dimen/dimen_16dp"
-            android:layout_marginBottom="@dimen/dimen_16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
             android:gravity="left"
             android:text="@string/pls_selct_ur_jaldee_wallet"
             android:textColor="@color/dark_blue"
@@ -76,8 +76,8 @@
             android:id="@+id/ll_noWallet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_40dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">

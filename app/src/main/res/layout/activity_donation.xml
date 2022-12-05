@@ -17,14 +17,14 @@
         android:backgroundTint="#F1B51C"
         android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:paddingEnd="10dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginStart="15dp"
             android:backgroundTint="#F1B51C"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="0dp">
@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@mipmap/img_back_arrow"
+                android:src="@drawable/img_back_arrow"
                 app:tint="@color/dark_black">
 
             </ImageView>
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/padding5"
-            android:layout_marginEnd="@dimen/dimen_45dp"
+            android:layout_marginEnd="45dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:paddingBottom="@dimen/dimen_60dp">
+        android:paddingBottom="60dp">
 
         <LinearLayout
             android:id="@+id/ll_main"
@@ -84,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/padding15"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginTop="15dp"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -111,10 +111,10 @@
                         android:id="@+id/tv_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_15dp"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginEnd="@dimen/dimen_20dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="left"
                         android:text=""
                         android:textColor="@color/title_color"
@@ -130,21 +130,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_donation"
-                    android:layout_marginStart="@dimen/dimen_25dp"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@drawable/donate_edittext"
                     android:backgroundTint="@color/special_background"
                     android:gravity="center_horizontal"
-                    android:padding="@dimen/dimen_10dp">
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:id="@+id/ll_entr_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="center_horizontal"
                         android:visibility="visible">
 
@@ -166,22 +166,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/dimen_30dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="10dp"
                         android:background="@drawable/donate_edittext"
-                        android:paddingLeft="@dimen/dimen_25dp"
-                        android:paddingRight="@dimen/dimen_25dp">
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/dimen_10dp"
+                            android:paddingLeft="10dp"
                             android:text="₹"
                             android:textColor="@color/dark_black"
-                            android:textSize="@dimen/dimen_20dp"
+                            android:textSize="20dp"
                             android:textStyle="normal">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
@@ -195,14 +195,14 @@
                             android:gravity="center_vertical"
                             android:hint="0"
                             android:inputType="numberDecimal"
-                            android:paddingTop="@dimen/dimen_0dp"
-                            android:paddingRight="@dimen/dimen_10dp"
-                            android:paddingBottom="@dimen/dimen_5dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
                             android:text=""
                             android:textColor="@color/dark_black"
                             android:textColorHint="@color/button_grey"
                             android:textCursorDrawable="@drawable/cursor"
-                            android:textSize="@dimen/dimen_40dp"
+                            android:textSize="40dp"
                             android:textStyle="bold">
 
                             <requestFocus />
@@ -216,9 +216,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_amount"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="center_horizontal"
                         android:visibility="visible">
 
@@ -235,7 +235,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_marginStart="10dp"
                             android:letterSpacing="0.04"
                             android:text=""
                             android:textSize="@dimen/txtsize_12">
@@ -249,7 +249,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_amount"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:layout_marginBottom="5dp"
                         android:text="* Amount is mandatory"
                         android:textColor="@color/red"
                         android:textSize="@dimen/txtsize_12"
@@ -264,7 +264,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_marginBottom="@dimen/padding5"
                     android:visibility="gone">
@@ -295,7 +295,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relative"
                     android:layout_marginStart="@dimen/padding15"
-                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginTop="5dp"
                     android:text="Donation by"
                     android:textAllCaps="true"
                     android:textColor="@color/dark_black"
@@ -309,24 +309,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_donation_text"
-                    android:layout_marginStart="@dimen/dimen_25dp"
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@drawable/donate_edittext"
                     android:orientation="vertical"
-                    android:padding="@dimen/dimen_10dp">
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/dimen_5dp"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp">
+                        android:paddingStart="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_20dp"
-                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="bottom"
                             android:src="@drawable/user_filled"
                             app:tint="@color/title_grey">
@@ -336,7 +336,7 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_marginStart="10dp"
                             android:hint="Name">
 
                             <EditText
@@ -354,7 +354,7 @@
                                 android:paddingRight="5dp"
                                 android:text=""
                                 android:textColor="@color/dark_black"
-                                android:textSize="@dimen/dimen_14sp">
+                                android:textSize="14sp">
 
                             </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -364,7 +364,7 @@
                         android:id="@+id/tv_error_donor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_16dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="@dimen/padding5"
                         android:text="* Donor name is mandatory"
                         android:textColor="@color/red"
@@ -377,13 +377,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/dimen_5dp"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp">
+                        android:paddingStart="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_20dp"
-                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="bottom"
                             android:src="@drawable/call_icon"
                             app:tint="@color/title_grey">
@@ -393,7 +393,7 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_marginStart="10dp"
                             android:hint="Phone">
 
                             <EditText
@@ -408,10 +408,10 @@
                                 android:focusable="false"
                                 android:hint=""
                                 android:inputType="text"
-                                android:paddingRight="@dimen/dimen_5dp"
+                                android:paddingRight="5dp"
                                 android:text=""
                                 android:textColor="@color/dark_black"
-                                android:textSize="@dimen/dimen_14sp">
+                                android:textSize="14sp">
 
                             </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -421,12 +421,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/dimen_5dp"
-                        android:paddingTop="@dimen/dimen_5dp">
+                        android:paddingStart="5dp"
+                        android:paddingTop="5dp">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_20dp"
-                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="bottom"
                             android:src="@drawable/emailicon_sized"
                             app:tint="@color/title_grey">
@@ -436,7 +436,7 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_marginStart="10dp"
                             android:hint="Mail">
 
                             <EditText
@@ -452,10 +452,10 @@
                                 android:hint=""
                                 android:inputType="text"
                                 android:maxLines="2"
-                                android:paddingRight="@dimen/dimen_5dp"
+                                android:paddingRight="5dp"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_14sp">
+                                android:textSize="14sp">
 
                             </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -465,7 +465,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:layout_marginLeft="@dimen/dimen_35dp"
+                        android:layout_marginLeft="35dp"
                         android:letterSpacing="0.04"
                         android:text="* donation receipts will be sent to email"
                         android:textColor="@color/sec_title_grey"
@@ -480,17 +480,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_consumerName"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="@dimen/dimen_25dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@drawable/donate_edittext"
                     android:hint="Add a note"
                     android:inputType="text"
                     android:maxWidth="250dp"
                     android:maxLines="10"
                     android:minWidth="150dp"
-                    android:padding="@dimen/dimen_10dp"
-                    android:textSize="@dimen/dimen_14sp">
+                    android:padding="10dp"
+                    android:textSize="14sp">
 
                 </EditText>
 
@@ -500,8 +500,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_note"
                     android:layout_marginStart="@dimen/padding15"
-                    android:paddingTop="@dimen/dimen_20dp"
-                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="10dp"
                     android:text="SELECT PAYMENT METHOD"
                     android:textAllCaps="true"
                     android:textColor="@color/dark_black"
@@ -516,19 +516,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_payment_text"
-                    android:layout_marginStart="@dimen/dimen_25dp"
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
-                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cv_payTm"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_height="50dp"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_weight="0.5"
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
@@ -539,17 +539,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Paytm"
-                            android:textSize="@dimen/dimen_15dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cv_razorpay"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_height="50dp"
                         android:layout_alignRight="@+id/cv_payTm"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_weight="0.5"
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
@@ -560,7 +560,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="CC/DC/NB/UPI"
-                            android:textSize="@dimen/dimen_15dp"
+                            android:textSize="15dp"
                             android:textStyle="bold" />
                     </androidx.cardview.widget.CardView>
 
@@ -588,7 +588,7 @@
     <LinearLayout
         android:id="@+id/ll_submit"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_70dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center"
         android:gravity="center"
@@ -599,12 +599,12 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/padding45"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.93"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardCornerRadius="@dimen/dimen_20dp">
+            app:cardCornerRadius="20dp">
 
 
             <LinearLayout

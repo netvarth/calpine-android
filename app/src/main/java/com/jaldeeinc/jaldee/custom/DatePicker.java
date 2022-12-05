@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.jaldeeinc.jaldee.R;
-
 import java.util.Calendar;
 
 public class DatePicker extends DialogFragment {
@@ -20,8 +18,10 @@ public class DatePicker extends DialogFragment {
 		int year = mCalender.get(Calendar.YEAR);
 		int month = mCalender.get(Calendar.MONTH);
 		int dayOfMonth = mCalender.get(Calendar.DAY_OF_MONTH);
-		DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, (DatePickerDialog.OnDateSetListener)
+		DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener)
 				getActivity(), year, month, dayOfMonth);
+		/*DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, (DatePickerDialog.OnDateSetListener)
+				getActivity(), year, month, dayOfMonth);*/
 		return datePickerDialog;
 	}
 }

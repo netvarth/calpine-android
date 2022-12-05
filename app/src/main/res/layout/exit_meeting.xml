@@ -7,7 +7,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +25,8 @@
             android:gravity="center"
             android:text=" Are you sure you want to exit the meeting?"
             android:textColor="@color/title_grey"
-            android:textSize="@dimen/dimen_15dp" />
+            android:textSize="15dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,19 +35,17 @@
             android:background="@color/app_background"
             android:orientation="horizontal">
 
-
-
             <Button
                 android:id="@+id/bt_no"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_40dp"
+                android:layout_height="40dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/curved_save"
                 android:backgroundTint="@color/special_background"
                 android:text="@string/btn_no"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/txtsize_hint" />
 
@@ -56,10 +54,10 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_marginLeft="@dimen/default_padding"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_40dp"
+                android:layout_height="40dp"
                 android:layout_weight="0.5"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/curved_save"
                 android:text="@string/btn_yes"
                 android:textAllCaps="true"
@@ -68,6 +66,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

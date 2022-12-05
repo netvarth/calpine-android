@@ -3,7 +3,7 @@
 
     <item
         android:drawable="@drawable/icon_donate"
-        android:width="@dimen/dimen_25dp"
+        android:width="25dp"
         android:height="@dimen/padding25"
         />
 

@@ -109,19 +109,6 @@
                 android:visibility="visible" />
 
         </LinearLayout>
-        <!--<android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical"
-            android:overScrollMode="never">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -146,8 +133,6 @@
                 android:orientation="horizontal"
                 android:gravity="right"
                 android:layout_weight="1">
-
-
 
             <TextView
                 android:id="@+id/txtrefinedsearch"

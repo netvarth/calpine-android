@@ -1,10 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -12,7 +7,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -28,6 +22,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.hbb20.CountryCodePicker;
@@ -251,7 +250,7 @@ public class EditProfileActivity extends AppCompatActivity {
         calenderclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new EditProfileActivity.MyDatePickerDialog();
+                DialogFragment newFragment = new MyDatePickerDialog();
                 newFragment.show(getSupportFragmentManager(), "date picker");
 
             }
@@ -519,7 +518,8 @@ public class EditProfileActivity extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
+            //DatePickerDialog da = new DatePickerDialog(getActivity(), R.style.Base_Theme_AppCompat_Light_Dialog, dateSetListener, year, month, day);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
             da.show();
             da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);

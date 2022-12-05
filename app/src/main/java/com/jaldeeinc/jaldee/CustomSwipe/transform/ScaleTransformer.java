@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.annotation.FloatRange;
 
 
-public class  ScaleTransformer implements DiscreteScrollItemTransformer {
+public class ScaleTransformer implements DiscreteScrollItemTransformer {
 
     private Pivot pivotX;
     private Pivot pivotY;

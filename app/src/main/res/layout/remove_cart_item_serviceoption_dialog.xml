@@ -4,9 +4,9 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/dimen_12dp"
+    android:layout_marginLeft="12dp"
     android:layout_marginTop="@dimen/default_padding"
-    android:layout_marginRight="@dimen/dimen_12dp"
+    android:layout_marginRight="12dp"
     android:layout_marginBottom="-6dp"
     android:background="@color/grey14"
     app:cardCornerRadius="10dp">
@@ -23,9 +23,9 @@
             android:id="@+id/ll_7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_20dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:layout_marginRight="@dimen/dimen_20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -63,7 +63,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/dimen_18dp"
+            android:layout_marginTop="18dp"
             android:background="@color/grey12"
             android:orientation="vertical" />
 
@@ -71,9 +71,9 @@
             android:id="@+id/rl_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_20dp"
-            android:layout_marginRight="@dimen/dimen_20dp"
-            android:layout_marginBottom="@dimen/dimen_20dp">
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp">
 
             <LinearLayout
                 android:id="@+id/ll_4"
@@ -93,8 +93,8 @@
                     <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_12dp"
-                        android:layout_marginBottom="@dimen/dimen_12dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
                         android:scrollbarStyle="outsideOverlay">
 
                         <LinearLayout
@@ -117,9 +117,9 @@
                                 <LinearLayout
                                     android:id="@+id/ll_divider"
                                     android:layout_width="match_parent"
-                                    android:layout_height="@dimen/dimen_1dp"
-                                    android:layout_marginBottom="@dimen/dimen_5dp"
-                                    android:layout_marginTop="@dimen/dimen_5dp"
+                                    android:layout_height="1dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginTop="5dp"
                                     android:background="@color/grey14"
                                     android:orientation="horizontal"
                                     android:visibility="gone"/>
@@ -140,7 +140,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginTop="@dimen/dimen_30dp"
+                                    android:layout_marginTop="30dp"
                                     android:gravity="center"
                                     android:orientation="horizontal"
                                     android:weightSum="4">
@@ -148,11 +148,11 @@
                                     <androidx.cardview.widget.CardView
                                         android:id="@+id/cv_cancel"
                                         android:layout_width="match_parent"
-                                        android:layout_height="@dimen/dimen_35dp"
-                                        android:layout_marginLeft="@dimen/dimen_1dp"
-                                        android:layout_marginTop="@dimen/dimen_4dp"
-                                        android:layout_marginRight="@dimen/dimen_10dp"
-                                        android:layout_marginBottom="@dimen/dimen_4dp"
+                                        android:layout_height="35dp"
+                                        android:layout_marginLeft="1dp"
+                                        android:layout_marginTop="4dp"
+                                        android:layout_marginRight="10dp"
+                                        android:layout_marginBottom="4dp"
                                         android:layout_weight="2"
                                         app:cardBackgroundColor="@color/grey16"
                                         app:cardCornerRadius="@dimen/padding3"                                        android:gravity="center"
@@ -170,7 +170,7 @@
                                                 android:gravity="center"
                                                 android:text="Cancel"
                                                 android:textColor="@color/grey17"
-                                                android:textSize="@dimen/dimen_14dp"
+                                                android:textSize="14dp"
                                                 android:visibility="visible">
 
                                             </TextView>
@@ -182,11 +182,11 @@
                                     <androidx.cardview.widget.CardView
                                         android:id="@+id/cv_done"
                                         android:layout_width="match_parent"
-                                        android:layout_height="@dimen/dimen_35dp"
-                                        android:layout_marginLeft="@dimen/dimen_10dp"
-                                        android:layout_marginTop="@dimen/dimen_4dp"
-                                        android:layout_marginRight="@dimen/dimen_1dp"
-                                        android:layout_marginBottom="@dimen/dimen_4dp"
+                                        android:layout_height="35dp"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="4dp"
+                                        android:layout_marginRight="1dp"
+                                        android:layout_marginBottom="4dp"
                                         android:layout_weight="2"
                                         app:cardBackgroundColor="@color/location_theme"
                                         app:cardCornerRadius="@dimen/padding3"                                        android:gravity="center"
@@ -204,7 +204,7 @@
                                                 android:gravity="center"
                                                 android:text="Done"
                                                 android:textColor="@color/white"
-                                                android:textSize="@dimen/dimen_14dp"
+                                                android:textSize="14dp"
                                                 android:visibility="visible">
 
                                             </TextView>

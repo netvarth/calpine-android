@@ -8,11 +8,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import com.jaldeeinc.jaldee.Interface.IAddressInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.model.Address;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +28,7 @@ public class ViewNotesDialog extends Dialog {
     ImageView ivClose;
 
 
-    public ViewNotesDialog(@NonNull Context context,String  notes,String itemName) {
+    public ViewNotesDialog(@NonNull Context context, String  notes, String itemName) {
         super(context);
         this.context = context;
         this.message = notes;

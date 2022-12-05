@@ -336,7 +336,7 @@ public class Config {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
         Call<LoginResponse> call = apiService.LoginResponse(body);
         call.enqueue(new Callback<LoginResponse>() {
@@ -439,7 +439,7 @@ public class Config {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
 
         Call<ResponseBody> call = apiService.updatePushToken(body);

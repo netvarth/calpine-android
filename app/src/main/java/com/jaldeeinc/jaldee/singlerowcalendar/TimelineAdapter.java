@@ -42,7 +42,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.calendar_item, parent, false);
-        return new TimelineAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override

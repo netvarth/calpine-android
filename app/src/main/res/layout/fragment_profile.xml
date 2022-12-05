@@ -49,14 +49,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/action_background"
-                    android:elevation="@dimen/dimen_15dp"
+                    android:elevation="15dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/dimen_10dp">
+                    android:padding="10dp">
 
                     <ImageView
-                        android:layout_width="@dimen/dimen_50dp"
-                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_margin="15.0dip"
                         android:scaleType="fitXY"
@@ -79,7 +79,7 @@
                             android:singleLine="true"
                             android:text=""
                             android:textColor="@color/dark_black"
-                            android:textSize="@dimen/dimen_18dp">
+                            android:textSize="18dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -87,12 +87,12 @@
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/dimen_8dp">
+                            android:layout_marginTop="8dp">
 
                             <ImageView
                                 android:id="@+id/image"
-                                android:layout_width="@dimen/dimen_20dp"
-                                android:layout_height="@dimen/dimen_20dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:src="@drawable/call_icon"
                                 app:tint="@color/dark_blue">
 
@@ -102,11 +102,11 @@
                                 android:id="@+id/tv_phoneNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_5dp"
+                                android:layout_marginStart="5dp"
                                 android:layout_toRightOf="@id/image"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_15dp">
+                                android:textSize="15dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -118,12 +118,12 @@
                             android:id="@+id/ll_mailId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_8dp"
+                            android:layout_marginTop="8dp"
                             android:visibility="gone">
 
                             <ImageView
-                                android:layout_width="@dimen/dimen_20dp"
-                                android:layout_height="@dimen/dimen_20dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:src="@drawable/emailicon_sized"
                                 app:tint="@color/dark_blue">
 
@@ -133,12 +133,12 @@
                                 android:id="@+id/tv_mailId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_5dp"
+                                android:layout_marginStart="5dp"
                                 android:ellipsize="end"
                                 android:singleLine="true"
                                 android:text="sravanworkinfo@gmail.com"
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_15dp">
+                                android:textSize="15dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -210,7 +210,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rounded_white_bg_rect"
                     android:orientation="vertical">
 
@@ -218,20 +218,20 @@
                         android:id="@+id/ljcash"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/ic_jaldee_wallet"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -263,12 +263,12 @@
                         android:id="@+id/lmember"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_45dp"
-                            android:layout_height="@dimen/dimen_45dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:layout_marginStart="3dp"
                             android:src="@drawable/icon_addmember"></ImageView>
 
@@ -276,7 +276,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -303,7 +303,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
 
@@ -317,20 +317,20 @@
                         android:id="@+id/lchangepwd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_password"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -357,7 +357,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
                 <LinearLayout
@@ -407,20 +407,20 @@
                         android:id="@+id/lchangeph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_change_number"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -447,7 +447,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
                 <LinearLayout
@@ -460,13 +460,13 @@
                         android:id="@+id/lterm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/ynw_logo"></ImageView>
 
 
@@ -474,7 +474,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -501,7 +501,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
                 <LinearLayout
@@ -514,13 +514,13 @@
                         android:id="@+id/lcontactus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_contactus"></ImageView>
 
 
@@ -528,7 +528,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -554,7 +554,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
                 <LinearLayout
@@ -567,13 +567,13 @@
                         android:id="@+id/lnotification"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_notification"></ImageView>
 
 
@@ -581,7 +581,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -608,7 +608,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
 
@@ -622,12 +622,12 @@
                         android:id="@+id/lappfeed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_45dp"
-                            android:layout_height="@dimen/dimen_45dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:layout_marginStart="1dp"
                             android:src="@drawable/icon_feedback"></ImageView>
 
@@ -635,7 +635,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -662,7 +662,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
                 <LinearLayout
@@ -675,13 +675,13 @@
                         android:id="@+id/lshare"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_share">
 
                         </ImageView>
@@ -690,7 +690,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -716,7 +716,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
 
                 <LinearLayout
@@ -729,20 +729,20 @@
                         android:id="@+id/llogout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dimen_4dp"
+                        android:layout_margin="4dp"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_35dp"
-                            android:layout_height="@dimen/dimen_45dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_width="35dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_logout"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:justificationMode="inter_word"
@@ -769,7 +769,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="@dimen/padding45"
-                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginEnd="25dp"
                     android:background="@color/view_border" />
             </LinearLayout>
         </ScrollView>

@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -155,11 +154,11 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
     }
 
     @Override
-    public SearchFiltersAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.morefilter_row, parent, false);
 
-        return new SearchFiltersAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
@@ -168,7 +167,7 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
     }
 
     @Override
-    public void onBindViewHolder(final SearchFiltersAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final RefinedFilters filterList = mFilterList.get(position);
 
 
@@ -500,107 +499,6 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
 
 
         } else if (filterList.getDataType().equalsIgnoreCase("Spinner_subdomain")) {
-////              myViewHolder.LexpandView.setVisibility(View.VISIBLE);
-//            myViewHolder.LexpandView.removeAllViews();
-//
-//            final Spinner spinner = new Spinner(mContext, Spinner.MODE_DIALOG);
-//            ArrayAdapter<SearchModel> adapter = new ArrayAdapter<SearchModel>(mContext, android.R.layout.simple_spinner_item, (ArrayList<SearchModel>) filterList.getEnumeratedConstants()) {
-//                @Override
-//                public boolean isEnabled(int position) {
-//                    if (position == 0) {
-//                        // Disable the first item from Spinner
-//                        // First item will be use for hint
-//                        return false;
-//                    } else {
-//                        return true;
-//                    }
-//                }
-//
-//                @Override
-//                public View getDropDownView(int position, View convertView,
-//                                            ViewGroup parent) {
-//                    View view = super.getDropDownView(position, convertView, parent);
-//                    TextView tv = (TextView) view;
-//                    if (position == 0) {
-//                        // Set the hint text color gray
-//                        tv.setTextColor(Color.GRAY);
-//                    } else {
-//                        tv.setTextColor(Color.BLACK);
-//                    }
-//                    return view;
-//                }
-//            };
-//
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//            final int pos = getIndexSubDomain((ArrayList<SearchModel>) filterList.getEnumeratedConstants(), subdomainDisplayName);
-//
-//            // spinner.setOnItemSelectedListener(new CustomSubDomainSpinner(filterAdapterCallback, recyclview_popup, passFormulaApi, pos));
-//            spinner.setAdapter(adapter);
-//            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                    if (position > 0 && position != pos) {
-//                        SearchModel spinnerSelect = (SearchModel) parent.getSelectedItem();
-//
-//
-//                        String query = "sub_sector:'" + spinnerSelect.getName() + "'";
-//
-//                        for (int i = 0; i < passFormula.size(); i++) {
-//                            //   if (passFormula.get(i).contains("sub_sector")) {
-//                            String splitsFormula[] = passFormula.get(i).toString().split(":");
-//                            // Config.logV("PRINT SUBSPINNERKK ##@@DD ##" + splitsFormula[0] + keyFormula.get(i).toString());
-//                            if (splitsFormula[0].equalsIgnoreCase("sub_sector")) {
-//
-//                                passFormula.remove(i);
-//                            }
-//                        }
-//
-//
-//                        passFormula = new ArrayList<>();
-//                        passFormula.add(query);
-//                        String query_sector = "sector:'" + domainSelect + "'";
-//                        passFormula.add(query_sector);
-//
-//                        Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
-//
-//                        filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect, spinnerSelect.getDisplayname());
-//                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
-//
-//                        // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);
-//
-//                        for (String str : passFormula) {
-//
-//                            Config.logV("PRINT VAL FORMULA@@HHHH" + str);
-//                        }
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) {
-//
-//                }
-//            });
-//
-//            for (int j = 0; j < passFormula.size(); j++) {
-//                String splitsFormula[] = passFormula.get(j).toString().split(":");
-//
-//                if (splitsFormula[0].equalsIgnoreCase("sub_sector")) {
-//
-//                    filterList.setExpand(true);
-//                    myViewHolder.LexpandView.setVisibility(View.VISIBLE);
-//
-//                }
-//            }
-//
-//            if (subDomianSelect.equalsIgnoreCase("Select")) {
-//                spinner.setSelection(0);
-//            } else {
-//                spinner.setSelection(pos);
-//            }
-//
-//            myViewHolder.LexpandView.addView(spinner);
 
             myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.recyclerView.setVisibility(View.GONE);

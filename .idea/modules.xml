@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="calpine-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/calpine-android.iml" filepath="$PROJECT_DIR$/.idea/modules/calpine-android.iml" group="calpine-android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement.iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement.iml" group="order_enhancement" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement_(original)_(backup).iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement_(original)_(backup).iml" group="order_enhancement_(original)_(backup)" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/revamp_after_rebuild.iml" filepath="$PROJECT_DIR$/.idea/modules/revamp_after_rebuild.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/revamp_after_rebuild.app.unitTest.iml" />
     </modules>
   </component>
 </project>

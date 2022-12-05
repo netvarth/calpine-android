@@ -2,10 +2,6 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +10,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.enums.CouponSystemNotes;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetailsOrder;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.enums.*;
 import com.jaldeeinc.jaldee.response.CouponSystemNote;
 
 import java.util.ArrayList;
@@ -110,15 +108,15 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
     }
 
     @Override
-    public CouponlistAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.coupon_list_row, parent, false);
 
-        return new CouponlistAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final CouponlistAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final String coupan = mcouponArraylist.get(position);
 
         Config.logV("Coupan NAme-------------------" + mcouponArraylist.get(position));
@@ -213,9 +211,6 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
             public void onClick(View v) {
                 mcouponArraylist.remove(position);
                 notifyDataSetChanged();
-
-                CheckIn checkIn = new CheckIn();
-                checkIn.setCouponList(mcouponArraylist);
 
                 iCpn.cpns(mcouponArraylist);
             }

@@ -1,11 +1,11 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -24,7 +24,7 @@ public class SpecialisationAdapter extends RecyclerView.Adapter<SpecialisationAd
     }
 
     @Override
-    public SpecialisationAdapter.SpecialisationAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SpecialisationAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.specialisation, parent, false);
         SpecialisationAdapterViewHolder gvh = new SpecialisationAdapterViewHolder(queueView);

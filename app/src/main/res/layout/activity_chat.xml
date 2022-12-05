@@ -9,16 +9,16 @@
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:paddingEnd="10dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="16dp"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding5"
-                android:src="@mipmap/img_back_arrow"
+                android:src="@drawable/img_back_arrow"
                 app:tint="@color/dark_blue">
 
             </ImageView>
@@ -38,13 +38,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginStart="15dp"
             android:layout_toEndOf="@id/cv_back"
             android:ellipsize="end"
             android:maxLines="1"
             android:text=""
             android:textColor="@color/dark_blue"
-            android:textSize="@dimen/dimen_18dp">
+            android:textSize="18dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -76,10 +76,10 @@
                 android:id="@+id/rv_chatMessages"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginBottom="@dimen/dimen_50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="50dp"
                 android:visibility="visible">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -88,7 +88,7 @@
                 android:id="@+id/ll_noHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_40dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone">
@@ -97,7 +97,7 @@
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:layout_marginTop="25dp"
                     android:text="No Messages here yet.\nSend your message now \nor Tap on the greeting below"
                     android:textColor="@color/title_color">
 
@@ -107,14 +107,13 @@
                     android:id="@+id/no_slots"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:layout_marginTop="20dp"
                     android:src="@drawable/hi"
                     android:visibility="visible">
 
                 </pl.droidsonroids.gif.GifImageView>
 
             </LinearLayout>
-
 
         </RelativeLayout>
 
@@ -139,13 +138,12 @@
             app:tint="@color/dark_blue"
             tools:ignore="HardcodedText" />
 
-
         <EditText
             android:id="@+id/et_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.9"
             android:background="@drawable/editbox"
@@ -162,7 +160,7 @@
             android:layout_width="8dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginEnd="15dp"
             android:layout_weight="0.1"
             app:cardBackgroundColor="@color/dark_blue">
 
@@ -178,6 +176,5 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
 
 </RelativeLayout>

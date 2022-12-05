@@ -57,7 +57,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
     @NonNull
     @Override
-    public TodayBookingsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         if (isLoading) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shimmer_booking, viewGroup, false);
@@ -72,7 +72,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(@NonNull final TodayBookingsAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         if (!isLoading) {
             final Bookings bookings = bookingsList.get(position);
@@ -377,7 +377,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 if (bookings.getBookingType() != null) {
                     viewHolder.ivBookingType.setVisibility(View.VISIBLE);
                     if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
-                        viewHolder.ivBookingType.setImageResource(R.drawable.appt_icon);
+                        viewHolder.ivBookingType.setImageResource(R.drawable.icon_appt);
                     } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN)) {
                         viewHolder.ivBookingType.setImageResource(R.drawable.icon_checkin);
                     } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
@@ -503,7 +503,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
             }
 
         } else {
-            TodayBookingsAdapter.ViewHolder skeletonViewHolder = (TodayBookingsAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }

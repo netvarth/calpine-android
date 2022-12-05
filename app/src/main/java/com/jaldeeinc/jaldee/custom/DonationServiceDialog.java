@@ -14,17 +14,15 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class DonationServiceDialog extends Dialog {
 
@@ -35,7 +33,7 @@ public class DonationServiceDialog extends Dialog {
     ArrayList<SearchService> mGallery;
     ArrayList<SearchDonation> dGallery;
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
-    ImageView i_servicegallery,ivClose;
+    ImageView i_servicegallery, ivClose;
     String title, from;
     TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
@@ -79,7 +77,7 @@ public class DonationServiceDialog extends Dialog {
                 tv_toolbartitle.setVisibility(View.VISIBLE);
                 String name = donationInfo.getName();
                 tv_toolbartitle.setText(name);
-                Drawable img = ContextCompat.getDrawable(context,R.drawable.donation);
+                Drawable img = ContextCompat.getDrawable(context, R.drawable.donation);
                 img.setBounds(0, 0, 40, 40);
                 tv_toolbartitle.setCompoundDrawables(img, null, null, null);
                 tv_toolbartitle.setCompoundDrawablePadding(15);
@@ -134,17 +132,17 @@ public class DonationServiceDialog extends Dialog {
                 if (donationInfo.getServicegallery().size() > 0) {
                     i_servicegallery.setVisibility(View.VISIBLE);
                     try {
-                        PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
-                        PicassoTrustAll.getInstance(context).load(donationInfo.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                        Glide.with(context).load(donationInfo.getServicegallery().get(0).getUrl()).fitCenter().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+
+//                        PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
+//                        PicassoTrustAll.getInstance(context).load(donationInfo.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else {
+                } else {
                     i_servicegallery.setVisibility(View.GONE);
                 }
-            }
-            else {
+            } else {
                 i_servicegallery.setVisibility(View.GONE);
             }
 

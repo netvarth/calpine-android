@@ -4,7 +4,6 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.FileAttachment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

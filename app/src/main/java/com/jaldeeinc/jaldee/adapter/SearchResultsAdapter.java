@@ -125,7 +125,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static Date parseDate(String date) {
         try {
             return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
+        } catch (ParseException e) {
             return new Date(0);
         }
     }
@@ -149,7 +149,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             case LOADING:
                 View v2 = inflater.inflate(R.layout.item_progress, parent, false);
-                viewHolder = new SearchResultsAdapter.LoadingVH(v2);
+                viewHolder = new LoadingVH(v2);
                 break;
         }
         return viewHolder;
@@ -159,7 +159,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater) {
         RecyclerView.ViewHolder viewHolder;
         View v1 = inflater.inflate(R.layout.search_new, parent, false);
-        viewHolder = new SearchResultsAdapter.MyViewHolder(v1);
+        viewHolder = new MyViewHolder(v1);
         return viewHolder;
     }
 
@@ -168,7 +168,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         final SearchListModel searchdetailList = searchResults.get(position);
         switch (getItemViewType(position)) {
             case ITEM:
-                final SearchResultsAdapter.MyViewHolder myViewHolder = (SearchResultsAdapter.MyViewHolder) holder;
+                final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
                 setAnimation(myViewHolder.cvCard, position);
                 // to set provider name
@@ -634,7 +634,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
     }
 
-    public void setSpecializations(SearchResultsAdapter.MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
+    public void setSpecializations(MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
         if (searchdetailList.getSpecialization_displayname() != null) {
             final List<String> list_spec = searchdetailList.getSpecialization_displayname();
 
@@ -993,7 +993,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private CustomTextViewBoldItalic tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewBold tvText;
         private CustomTextViewSemiBold tvNoOfDoctors;
-        private CardView cvClaimNow, cvAction, cvCard, cvImage, cvShimmer;
+        private CardView cvClaimNow, cvCard, cvImage, cvShimmer;
 
         public MyViewHolder(View view) {
             super(view);
@@ -1020,7 +1020,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvWaitingCount = view.findViewById(R.id.tv_waitingCount);
             tvWaitingCountHint = view.findViewById(R.id.tv_waitingCountHint);
             tvWaitingInLine = view.findViewById(R.id.tv_waitingInLine);
-            cvAction = view.findViewById(R.id.cv_Action);
             tvText = view.findViewById(R.id.tv_text);
             llEstTime = view.findViewById(R.id.ll_estTime);
             cvCard = view.findViewById(R.id.cv_card);

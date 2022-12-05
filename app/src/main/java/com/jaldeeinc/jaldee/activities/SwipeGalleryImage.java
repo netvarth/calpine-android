@@ -3,12 +3,13 @@ package com.jaldeeinc.jaldee.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.viewpager.widget.ViewPager;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CustomPageAdapter;

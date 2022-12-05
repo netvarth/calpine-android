@@ -1,12 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -31,7 +32,7 @@ public class SpecializationListAdapter extends RecyclerView.Adapter<Specializati
     ArrayList<SearchViewDetail> mSpecializationList;
     String from,businessName;
 
-    public SpecializationListAdapter(ArrayList<SearchViewDetail> mSpecializationList, Context mContext,String from, String businessName) {
+    public SpecializationListAdapter(ArrayList<SearchViewDetail> mSpecializationList, Context mContext, String from, String businessName) {
         this.mContext = mContext;
         this.mSpecializationList = mSpecializationList;
         this.from = from;
@@ -39,15 +40,15 @@ public class SpecializationListAdapter extends RecyclerView.Adapter<Specializati
     }
 
     @Override
-    public SpecializationListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.specializationlist_row, parent, false);
 
-        return new SpecializationListAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final SpecializationListAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final SearchViewDetail specializationList = mSpecializationList.get(position);
         myViewHolder.tv_specialization.setText(specializationList.getName());
     }

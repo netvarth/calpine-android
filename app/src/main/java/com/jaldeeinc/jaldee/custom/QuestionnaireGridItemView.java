@@ -2,23 +2,14 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
 import com.jaldeeinc.jaldee.adapter.QGridItemAdapter;
-import com.jaldeeinc.jaldee.model.AnswerLine;
-import com.jaldeeinc.jaldee.model.DataGrid;
-import com.jaldeeinc.jaldee.model.DataGridAnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
-import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 

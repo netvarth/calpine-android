@@ -600,7 +600,7 @@ public class ChatActivity extends AppCompatActivity {
 
 //        String object = obj.toString() +";type=application/json";
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
         mBuilder.addFormDataPart("message", "blob", body);
@@ -671,7 +671,7 @@ public class ChatActivity extends AppCompatActivity {
 
 //        String object = obj.toString() +";type=application/json";
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
         mBuilder.addFormDataPart("message", "blob", body);
@@ -740,7 +740,7 @@ public class ChatActivity extends AppCompatActivity {
 
 //        String object = obj.toString() +";type=application/json";
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
         mBuilder.addFormDataPart("message", "blob", body);
@@ -813,7 +813,7 @@ public class ChatActivity extends AppCompatActivity {
             obj.addProperty("messageType", "CHAT");
         }
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
         mBuilder.addFormDataPart("message", "blob", body);
@@ -882,7 +882,7 @@ public class ChatActivity extends AppCompatActivity {
 
 //        String object = obj.toString() +";type=application/json";
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
         mBuilder.addFormDataPart("message", "blob", body);

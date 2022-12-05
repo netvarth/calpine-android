@@ -1,12 +1,14 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-
-    compileSdkVersion 30
+    namespace 'com.jaldeeinc.jaldee'
+    compileSdk 33
     defaultConfig {
         applicationId "com.nv.ynw"
-        minSdkVersion 23
-        targetSdkVersion 30
+        minSdkVersion 24
+        targetSdkVersion 33
         versionCode 90
         versionName "1.4.62"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -15,15 +17,16 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
-        // Sets Java compatibility to Java 8
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        // Sets Java compatibility to Java 11
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -31,101 +34,87 @@ android {
         javaMaxHeapSize "4g"
     }
 
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
-    implementation 'commons-io:commons-io:2.5'
-    implementation 'com.google.firebase:firebase-database:20.0.3'
-    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
-    android {
-        useLibrary 'org.apache.http.legacy'
-    }
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    implementation 'com.karumi:dexter:5.0.0'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleCompatible
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.annotation:annotation:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-
-    //to use gif's
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
-
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
-
-    implementation 'com.squareup.picasso:picasso:2.4.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.payumoney.sdkui:plug-n-play:1.2.0'
-    implementation 'com.github.drawers:SpinnerDatePicker:1.0.6'
-    implementation 'com.paytm.appinvokesdk:appinvokesdk:1.6.5'
-    implementation 'com.razorpay:checkout:1.6.12'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.google.firebase:firebase-analytics:19.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.0'
-    //to use gif's
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
-
-
-    // shimmer
-    implementation 'com.omjoonkim.library:skeleton-loading-view:0.1.3'
-
-    implementation 'com.squareup.okhttp:okhttp:2.2.0'
-    implementation 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
-
-
-    // retrofit, gson
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    // gson
+    implementation 'com.google.code.gson:gson:2.10'
+    // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
-    implementation 'com.github.4inodev:Neomorphic-FrameLayout-Android:1.03'
-
-    implementation 'com.github.fornewid:neumorphism:0.2.0'
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
-
-    // library to display messages
-    implementation 'com.pranavpandey.android:dynamic-toasts:3.2.0'
-
-    //QR generator
-    implementation 'com.google.zxing:core:3.2.1'
+    //okhttp
+    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    implementation 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    //implementation 'com.squareup.okhttp3:okhttp'
 
     // country picker
-    implementation 'com.hbb20:ccp:2.2.7'
-
+    implementation 'com.hbb20:ccp:2.6.1'
+    //butterknife
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    //to use gif's
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
+    // picasso with blur effect
+    implementation 'com.squareup.picasso:picasso:2.4.0'
+    implementation 'jp.wasabeef:picasso-transformations:2.4.0'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    //lib for validate any international phone numbers with countrycode
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.0'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    // shimmer
+    implementation 'com.omjoonkim.library:skeleton-loading-view:0.1.3'
+    implementation 'com.github.fornewid:neumorphism:0.3.2'
+    // library to display messages
+    implementation 'com.pranavpandey.android:dynamic-toasts:4.1.2'
+    //QR generator
+    implementation 'com.google.zxing:core:3.5.1'
+    implementation 'com.karumi:dexter:6.2.3'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    // picasso with blur effect
-    implementation 'jp.wasabeef:picasso-transformations:2.2.1'
+
+    //razorpay
+    implementation 'com.razorpay:checkout:1.6.26'
+    //payu
+    implementation 'com.payumoney.sdkui:plug-n-play:1.6.1'
+    //paytm
+    implementation 'com.paytm.appinvokesdk:appinvokesdk:1.6.5'
+
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
+    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0' // For control over item selection of both touch and mouse driven selection
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.github.drawers:SpinnerDatePicker:2.0.1'
+    implementation 'com.google.firebase:firebase-database:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation 'com.google.firebase:firebase-analytics:21.2.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+    implementation 'com.github.4inodev:Neomorphic-FrameLayout-Android:1.03'
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    implementation 'com.github.st235:expandablebottombar:1.5.1'
 
-    implementation 'com.github.st235:expandablebottombar:0.4'
-
-    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.3.4'
-
-    //lib for validate any international phone numbers with countrycode
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.14'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
 }
-
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
-

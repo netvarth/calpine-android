@@ -1,12 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
@@ -23,10 +24,6 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
     private ArrayList<String> systemNote = new ArrayList<String>();
     String couponNote;
     String couponNoteValue;
-
-
-
-
 
     public BillCouponAdapter(Map<String, JsonObject> jCoupon) {
         this.jCoupons = jCoupon;
@@ -53,7 +50,7 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
     }
 
     @Override
-    public void onBindViewHolder(final BillCouponAdapter.BillCouponViewHolder holder, final int position) {
+    public void onBindViewHolder(final BillCouponViewHolder holder, final int position) {
          String couponName = this.keyList.get(position);
          String couponValue = this.valueList.get(position);
          couponNote = this.systemNote.get(position);

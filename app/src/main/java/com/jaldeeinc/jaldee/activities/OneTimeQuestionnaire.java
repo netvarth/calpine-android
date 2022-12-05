@@ -40,9 +40,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
 import com.google.gson.Gson;
-
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -82,7 +80,6 @@ import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -99,9 +96,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1893,7 +1888,7 @@ public class OneTimeQuestionnaire extends Fragment implements IFilesInterface, D
 
     private void playAudio(String imagePath) {
 
-        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent i = new Intent(Intent.ACTION_VIEW);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setDataAndType(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", new File(imagePath)), "audio/*");
@@ -2070,7 +2065,7 @@ public class OneTimeQuestionnaire extends Fragment implements IFilesInterface, D
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -2230,7 +2225,7 @@ public class OneTimeQuestionnaire extends Fragment implements IFilesInterface, D
             uploadArray.put(urlObj);
         }
         uploadObj.putOpt("urls", uploadArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
         call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, providerId, body);
 

@@ -3,9 +3,7 @@
 
     <item
         android:drawable="@drawable/icon_message_gray"
-        android:width="@dimen/dimen_12sp"
-        android:height="@dimen/dimen_12dp"
-
-        />
+        android:width="12sp"
+        android:height="12dp" />
 
 </layer-list >

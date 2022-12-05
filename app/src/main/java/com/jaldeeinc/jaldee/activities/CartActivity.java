@@ -1,11 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -54,12 +54,9 @@ import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.Questionnaire;
-import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -598,7 +595,7 @@ public class CartActivity extends AppCompatActivity implements IItemInterface, I
         //final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         //mDialog.show();
         Call<Questionnaire> call = apiService.getOrderItemServiceOptionQnr(itemDetailsModel.getItemId(), providerId);
-        call.enqueue(new retrofit2.Callback<Questionnaire>() {
+        call.enqueue(new Callback<Questionnaire>() {
             @Override
             public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
                 Config.logV("URL------getQNR response---------" + response.raw().request().url().toString().trim());

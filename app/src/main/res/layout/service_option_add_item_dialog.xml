@@ -4,9 +4,9 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/dimen_12dp"
+    android:layout_marginLeft="12dp"
     android:layout_marginTop="@dimen/default_padding"
-    android:layout_marginRight="@dimen/dimen_12dp"
+    android:layout_marginRight="12dp"
     android:layout_marginBottom="@dimen/default_padding"
     app:cardCornerRadius="10dp">
 
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="13dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="13dp"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
@@ -51,28 +51,28 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.20"
                     android:fontFamily="@font/font_semibold"
-                    android:padding="@dimen/dimen_5dp"
+                    android:padding="5dp"
                     android:text="Add Item"
                     android:textColor="@color/dark_blue"
-                    android:textSize="@dimen/dimen_16dp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.20"
                     android:fontFamily="@font/font_semibold"
-                    android:padding="@dimen/dimen_5dp"
+                    android:padding="5dp"
                     android:text="Select Item"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/dimen_10dp" />
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:paddingLeft="@dimen/dimen_5dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="5dp" />
 
         </LinearLayout>
 
@@ -88,7 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="@dimen/padding20"
                 android:layout_marginBottom="@dimen/padding25"
                 android:layout_weight="1.5"
@@ -98,7 +98,7 @@
                 android:text="NEXT"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/dimen_12sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

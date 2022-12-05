@@ -1,11 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
-
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +10,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
@@ -78,7 +76,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
 
 
     @Override
-    public TimeSlotsAdapter.TimeSlotsAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TimeSlotsAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.appt_time_slots, parent, false);
         TimeSlotsAdapterViewHolder gvh = new TimeSlotsAdapterViewHolder(queueView);

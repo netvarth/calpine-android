@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="16dp"
             app:cardBackgroundColor="@color/dark_blue"
             app:cardElevation="0dp"
             android:layout_centerVertical="true">
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding5"
-                android:src="@mipmap/img_back_arrow"
+                android:src="@drawable/img_back_arrow"
                 app:tint="@color/white">
 
             </ImageView>
@@ -36,7 +36,7 @@
             android:layout_centerInParent="true"
             android:text="Attachments preview"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_18dp">
+            android:textSize="18dp">
 
         </com.jaldeeinc.jaldee.custom.CustomAutoSemiBold>
 
@@ -45,10 +45,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal"
         android:layout_gravity="center">
 

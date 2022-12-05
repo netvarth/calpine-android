@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dimen_10dp"
+    android:layout_margin="10dp"
     android:orientation="vertical">
 
     <ImageView
@@ -40,15 +40,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="@dimen/dimen_5dp">
+                android:padding="5dp">
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.20"
-                    android:padding="@dimen/dimen_5dp"
+                    android:padding="5dp"
                     android:text="Select a person booking for"
-                    android:textSize="@dimen/dimen_16sp" />
+                    android:textSize="16sp" />
 
 
                 <ImageView
@@ -64,8 +64,8 @@
                 android:id="@+id/recycle_familyMember"
                 android:layout_width="match_parent"
                 android:layout_height="155dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:paddingLeft="@dimen/dimen_5dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="5dp" />
 
             <ImageView
                 android:id="@+id/lImage"
@@ -81,43 +81,43 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_5dp"
+            android:padding="5dp"
             android:text="Booking alerts and communications send to"
-            android:textSize="@dimen/dimen_14sp" />
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_5dp">
+            android:padding="5dp">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:text="Phone"
-                android:textSize="@dimen/dimen_15sp" />
+                android:textSize="15sp" />
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="0.3"
                 android:background="@drawable/edittext_color"
                 android:visibility="visible"
                 app:ccp_autoDetectCountry="true"
                 app:ccp_showFlag="false"
                 app:ccp_showNameCode="false"
-                app:ccp_textSize="@dimen/dimen_15dp" />
+                app:ccp_textSize="15dp" />
 
             <EditText
                 android:id="@+id/edtPhone"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="0.7"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
@@ -125,7 +125,7 @@
                 android:maxLength="10"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 app:tint="@color/spinnerbg" />
         </LinearLayout>
 
@@ -133,7 +133,7 @@
             android:id="@+id/error_mesg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_70dp"
+            android:layout_marginStart="70dp"
             android:layout_marginBottom="@dimen/padding3"
             android:text="* This field is mandatory"
             android:textColor="@color/red"
@@ -147,26 +147,26 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_5dp">
+            android:padding="5dp">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:text="Email"
-                android:textSize="@dimen/dimen_15sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_8dp"
+                android:layout_marginLeft="8dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter your Email"
                 android:inputType="textEmailAddress"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 app:tint="@color/gray" />
         </LinearLayout>
 
@@ -174,7 +174,7 @@
             android:id="@+id/errormesg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_70dp"
+            android:layout_marginStart="70dp"
             android:text="* This field is mandatory"
             android:textColor="@color/red"
             android:textSize="@dimen/txtsize_12"
@@ -187,7 +187,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/padding40"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="@dimen/padding20"
             android:layout_marginBottom="@dimen/padding25"
             android:background="@drawable/curved_save"
@@ -196,7 +196,7 @@
             android:text="Save"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_12sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -206,34 +206,34 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_5dp"
+        android:padding="5dp"
         android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/dimen_5dp">
+            android:padding="5dp">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:text="First Name*"
-                android:textSize="@dimen/dimen_15sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/addfirstname"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_40dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginEnd="@dimen/padding5"
                 android:background="@drawable/edittext_color"
                 android:hint=""
                 android:inputType="textPersonName"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 app:tint="@color/spinnerbg" />
         </LinearLayout>
 
@@ -254,27 +254,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/dimen_5dp">
+            android:padding="5dp">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:text="Last Name*"
-                android:textSize="@dimen/dimen_15sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/addlastname"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_40dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginEnd="@dimen/padding5"
                 android:background="@drawable/edittext_color"
                 android:hint=""
                 android:inputType="textPersonName"
-                android:padding="@dimen/dimen_5dp"
+                android:padding="5dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
+                android:textSize="15sp"
                 app:tint="@color/gray" />
         </LinearLayout>
 
@@ -282,7 +282,7 @@
             android:id="@+id/errormesg_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/padding2"
             android:text="* This field is mandatory"
             android:textColor="@color/red"
@@ -296,7 +296,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/padding40"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="@dimen/padding20"
             android:layout_marginBottom="@dimen/padding25"
             android:background="@drawable/curved_save"
@@ -305,7 +305,7 @@
             android:text="Add"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_12sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
 

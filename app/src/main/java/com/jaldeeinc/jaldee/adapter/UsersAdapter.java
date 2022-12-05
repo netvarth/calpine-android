@@ -15,14 +15,14 @@ import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import java.util.ArrayList;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder> {
-    UsersAdapter.OnItemClickListener onItemClickListener;
+    OnItemClickListener onItemClickListener;
     static Context mcontext;
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
 
     String businessName;
     int department;
 
-    public UsersAdapter(UsersAdapter.OnItemClickListener onItemClickListener) {
+    public UsersAdapter(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -46,14 +46,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
     @NonNull
     @Override
-    public UsersAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.departmentlist, parent, false);
-        return new UsersAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final UsersAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         final ProviderUserModel providerUserModel = usersList.get(position);
 
         holder.deptName.setText(usersList.get(position).getFirstName() +" "+ usersList.get(position).getLastName() );

@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import java.util.List;
+
 /**
  * Interface for implementing required methods in a section.
  */

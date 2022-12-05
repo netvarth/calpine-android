@@ -9,16 +9,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="60dp"
         android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:paddingEnd="10dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="16dp"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="My Jaldee Orders History"
-            android:textSize="@dimen/dimen_16sp"
+            android:textSize="16sp"
             android:textColor="@color/location_theme"
             android:layout_centerInParent="true">
 
@@ -51,10 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:neumorph_backgroundColor="@color/white"
-        app:neumorph_insetBottom="@dimen/dimen_0dp"
-        app:neumorph_insetEnd="@dimen/dimen_1dp"
-        app:neumorph_insetStart="@dimen/dimen_1dp"
-        app:neumorph_insetTop="@dimen/dimen_1dp"
+        app:neumorph_insetBottom="0dp"
+        app:neumorph_insetEnd="1dp"
+        app:neumorph_insetStart="1dp"
+        app:neumorph_insetTop="1dp"
         app:neumorph_shadowColorDark="#BEF2F2F2"
         app:neumorph_shadowColorLight="#BEF2F2F2"
         app:neumorph_shapeType="pressed">
@@ -80,8 +80,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_40dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp"
                 android:visibility="gone"
                 android:orientation="vertical">
 

@@ -1,20 +1,9 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import android.content.Context;
-
-import com.jaldeeinc.jaldee.callback.AdapterCallback;
-import com.jaldeeinc.jaldee.model.Domain_Spinner;
-import com.jaldeeinc.jaldee.model.FilterChips;
-import com.jaldeeinc.jaldee.model.SearchModel;
-import com.jaldeeinc.jaldee.response.RefinedFilters;
-
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,14 +26,22 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.model.Domain_Spinner;
+import com.jaldeeinc.jaldee.model.FilterChips;
+import com.jaldeeinc.jaldee.model.SearchModel;
+import com.jaldeeinc.jaldee.response.RefinedFilters;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -91,7 +88,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
     ArrayList<String> passedFormulaArray = new ArrayList<>();
     String subdomainDisplayName;
-    public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain, ArrayList<String> passedFormulaArray,String subdomainDisplayName) {
+    public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain, ArrayList<String> passedFormulaArray, String subdomainDisplayName) {
 
         Config.logV("PASSED FORMULA ARRAY WWWW GGGKKKG@@" + passFormula.size());
         this.mContext = mContext;
@@ -146,11 +143,11 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
     }
 
     @Override
-    public MoreFilterAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.morefilter_row, parent, false);
 
-        return new MoreFilterAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
@@ -159,7 +156,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(final MoreFilterAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final RefinedFilters filterList = mFilterList.get(position);
 
 

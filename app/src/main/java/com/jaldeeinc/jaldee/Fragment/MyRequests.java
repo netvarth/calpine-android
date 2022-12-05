@@ -273,6 +273,9 @@ public class MyRequests extends RootFragment implements ISelectedBooking, ISendD
                             bookingInfo.setIsDateTime(activeAppointment.getService().isDateTime());
                             bookingInfo.setIsNoDateTime(activeAppointment.getService().isNoDateTime());
                             /** booking Type "booking"/"request" **/
+                            if (activeAppointment.getProviderAccount() != null) {
+                                bookingInfo.setUniqueId(activeAppointment.getProviderAccount().getUniqueId());
+                            }
                             bookings.add(bookingInfo);
                         }
                         if (bookings.size() > 0) {

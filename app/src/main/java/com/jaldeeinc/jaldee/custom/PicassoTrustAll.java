@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import javax.net.ssl.HostnameVerifier;
@@ -13,6 +13,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import okhttp3.Call;
 
 public class PicassoTrustAll {
 
@@ -53,7 +55,7 @@ public class PicassoTrustAll {
         }
 
         mInstance = new Picasso.Builder(context)
-                .downloader(new OkHttpDownloader(client))
+                .downloader(new OkHttp3Downloader((Call.Factory) client))
                 .listener(new Picasso.Listener() {
                     @Override
                     public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {

@@ -5,9 +5,9 @@
     android:id="@+id/rl_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/dimen_5dp"
-    android:layout_marginBottom="@dimen/dimen_5dp"
-    android:paddingBottom="@dimen/dimen_5dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:paddingBottom="5dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_card"
@@ -42,11 +42,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/padding2"
-                        android:layout_marginRight="@dimen/dimen_2dp"
+                        android:layout_marginRight="2dp"
                         android:gravity="center"
                         android:text="App Rewards"
                         android:textColor="@color/dark_blue"
-                        android:textSize="@dimen/dimen_18dp" />
+                        android:textSize="18dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginLeft="5dp"
                     android:gravity="right">
 
                     <LinearLayout
@@ -216,7 +216,6 @@
 
                         </LinearLayout>
 
-
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -234,7 +233,7 @@
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_weight="0.5"
                     android:backgroundTint="@color/alpha_red"
-                    app:cardCornerRadius="@dimen/dimen_10dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -242,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:padding="@dimen/dimen_2dp">
+                        android:padding="2dp">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_rwrd_expiry"
@@ -268,7 +267,7 @@
                     android:text="T&amp;C"
                     android:textColor="@color/gray"
                     android:textSize="@dimen/txtsize_12"
-                    android:padding="@dimen/dimen_5dp"/>
+                    android:padding="5dp"/>
             </RelativeLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
-import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
 import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
@@ -48,7 +47,6 @@ public class Home extends AppCompatActivity {
 
     HomeTabFragment mHomeTab;
     SearchDetailViewFragment searchDetailViewFragment;
-    CheckinsFragmentCopy checkinsFragmentCopy;
     Context mContext;
     String detail;
     String path;

@@ -97,7 +97,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ArrayList<BillModel> itemArrayList = new ArrayList<>();
     ArrayList<BillModel> serviceItemArrayList = new ArrayList<>();
 
-
     ArrayList<BillModel> discountArrayList = new ArrayList<>();
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
@@ -129,7 +128,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     public boolean internationalPay = false;
     public String PAYMENT_LINK_FLAG;
     public ArrayList<PayMode> payModes = new ArrayList<>();
-    public PaymentModeAdapter paymentModeAdapter;
     boolean isInternational = false;
     public String selectedpaymentMode;
     public IPaymentGateway iPaymentGateway;
@@ -219,7 +217,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         txtnetRate.setTypeface(tyface);
         boolean iscouponCheckin = false;
 
-
         ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,7 +299,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 getPrePayRemainingAmntNeeded(sAmountPay);
             }
         });
-
 
     }
 
@@ -873,7 +869,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-        builder.setAmount(convertStringToDouble(amount))
+        builder.setAmount(String.valueOf(convertStringToDouble(amount)))
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 .setProductName(new Gson().toJson(checksumModel.getProductinfo()))

@@ -42,7 +42,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
-import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 
@@ -80,22 +79,22 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
 
     @NonNull
     @Override
-    public DetailPageItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.shimmer, parent, false);
-            return new DetailPageItemsAdapter.ViewHolder(v, true);
+            return new ViewHolder(v, true);
 
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.detailpage_itemcard, parent, false);
-            return new DetailPageItemsAdapter.ViewHolder(v, false);
+            return new ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DetailPageItemsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
             final CatalogItem catalogItem = itemsList.get(position);
@@ -338,7 +337,7 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
 
         } else {
 
-            DetailPageItemsAdapter.ViewHolder skeletonViewHolder = (DetailPageItemsAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 
@@ -439,7 +438,7 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
     }
 
     @Override
-    public void onViewRecycled(@NonNull DetailPageItemsAdapter.ViewHolder holder) {
+    public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
         Glide.with(context).clear(holder.bIvItemImage);
     }

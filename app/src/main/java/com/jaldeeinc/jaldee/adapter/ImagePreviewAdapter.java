@@ -58,15 +58,15 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
     }
 
     @Override
-    public ImagePreviewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.image_preview, parent, false);
 
-        return new ImagePreviewAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ImagePreviewAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         // final  fileList = mfileList.get(position);
         Log.i("path", itemList.get(position).getImagePath());
         String imagePath = itemList.get(position).getImagePath();

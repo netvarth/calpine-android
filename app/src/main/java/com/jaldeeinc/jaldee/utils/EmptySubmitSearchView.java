@@ -1,10 +1,11 @@
 package com.jaldeeinc.jaldee.utils;
 
 import android.content.Context;
-import androidx.appcompat.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SearchView;
 
 /**
  * Created by sharmila on 20/2/19.
@@ -19,7 +20,7 @@ public class EmptySubmitSearchView extends SearchView {
 *
 * */
 
-    SearchView.SearchAutoComplete mSearchSrcTextView;
+    SearchAutoComplete mSearchSrcTextView;
     OnQueryTextListener listener;
 
     public EmptySubmitSearchView(Context context) {

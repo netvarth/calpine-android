@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:text="@string/ynw"
                 android:textColor="@color/dark_blue"
-                android:textSize="@dimen/dimen_25dp" />
+                android:textSize="25dp" />
 
             <TextView
                 android:id="@+id/txtcons"
@@ -59,19 +59,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginStart="@dimen/dimen_20dp"
-            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:background="@color/special_background">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:background="@color/special_background"
-                android:paddingTop="@dimen/dimen_12dp"
-                android.support.design:ccp_textSize="@dimen/dimen_12dp"
+                android:paddingTop="12dp"
+                android.support.design:ccp_textSize="12dp"
                 app:ccp_autoDetectCountry="true"/>
 
 
@@ -92,7 +92,7 @@
                     android:inputType="number"
                     android:maxLength="10"
                     android:maxLines="1"
-                    android:layout_marginBottom="@dimen/dimen_1dp"
+                    android:layout_marginBottom="1dp"
                     android:textAppearance="@style/GreyTextInputLayoutHint"
                     android:textColor="@color/title_grey" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -142,7 +142,7 @@
                 android:gravity="center"
                 android:text="@string/terms_cond_register2"
                 android:textColor="@color/title_grey"
-                android:textSize="@dimen/dimen_14sp" />
+                android:textSize="14sp" />
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txtProvider"

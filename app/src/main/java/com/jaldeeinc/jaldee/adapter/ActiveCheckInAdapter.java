@@ -6,12 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
-
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -24,8 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
-import com.jaldeeinc.jaldee.Interface.IActiveBookings;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
@@ -112,23 +108,23 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         this.callback = callback;
     }
     @Override
-    public ActiveCheckInAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.active_checkin_newrow, parent, false);
 
-        return new ActiveCheckInAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
     private static Date dateCompareOne;
     private static Date parseDate(String date) {
         try {
             return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
+        } catch (ParseException e) {
             return new Date(0);
         }
     }
     @Override
-    public void onBindViewHolder(final ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
         final ActiveCheckIn activelist = activeChekinList.get(position);
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getBusinessName()));
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),

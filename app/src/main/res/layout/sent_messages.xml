@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dimen_8dp"
+    android:layout_margin="8dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,10 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginEnd="8dp"
             android:autoLink="web|phone"
             android:gravity="end"
-            android:padding="@dimen/dimen_10dp"
+            android:padding="10dp"
             android:textColor="@color/white"
             android:textIsSelectable="true"
             android:textSize="@dimen/txtsize_12">
@@ -36,14 +36,14 @@
             android:background="@color/white"
             android:gravity="end"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
+            android:padding="10dp"
             android:visibility="gone">
 
             <ImageView
                 android:id="@+id/img_sent1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginRight="5dp"
                 android:visibility="gone"
                 app:srcCompat="@drawable/icon_noimage">
 
@@ -53,7 +53,7 @@
                 android:id="@+id/img_sent2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginRight="5dp"
                 android:visibility="gone"
                 app:srcCompat="@drawable/icon_noimage">
 
@@ -64,24 +64,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginRight="5dp"
                 android:gravity="center"
                 android:text="+1 more"
                 android:textColor="@color/sender_color"
-                android:textSize="@dimen/dimen_12sp"
+                android:textSize="12sp"
                 android:visibility="gone"></com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
-
         </LinearLayout>
+
     </LinearLayout>
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/recyclerImage"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:nestedScrollingEnabled="false"-->
-    <!--        android:scrollbars="horizontal" />-->
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -93,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginEnd="15dp"
             android:text=""
             android:textColor="@color/location_theme"
             android:textSize="@dimen/txtsize_10">
@@ -104,7 +96,7 @@
             android:id="@+id/tv_sentTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginEnd="8dp"
             android:text="12:58 PM"
             android:textSize="@dimen/txtsize_10">
 

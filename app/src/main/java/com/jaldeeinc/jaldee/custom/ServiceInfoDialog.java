@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.common.Config;
@@ -62,16 +63,16 @@ public class ServiceInfoDialog extends Dialog {
                 try {
                     if (searchService.getServiceType().equalsIgnoreCase("virtualservice")) {
                         if (searchService.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                            tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                            tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
                             tv_toolbartitle.setCompoundDrawablePadding(15);
                         } else if (searchService.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                            tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                            tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                             tv_toolbartitle.setCompoundDrawablePadding(15);
                         } else if (searchService.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             if (searchService.getVirtualCallingModes().get(0).getVirtualServiceType() != null && searchService.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                 tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
                             } else {
-                                tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                                tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
                             }
                             tv_toolbartitle.setCompoundDrawablePadding(15);
                         } else if (searchService.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
@@ -190,8 +191,10 @@ public class ServiceInfoDialog extends Dialog {
                 if (searchService.getServicegallery().size() > 0) {
                     i_servicegallery.setVisibility(View.VISIBLE);
                     try {
-                        PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
-                        PicassoTrustAll.getInstance(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                        Glide.with(context).load(searchService.getServicegallery().get(0).getUrl()).fitCenter().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+
+//                        PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
+//                        PicassoTrustAll.getInstance(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

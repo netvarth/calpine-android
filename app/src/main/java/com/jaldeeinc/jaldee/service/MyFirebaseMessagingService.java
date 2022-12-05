@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.service;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,8 +11,6 @@ import androidx.annotation.NonNull;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.jaldeeinc.jaldee.common.Config;
-
-import java.util.Date;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

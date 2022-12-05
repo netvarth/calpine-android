@@ -1,5 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext.kotlin_version = '1.3.61'
     repositories {
@@ -10,15 +9,19 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.2.2'
 
 //        classpath 'com.google.gms:google-services:4.0.2'
-        classpath 'com.google.gms:google-services:4.3.4'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
+        classpath 'com.google.gms:google-services:4.3.14'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
-
+plugins {
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.5.31' apply false
+}
 allprojects {
     repositories {
         maven { url "https://jitpack.io" }
@@ -32,3 +35,20 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+/*
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.5.31' apply false
+}
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+        maven { url "https://artifactory.paytm.in/libs-release-local" }
+        google()
+        jcenter()
+        mavenCentral()
+    }
+}*/

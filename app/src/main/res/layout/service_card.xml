@@ -20,10 +20,10 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_image"
-                android:layout_width="@dimen/dimen_80dp"
-                android:layout_height="@dimen/dimen_80dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dimen_25dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginBottom="@dimen/padding5"
                 android:elevation="12dp"
                 android:visibility="gone"
@@ -44,7 +44,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_marginEnd="@dimen/padding5">
 
@@ -53,7 +53,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dimen_4dp"
+                        android:layout_marginEnd="4dp"
                         android:src="@drawable/google_meet"
                         android:visibility="gone">
 
@@ -64,7 +64,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dimen_4dp"
+                        android:layout_marginEnd="4dp"
                         android:src="@drawable/google_meet"
                         android:visibility="gone">
 
@@ -80,19 +80,18 @@
                         android:maxLines="2"
                         android:text=""
                         android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_18sp">
+                        android:textSize="18sp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:id="@+id/ll_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_marginEnd="@dimen/padding5"
                     android:orientation="vertical"
@@ -130,9 +129,9 @@
                         android:id="@+id/tv_peopleAhead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="@dimen/padding5"
-                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        android:layout_marginEnd="5dp"
                         android:text=""
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
@@ -173,7 +172,6 @@
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-
                     </LinearLayout>
 
                 </LinearLayout>
@@ -184,7 +182,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/txtsize_10"
-                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -210,9 +208,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/dimen_8dp"
-            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="20dp"
             android:text=""
             android:textColor="@color/appoint_theme"
             android:textSize="14sp"
@@ -222,18 +220,17 @@
 
         <ImageView
             android:id="@+id/iv_info"
-            android:layout_width="@dimen/dimen_15dp"
-            android:layout_height="@dimen/dimen_15dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
             android:src="@drawable/more"
             android:visibility="gone"
             app:tint="@color/title_color">
 
         </ImageView>
-
 
     </RelativeLayout>
 

@@ -67,11 +67,9 @@ import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
-import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -126,7 +124,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMobileSubmit, IMailSubmit,
+        ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
 
 
     @BindView(R.id.iv_teleService)
@@ -446,11 +445,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                     ivteleService.setVisibility(View.VISIBLE);
                     if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
 
-                        ivteleService.setImageResource(R.drawable.zoom);
+                        ivteleService.setImageResource(R.drawable.zoomicon_sized);
 
                     } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
-                        ivteleService.setImageResource(R.drawable.googlemeet);
+                        ivteleService.setImageResource(R.drawable.googlemeet_sized);
 
                     } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                         if (checkInInfo.getVirtualServiceType() != null && checkInInfo.getVirtualServiceType().equalsIgnoreCase("videoService")) {
@@ -2077,12 +2076,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         alertDialog.show();
     }
 
-    private void showToolTip() {
-
-        CustomToolTip tipWindow = new CustomToolTip(CheckInActivity.this, CustomToolTip.DRAW_TOP, "Please add notes");
-        tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
-    }
-
     public static String getCustomDateString(String d) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date1 = format.parse(d);
@@ -2199,11 +2192,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
 
     @Override
     public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
-
-    }
-
-    @Override
-    public void SelectedPincodeLocation(PincodeLocationsResponse selectedPincodeLocation) {
 
     }
 

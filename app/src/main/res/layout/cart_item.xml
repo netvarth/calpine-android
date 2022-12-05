@@ -4,10 +4,10 @@
     android:id="@+id/cv_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dimen_15dp"
+    android:layout_marginBottom="15dp"
     android:background="@color/white"
     android:orientation="vertical"
-    app:cardCornerRadius="@dimen/dimen_8dp">
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,10 +36,10 @@
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cv_image"
-                        android:layout_width="@dimen/dimen_50dp"
-                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="top"
-                        android:layout_margin="@dimen/dimen_3dp"
+                        android:layout_margin="3dp"
                         android:elevation="1dp"
                         android:visibility="visible"
                         app:cardCornerRadius="40dp">
@@ -48,7 +48,7 @@
                             android:id="@+id/iv_item_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/dimen_2dp"
+                            android:padding="2dp"
                             android:scaleType="centerInside"
                             android:src="@drawable/ic_item" />
                     </androidx.cardview.widget.CardView>
@@ -67,7 +67,7 @@
                             android:maxLines="3"
                             android:text=""
                             android:textColor="@color/dark_black"
-                            android:textSize="@dimen/dimen_16dp">
+                            android:textSize="16dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -77,16 +77,16 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_itemName"
                             android:layout_centerHorizontal="false"
-                            android:layout_marginTop="@dimen/dimen_10dp">
+                            android:layout_marginTop="10dp">
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewLight
                                 android:id="@+id/tv_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/dimen_10dp"
+                                android:layout_marginRight="10dp"
                                 android:text=""
                                 android:textColor="@color/red"
-                                android:textSize="@dimen/dimen_12dp">
+                                android:textSize="12dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
 
@@ -96,7 +96,7 @@
                                 android:layout_height="wrap_content"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_12dp">
+                                android:textSize="12dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
@@ -107,13 +107,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/ll_amount"
-                            android:layout_marginStart="@dimen/dimen_10dp"
-                            android:layout_marginTop="@dimen/dimen_8dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="8dp"
                             android:visibility="gone">
 
                             <ImageView
-                                android:layout_width="@dimen/dimen_15dp"
-                                android:layout_height="@dimen/dimen_15dp"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/edit_icon"
                                 app:tint="@color/dark_blue">
@@ -124,10 +124,10 @@
                                 android:id="@+id/tv_note"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_2dp"
+                                android:layout_marginStart="2dp"
                                 android:text="Add note"
                                 android:textColor="@color/dark_blue"
-                                android:textSize="@dimen/dimen_12dp">
+                                android:textSize="12dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
@@ -142,32 +142,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_1"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginTop="15dp"
                     android:backgroundTint="@color/green1"
-                    app:cardCornerRadius="@dimen/dimen_3dp">
+                    app:cardCornerRadius="3dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@color/green1"
-                        android:paddingLeft="@dimen/dimen_10dp"
-                        android:paddingRight="@dimen/dimen_10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dimen_10dp"
+                            android:layout_marginRight="10dp"
                             android:fontFamily="@font/font_semibold"
                             android:text="Item Details"
                             android:textColor="@color/green2"
                             android:textSize="@dimen/txtsize_12" />
 
                         <ImageView
-                            android:layout_width="@dimen/dimen_12dp"
-                            android:layout_height="@dimen/dimen_12dp"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
                             android:layout_gravity="center"
                             android:src="@drawable/icon_arrow_down_gray"
                             app:tint="@color/green2">
@@ -214,8 +214,8 @@
             android:id="@+id/rv_itemDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_30dp"
-            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="25dp"
             android:visibility="gone" />
     </LinearLayout>
 

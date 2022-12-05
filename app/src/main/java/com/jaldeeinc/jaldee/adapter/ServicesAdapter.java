@@ -24,7 +24,6 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AppointmentServiceDialog;
 import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.DepartmentInfo;
@@ -110,8 +109,9 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
             viewHolder.tvServiceType.setVisibility(View.GONE);
             viewHolder.ivMore.setVisibility(View.GONE);
             if (child.getProviderImage() != null) {
+                Glide.with(context).load(child.getProviderImage()).fitCenter().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
 
-                PicassoTrustAll.getInstance(context).load(child.getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
+                //PicassoTrustAll.getInstance(context).load(child.getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
             } else {
                 if (child.getType().equalsIgnoreCase(Constants.ORDERS)) {
                     Glide.with(context).load(R.drawable.ic_catalogue).into(viewHolder.ivImage);
@@ -280,11 +280,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                         viewHolder.ivTeleService.setVisibility(View.VISIBLE);
                         if (child.getCallingMode().equalsIgnoreCase("Zoom")) {
 
-                            viewHolder.ivTeleService.setImageResource(R.drawable.zoom);
+                            viewHolder.ivTeleService.setImageResource(R.drawable.zoomicon_sized);
 
                         } else if (child.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
-                            viewHolder.ivTeleService.setImageResource(R.drawable.new_gmeet);
+                            viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet_sized);
 
                         } else if (child.getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             if (child.getVirtualServiceType() != null && child.getVirtualServiceType().equalsIgnoreCase("videoService")) {
@@ -379,7 +379,6 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                         }
                     }
                 }
-
             }
         });
 
@@ -430,11 +429,8 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                         }
                     }
                 }
-
             }
         });
-
-
     }
 
     private void showProviderUnavailable() {
@@ -488,14 +484,8 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
             firstWord = "Estimated wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
         }
-        // Spannable spannable = new SpannableString(firstWord + secondWord);
-//        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
-//        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return firstWord + "-" + secondWord;
     }
-
 
     public static String convertDate(String date) {
 
@@ -550,5 +540,4 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
             return "0";
         }
     }
-
 }

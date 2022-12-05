@@ -1,12 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,12 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -42,6 +32,20 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,7 +74,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EditContactDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.SlotSelection;
 import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
 import com.jaldeeinc.jaldee.custom.SuccessDialog;
@@ -98,7 +101,7 @@ import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
-import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
+import com.jaldeeinc.jaldee.utils.DialogUtils1;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.razorpay.PaymentData;
@@ -108,21 +111,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -770,9 +768,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             e.printStackTrace();
         }
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("captions", "blob", body);
-        RequestBody body1 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputBody.toString());
+        RequestBody body1 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), inputBody.toString());
         mBuilder.addFormDataPart("order", "blob", body1);
         RequestBody requestBody = mBuilder.build();
         Call<ResponseBody> call = apiService.orderList(providerId, requestBody);
@@ -1182,7 +1180,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         }
 
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<WalletCheckSumModel> call = apiService.generateHash2(body);
         call.enqueue(new Callback<WalletCheckSumModel>() {
 
@@ -1529,7 +1527,31 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 if (mBusinessDataList.getLogo() != null) {
 
                                     shimmer.setVisibility(View.VISIBLE);
-                                    PicassoTrustAll.getInstance(CheckoutListActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
+                                    Glide.with(CheckoutListActivity.this)
+                                            .load(mBusinessDataList.getLogo().getUrl())
+                                            .apply(new RequestOptions().error(R.drawable.icon_noimage).centerCrop())
+                                            .listener(new RequestListener<Drawable>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    //on load failed
+
+                                                    shimmer.setVisibility(View.GONE);
+                                                    ivSpImage.setVisibility(View.VISIBLE);
+                                                    ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                                    return false;
+                                                }
+
+                                                @Override
+                                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    //on load success
+
+                                                    shimmer.setVisibility(View.GONE);
+                                                    ivSpImage.setVisibility(View.VISIBLE);
+                                                    return false;
+                                                }
+                                            })
+                                            .into(ivSpImage);
+                                   /* PicassoTrustAll.getInstance(CheckoutListActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
                                         @Override
                                         public void onSuccess() {
 
@@ -1538,13 +1560,13 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
 
                                             shimmer.setVisibility(View.GONE);
                                             ivSpImage.setVisibility(View.VISIBLE);
                                             ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                         }
-                                    });
+                                    });*/
                                 } else {
                                     shimmer.setVisibility(View.GONE);
                                     ivSpImage.setVisibility(View.VISIBLE);
@@ -2031,7 +2053,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             e.printStackTrace();
         }
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, providerId);
         call.enqueue(new Callback<ResponseBody>() {
 
@@ -2084,7 +2106,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             e.printStackTrace();
         }
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, providerId);
         call.enqueue(new Callback<ResponseBody>() {
 
@@ -2203,7 +2225,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     private void showAlert(String message) {
         //DialogUtilities c = new DialogUtilities();
         //c.displayAlert(mContext, "", message);
-        DialogUtilsKt.showUIDialog(mContext, "", message, () -> {
+        DialogUtils1.showUIDialog(mContext, "", message, () -> {
             return Unit.INSTANCE;
         });
     }
@@ -2455,7 +2477,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(input);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
@@ -2606,7 +2628,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
 
         uploadObj.putOpt("urls", uploadArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
         call = apiService.checkOrderUploadStatus(uid, accountId, body);
 

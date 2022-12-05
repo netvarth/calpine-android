@@ -29,7 +29,6 @@ import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.ItemDetails;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
     @NonNull
     @Override
-    public TodayOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         if (isLoading) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shimmer_booking, viewGroup, false);
@@ -73,7 +72,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final TodayOrdersAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
 
         if (!isLoading) {
             final ActiveOrders orders = ordersList.get(position);
@@ -236,7 +235,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
             }
 
         } else {
-            TodayOrdersAdapter.ViewHolder skeletonViewHolder = (TodayOrdersAdapter.ViewHolder) viewHolder;
+            ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }

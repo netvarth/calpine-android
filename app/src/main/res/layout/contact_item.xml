@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/dimen_2dp"
-    android:paddingBottom="@dimen/dimen_2dp">
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewLight
         android:id="@+id/tv_label"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginStart="5dp"
         android:textColorLink="@color/title_color"
         android:textSize="14dp"
         android:autoLink="phone">

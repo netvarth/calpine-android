@@ -21,7 +21,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.singlerowcalendar.DatePickerTimeline;
 import com.jaldeeinc.jaldee.singlerowcalendar.OnDateSelectedListener;
-import com.jaldeeinc.jaldee.utils.DateUtils;
+import com.jaldeeinc.jaldee.utils.DateUtils1;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -117,8 +117,8 @@ public class CheckInSlotsDialog extends LinearLayout implements ISelectedQueue {
                 mCal.set(Calendar.DAY_OF_MONTH, day);
                 Date d = mCal.getTime();
 
-                String nameOfMonth = DateUtils.INSTANCE.getMonthName(d);
-                String yer = DateUtils.INSTANCE.getYear(d);
+                String nameOfMonth = DateUtils1.getMonthName(d);
+                String yer = DateUtils1.getYear(d);
 
                 tvSelectedCalendarDate.setText(nameOfMonth + ", " + yer);
 
@@ -143,8 +143,8 @@ public class CheckInSlotsDialog extends LinearLayout implements ISelectedQueue {
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 Date d = myCalendar.getTime();
 
-                String nameOfMonth = DateUtils.INSTANCE.getMonthName(d);
-                String yer = DateUtils.INSTANCE.getYear(d);
+                String nameOfMonth = DateUtils1.getMonthName(d);
+                String yer = DateUtils1.getYear(d);
 
                 tvSelectedCalendarDate.setText(nameOfMonth + ", " + yer);
 
@@ -183,13 +183,15 @@ public class CheckInSlotsDialog extends LinearLayout implements ISelectedQueue {
             }
         };
 
-        btn_calendar.setOnClickListener(new View.OnClickListener() {
+        btn_calendar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                DatePickerDialog da = new DatePickerDialog(context, R.style.Base_Theme_AppCompat_Light_Dialog, date, myCalendar
+                DatePickerDialog da = new DatePickerDialog(context, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
+                /*DatePickerDialog da = new DatePickerDialog(context, R.style.Base_Theme_AppCompat_Light_Dialog, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));*/
 
                 da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 da.show();

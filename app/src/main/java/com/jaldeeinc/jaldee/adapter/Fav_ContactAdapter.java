@@ -2,16 +2,15 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -48,7 +47,7 @@ public class Fav_ContactAdapter extends RecyclerView.Adapter<Fav_ContactAdapter.
     Activity mActivity;
     ContactAdapterCallback mInterface;
 
-    public Fav_ContactAdapter(List<ContactModel> mcontactDetail, Context mContext,ContactAdapterCallback mInterface, String countryCode) {
+    public Fav_ContactAdapter(List<ContactModel> mcontactDetail, Context mContext, ContactAdapterCallback mInterface, String countryCode) {
         this.mContext = mContext;
         this.contactDetail = mcontactDetail;
         this.mInterface=mInterface;
@@ -59,15 +58,15 @@ public class Fav_ContactAdapter extends RecyclerView.Adapter<Fav_ContactAdapter.
     }
 
     @Override
-    public Fav_ContactAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favcontact_list_row, parent, false);
 
-        return new Fav_ContactAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(Fav_ContactAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
         final ContactModel mcontactDetail = contactDetail.get(position);
 
        /* Typeface tyface= Typeface.createFromAsset(mContext.getAssets(),

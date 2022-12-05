@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
@@ -57,7 +57,7 @@
             android:letterSpacing="0.1"
             android:text=""
             android:textColor="@color/appoint_theme"
-            android:textSize="@dimen/dimen_30sp">
+            android:textSize="30sp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -69,7 +69,7 @@
             android:letterSpacing="0.1"
             android:text=""
             android:textColor="@color/appoint_theme"
-            android:textSize="@dimen/dimen_30sp">
+            android:textSize="30sp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -92,8 +92,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding5"
-        android:layout_marginStart="@dimen/dimen_20dp"
-        android:layout_marginEnd="@dimen/dimen_20dp">
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
 
 
         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/minus"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_marginStart="20dp"
                     app:tint="@color/dark_blue">
 
                 </ImageView>
@@ -145,7 +145,7 @@
                     android:src="@drawable/plus"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/dimen_20dp"
+                    android:layout_marginEnd="20dp"
                     app:tint="@color/dark_blue">
 
                 </ImageView>
@@ -157,7 +157,7 @@
 
         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
             android:id="@+id/fl_calender"
-            android:layout_width="@dimen/dimen_65dp"
+            android:layout_width="65dp"
             android:layout_height="@dimen/padding60"
             app:neomorph_shadow_type="outer"
             app:neomorph_layer_type="hardware"
@@ -202,12 +202,12 @@
             android:id="@+id/rv_slots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginTop="5dp"
             android:scrollbars="vertical"
-            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginBottom="5dp"
             app:layout_constrainedHeight="true"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/Id_const_layout"
             app:layout_constraintEnd_toEndOf="@+id/Id_const_layout"
             app:layout_constraintHeight_max="250dp"
@@ -248,9 +248,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding45"
         android:layout_marginStart="@dimen/padding15"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="@dimen/padding15"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginBottom="20dp"
         app:cardBackgroundColor="@color/dark_blue"
         app:cardCornerRadius="@dimen/padding3">
 

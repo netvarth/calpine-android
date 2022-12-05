@@ -8,23 +8,23 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/dimen_5dp"
+        app:cardCornerRadius="5dp"
         app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="@dimen/dimen_5dp"
-            android:paddingTop="@dimen/dimen_8dp"
-            android:paddingEnd="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_8dp">
+            android:paddingStart="5dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_8dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -34,7 +34,7 @@
                     android:fontFamily="@font/font_semibold"
                     android:text=""
                     android:textColor="@color/black1"
-                    android:textSize="@dimen/dimen_14dp">
+                    android:textSize="14dp">
 
                 </TextView>
 
@@ -42,12 +42,12 @@
                     android:id="@+id/tv_manditory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="5dp"
                     android:fontFamily="@font/font_semibold"
                     android:gravity="center"
                     android:text="*"
                     android:textColor="@color/red"
-                    android:textSize="@dimen/dimen_14dp"
+                    android:textSize="14dp"
                     android:visibility="gone">
 
                 </TextView>
@@ -58,11 +58,11 @@
                 android:id="@+id/tv_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_8dp"
-                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
                 android:text=""
                 android:textColor="@color/tab_disable"
-                android:textSize="@dimen/dimen_12dp"
+                android:textSize="12dp"
                 android:visibility="gone">
 
             </TextView>
@@ -71,8 +71,8 @@
                 android:id="@+id/rl_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_8dp"
-                android:layout_marginTop="@dimen/dimen_8dp">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp">
 
                 <RelativeLayout
                     android:id="@+id/rl_calender"
@@ -90,28 +90,28 @@
                             android:id="@+id/tv_date"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/dimen_15dp"
-                            android:layout_marginEnd="@dimen/dimen_10dp"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginEnd="10dp"
                             android:layout_weight="2"
-                            android:background="@drawable/rctgle_bordergrey_roundededge_greyfilled"
+                            android:background="@drawable/rctngle_bordergrey_roundededge3_greyfilled"
                             android:text=""
                             android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_14dp"
+                            android:textSize="14dp"
                             android:gravity="center">
 
                         </TextView>
 
                         <androidx.cardview.widget.CardView
-                            android:layout_width="@dimen/dimen_30dp"
-                            android:layout_height="@dimen/dimen_30dp"
-                            android:layout_marginEnd="@dimen/dimen_15dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="15dp"
                             android:backgroundTint="@color/grey9"
-                            app:cardCornerRadius="@dimen/dimen_50dp">
+                            app:cardCornerRadius="50dp">
 
                             <ImageView
                                 android:id="@+id/iv_calender"
-                                android:layout_width="@dimen/dimen_20dp"
-                                android:layout_height="@dimen/dimen_20dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="center"
@@ -137,11 +137,11 @@
                 android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_8dp"
-                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
                 android:text=""
                 android:textColor="@color/red"
-                android:textSize="@dimen/dimen_12dp"
+                android:textSize="12dp"
                 android:visibility="gone">
 
             </TextView>

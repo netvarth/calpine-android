@@ -26,7 +26,7 @@ public class Domain_Spinner {
         return displayName;
     }
 
-    public Domain_Spinner(String displayname,String domain) {
+    public Domain_Spinner(String displayname, String domain) {
         this.displayName = displayname;
         this.domain=domain;
 

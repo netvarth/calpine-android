@@ -10,16 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -71,11 +70,11 @@ public class AppointmentServiceInfoDialog extends Dialog {
             try{
             if(appointmentServices.getServiceType().equalsIgnoreCase("virtualservice")){
                 if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
+                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
                     tv_toolbartitle.setCompoundDrawablePadding(15);
                 }
                 else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
+                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
                     tv_toolbartitle.setCompoundDrawablePadding(15);
                 }
                 else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
@@ -83,7 +82,7 @@ public class AppointmentServiceInfoDialog extends Dialog {
                         tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon,0,0,0);
                     }
                     else{
-                        tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
+                        tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
                     }
                     tv_toolbartitle.setCompoundDrawablePadding(15);
                 }
@@ -175,8 +174,10 @@ public class AppointmentServiceInfoDialog extends Dialog {
             if (appointmentServices.getServicegallery().size() > 0) {
                 i_servicegallery.setVisibility(View.VISIBLE);
                 try {
-                    PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
-                    PicassoTrustAll.getInstance(context).load(appointmentServices.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    Glide.with(context).load(appointmentServices.getServicegallery().get(0).getUrl()).fitCenter().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+
+//                    PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
+//                    PicassoTrustAll.getInstance(context).load(appointmentServices.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

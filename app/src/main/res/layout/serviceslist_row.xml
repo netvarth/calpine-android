@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/padding5"
         android:textColor="@color/black"
-        android:padding="@dimen/dimen_12dp"/>
+        android:padding="12dp"/>
     <View
         android:id="@+id/vsep"
         android:layout_width="match_parent"

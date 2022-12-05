@@ -11,10 +11,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -32,6 +35,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -61,7 +68,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.OrderitemServiceoptionadditemDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.AnswerLine;
@@ -84,7 +90,6 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,7 +109,8 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface, ISaveNotes, IDataGrid, IServiceOption {
+public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface,
+        IDeleteImagesInterface, ISaveNotes, IDataGrid, IServiceOption {
 
     @BindView(R.id.tv_homeDeliveryRadiuse)
     CustomTextViewBoldItalic tvHomeDeliveryRadiuse;
@@ -264,7 +270,24 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             try {
                 if (catalogInfo.getCatalogImagesList() != null && catalogInfo.getCatalogImagesList().size() > 0) {
                     shimmer.setVisibility(View.VISIBLE);
-                    PicassoTrustAll.getInstance(ItemsActivity.this).load(catalogInfo.getCatalogImagesList().get(0).getUrl()).into(ivCatalogImage, new Callback() {
+                    Glide.with(this).load(catalogInfo.getCatalogImagesList().get(0).getUrl()).listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            // log exception
+                            Log.e("TAG", "Error loading image", e);
+                            shimmer.setVisibility(View.GONE);
+                            ivCatalogImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                            return false; // important to return false so the error placeholder can be placed
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            shimmer.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(ivCatalogImage);
+
+                    /*PicassoTrustAll.getInstance(ItemsActivity.this).load(catalogInfo.getCatalogImagesList().get(0).getUrl()).into(ivCatalogImage, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -272,12 +295,12 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                         }
 
                         @Override
-                        public void onError() {
+                        public void onError(Exception e) {
 
                             shimmer.setVisibility(View.GONE);
                             ivCatalogImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                         }
-                    });
+                    });*/
                 } else {
                     Glide.with(mContext).load(R.drawable.ic_catalogue).into(ivCatalogImage);
                 }

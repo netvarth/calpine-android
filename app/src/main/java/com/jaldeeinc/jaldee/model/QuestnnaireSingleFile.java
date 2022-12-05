@@ -1,7 +1,5 @@
 package com.jaldeeinc.jaldee.model;
 
-import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
-
 import java.util.ArrayList;
 
 public class QuestnnaireSingleFile {

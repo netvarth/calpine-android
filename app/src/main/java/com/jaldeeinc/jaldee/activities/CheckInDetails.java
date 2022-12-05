@@ -37,6 +37,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
@@ -470,11 +471,11 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onClick(View view) {
 
                 if (activeCheckIn != null && activeCheckIn.getCheckinEncId() != null) {
-                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                     sharingIntent.setType("text/html");
                     String statusUrl = Constants.URL + "status/" + activeCheckIn.getCheckinEncId();
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your CheckIn/Token status link");
-                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Share your CheckIn/Token status link");
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, statusUrl);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 }
 
@@ -715,6 +716,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
         mDialog.show();
         Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uid, String.valueOf(id));
         call.enqueue(new Callback<ActiveCheckIn>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
                 try {
@@ -769,6 +771,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateUI(ActiveCheckIn checkInInfo) {
 
         try {

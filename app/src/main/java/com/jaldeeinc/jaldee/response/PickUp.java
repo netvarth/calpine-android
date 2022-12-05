@@ -39,7 +39,6 @@ public class PickUp implements Serializable {
         this.pickUpASAPAllowed = pickUpASAPAllowed;
     }
 
-
     public boolean isOrderPickUp() {
         return orderPickUp;
     }

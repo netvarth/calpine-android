@@ -1,7 +1,5 @@
 package com.jaldeeinc.jaldee.model;
 
-import com.jaldeeinc.jaldee.response.Questionnaire;
-
 import java.io.Serializable;
 
 public class CartItemModel implements Serializable {

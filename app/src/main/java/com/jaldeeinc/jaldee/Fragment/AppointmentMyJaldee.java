@@ -21,12 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -49,7 +43,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -140,7 +141,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     String filePath;
-    TextView txtCheckins;
     public final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
@@ -198,7 +198,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        final TextView txtCheckins = (TextView) row.findViewById(R.id.checkins);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
         expandlistAppointment.setVisibility(View.VISIBLE);
 
@@ -207,7 +206,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
         // Check if enabled and if not send user to the GPS settings
         if (!enabled) {
-            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
@@ -400,7 +399,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                                         permission.CAMERA}, CAMERA);
                                 return;
                             } else {
-                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                 Intent cameraIntent = new Intent();
                                 cameraIntent.setType("image/*");
                                 cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -408,7 +407,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                                 startActivityForResult(intent, CAMERA);
                             }
                         } else {
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
                             cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -943,7 +942,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call;
         if (firstTimerate) {
             call = apiService.PostRatingApp(accountID, body);
@@ -1007,7 +1006,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
