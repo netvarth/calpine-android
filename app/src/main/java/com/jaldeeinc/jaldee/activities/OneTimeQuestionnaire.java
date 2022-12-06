@@ -1973,7 +1973,7 @@ public class OneTimeQuestionnaire extends Fragment implements IFilesInterface, D
                     if (checkedCount < minAnswers) {
 
                         tvError.setVisibility(View.VISIBLE);
-                        tvError.setText("Please select atleast " + minAnswers + " Checkbox");
+                        tvError.setText("Please select atleast " + minAnswers + " Item");
                         return false;
                     } else if (checkedCount > maxAnswers) {
 

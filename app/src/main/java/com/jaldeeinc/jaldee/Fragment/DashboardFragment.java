@@ -807,7 +807,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         //SEARCH
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-        //searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(R.id.search_src_text);
+        searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
         searchSrcTextView.setDropDownHeight(450);

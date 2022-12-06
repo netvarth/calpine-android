@@ -556,7 +556,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
         //SEARCH
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-        //searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(androidx.appcompat.R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
         searchSrcTextView.setDropDownHeight(450);

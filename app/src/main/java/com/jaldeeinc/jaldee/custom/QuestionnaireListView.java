@@ -301,7 +301,7 @@ public class QuestionnaireListView extends LinearLayout {
             }
             if(checkedCount <= 0){
                 tvError.setVisibility(View.VISIBLE);
-                tvError.setText("Please select atleast " + 1 + " Checkbox");
+                tvError.setText("Please select atleast " + 1 + " Item");
                 return false;
             }
 
@@ -312,7 +312,7 @@ public class QuestionnaireListView extends LinearLayout {
             if (checkedCount < minAnswers) {
 
                 tvError.setVisibility(View.VISIBLE);
-                tvError.setText("Please select atleast " + minAnswers + " Checkbox");
+                tvError.setText("Please select atleast " + minAnswers + " Item");
                 return false;
             } else if (checkedCount > maxAnswers) {
 

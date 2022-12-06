@@ -80,11 +80,11 @@ public class PaymentModeAdapter extends BaseAdapter {
                         break;
                     case "CC":
                         tv_payMode.setText("Credit Card");
-                        Glide.with(context).load(R.drawable.icon_paymentmode_card).placeholder(R.drawable.icon_noimage).into(iv_paymentMode);
+                        Glide.with(context).load(R.drawable.icon_paymentmode_credit_card).placeholder(R.drawable.icon_noimage).into(iv_paymentMode);
                         break;
                     case "DC":
                         tv_payMode.setText("Debit Card");
-                        Glide.with(context).load(R.drawable.icon_paymentmode_card).placeholder(R.drawable.icon_noimage).into(iv_paymentMode);
+                        Glide.with(context).load(R.drawable.icon_paymentmode_debit_card).placeholder(R.drawable.icon_noimage).into(iv_paymentMode);
                         break;
                     case "NB":
                         tv_payMode.setText("Net Banking");
