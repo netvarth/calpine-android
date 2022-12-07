@@ -1388,6 +1388,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements IFamily
                             }
                             if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT) && serviceBookingType != null &&
                                     serviceBookingType.equalsIgnoreCase(Constants.SERVICE_BOOKING_TYPE_REQUEST)) {   // for appointment request type
+                                if (attachedImagePathList.size() > 0) {
+                                    ApiCommunicate(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
+                                }
                                 getApptConfirmationDetails(bookingModel.getAccountId());
                             } else {
                                 if (reader.has("_prepaymentAmount")) {
