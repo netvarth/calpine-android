@@ -452,7 +452,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 try {
 
                     if (activeCheckIn != null && activeCheckIn.getService() != null) {
-                        customerNotes = new CustomerNotes(mContext, activeCheckIn.getService().getConsumerNoteTitle(), activeCheckIn.getConsumerNote());
+                        customerNotes = new CustomerNotes(mContext, tvCustomerNotes.getText().toString()/*activeCheckIn.getService().getConsumerNoteTitle()*/, activeCheckIn.getConsumerNote());
                         customerNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         customerNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         customerNotes.show();

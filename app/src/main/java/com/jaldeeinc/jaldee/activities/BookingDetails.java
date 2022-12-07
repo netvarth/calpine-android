@@ -444,7 +444,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 try {
 
                     if (apptInfo != null && apptInfo.getService() != null) {
-                        customerNotes = new CustomerNotes(mContext, apptInfo.getService().getConsumerNoteTitle(), apptInfo.getConsumerNote());
+                        customerNotes = new CustomerNotes(mContext, tvCustomerNotes.getText().toString()/*apptInfo.getService().getConsumerNoteTitle()*/ , apptInfo.getConsumerNote());
                         customerNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         customerNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         customerNotes.show();

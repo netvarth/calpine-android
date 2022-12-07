@@ -964,7 +964,7 @@ public class ActionsDialog extends Dialog {
                     if (bookings.getAppointmentInfo() != null) {
 
                         if (bookings.getAppointmentInfo().getService() != null) {
-                            customerNotes = new CustomerNotes(mContext, bookings.getAppointmentInfo().getService().getConsumerNoteTitle(), bookings.getAppointmentInfo().getConsumerNote());
+                            customerNotes = new CustomerNotes(mContext, tvCustomerNotes.getText().toString()/*bookings.getAppointmentInfo().getService().getConsumerNoteTitle()*/, bookings.getAppointmentInfo().getConsumerNote());
                             customerNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                             customerNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             customerNotes.show();
