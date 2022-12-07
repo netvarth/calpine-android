@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
@@ -86,7 +89,20 @@ public class MeetingInfo extends Dialog {
         }
 
         if (phoneNumber != null) {
-            tvPhoneNumber.setText(phoneNumber);
+            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+            try {
+                String validatePhoneNumber = phoneNumber;
+                if (!validatePhoneNumber.startsWith("+")) {
+                    validatePhoneNumber = "+" + phoneNumber;
+                }
+                // phone must begin with '+'
+                Phonenumber.PhoneNumber numberProto = phoneUtil.parse(validatePhoneNumber, "");
+                int countryCode = numberProto.getCountryCode();
+                tvPhoneNumber.setText(validatePhoneNumber);
+            } catch (NumberParseException e) {
+                tvPhoneNumber.setText(countryCode + phoneNumber);
+                // System.err.println("NumberParseException was thrown: " + e.toString());
+            }
         }
 
 //        if(phoneNumber!=null&& countryCode!=null && bookingType.equalsIgnoreCase(Constants.CHECKIN)){
