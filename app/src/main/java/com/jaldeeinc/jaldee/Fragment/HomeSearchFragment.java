@@ -229,6 +229,14 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         iSelectedPopularSearch = (ISelectedPopularSearch) this;
         mInterface = (AdapterCallback) this;
+
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
+
         initializations(row);
         ApiAWSearchDomain();
         ApiGetJCashInfo();
@@ -276,12 +284,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             DefaultLocation();
         }
 
-        isLastPage = false;
-        isLoading = false;
-        PAGE_START = 0;
-        total_foundcount = 0;
-        TOTAL_PAGES = 0;
-        currentPage = PAGE_START;
 
         if (Config.isOnline(mContext)) {
             APiSearchList();
@@ -791,6 +793,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     }
 
     private void initializations(View view) {
+        cv_jaldee_cash_available = view.findViewById(R.id.cv_jaldee_cash_available);
 
         mSpinnerDomain = (Spinner) view.findViewById(R.id.spinnerdomain);
         rvNearByResults = view.findViewById(R.id.rv_nearbyResults);
@@ -799,7 +802,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         rvPopularSearch = view.findViewById(R.id.rv_popularSearch);
         llNoResults = view.findViewById(R.id.ll_noResults);
         tvNoResults = view.findViewById(R.id.txtnosearchresult);
-        cv_jaldee_cash_available = view.findViewById(R.id.cv_jaldee_cash_available);
         tv_jaldee_cash_available = view.findViewById(R.id.tv_jaldee_cash_available);
     }
 

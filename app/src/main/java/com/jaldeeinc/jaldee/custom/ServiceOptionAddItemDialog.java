@@ -364,11 +364,19 @@ public class ServiceOptionAddItemDialog extends Fragment implements IServiceOpti
                     } else {
                         if (selectedItemName != null) {
                             //JSONObject j = priceGridList.getJSONObject(selectedItemName);
-                            if (selectedPriceGridList.has(question.getColumnId())) {
+                            String cap = question.getColumnId().substring(0, 1).toUpperCase() + question.getColumnId().substring(1);
 
-                                Map<String, Object> kj = new Gson().fromJson(
-                                        String.valueOf(selectedPriceGridList.getJSONObject(question.getColumnId())), new TypeToken<HashMap<String, Object>>() {
-                                        }.getType());
+                            if (selectedPriceGridList.has(question.getColumnId()) || selectedPriceGridList.has(cap)) {
+                                Map<String, Object> kj = new HashMap<>();
+                                if (selectedPriceGridList.has(question.getColumnId())) {
+                                    kj = new Gson().fromJson(
+                                            String.valueOf(selectedPriceGridList.getJSONObject(question.getColumnId())), new TypeToken<HashMap<String, Object>>() {
+                                            }.getType());
+                                } else if (selectedPriceGridList.has(cap)) {
+                                    kj = new Gson().fromJson(
+                                            String.valueOf(selectedPriceGridList.getJSONObject(cap)), new TypeToken<HashMap<String, Object>>() {
+                                            }.getType());
+                                }
                                 for (Map.Entry<String, Object> entry : kj.entrySet()) {
                                     System.out.println(entry.getKey() + "/" + entry.getValue());
                                     QuestionnaireCheckbox questionnaireCheckbox = new QuestionnaireCheckbox();
@@ -426,11 +434,17 @@ public class ServiceOptionAddItemDialog extends Fragment implements IServiceOpti
 
     private float getItemPrice(JSONObject selectedPriceGridListt, DataGridColumns questionn) {
         float itemPrice = 0;
-        if (selectedPriceGridListt.has(questionn.getColumnId())) {
+        String cap = questionn.getColumnId().substring(0, 1).toUpperCase() + questionn.getColumnId().substring(1);
+
+        if (selectedPriceGridListt.has(questionn.getColumnId()) || selectedPriceGridListt.has(cap)) {
             Map<String, Object> kj = new Gson().fromJson(
                     String.valueOf(selectedPriceGridListt), new TypeToken<HashMap<String, Object>>() {
                     }.getType());
-            itemPrice = Float.parseFloat(kj.get(questionn.getColumnId()).toString());
+            if (selectedPriceGridListt.has(questionn.getColumnId())) {
+                itemPrice = Float.parseFloat(kj.get(questionn.getColumnId()).toString());
+            } else if (selectedPriceGridListt.has(cap)) {
+                itemPrice = Float.parseFloat(kj.get(cap).toString());
+            }
         } else {
             itemPrice = 0;
         }
@@ -878,7 +892,7 @@ public class ServiceOptionAddItemDialog extends Fragment implements IServiceOpti
             cv_submit = itemOptionsDialog.findViewById(R.id.cv_submit);
             cv_cover = itemOptionsDialog.findViewById(R.id.cv_cover);
             tv_item_name.setText(selectedItemNme);
-            if(!isEdit) {
+            if (!isEdit) {
                 cv_submit.setVisibility(View.GONE);
                 cv_cover.setVisibility(View.VISIBLE);
             } else {
@@ -930,7 +944,7 @@ public class ServiceOptionAddItemDialog extends Fragment implements IServiceOpti
                     addDataToQuestionnaireGrid();
                 }
             });
-            if(!isEdit) {
+            if (!isEdit) {
                 cv_cover.setOnClickListener(new View.OnClickListener() {   //this empty click listner is important for in case of not editable service qnr
                     @Override
                     public void onClick(View view) {

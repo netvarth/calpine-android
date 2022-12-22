@@ -56,6 +56,7 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
         initView();
 
     }
+
     private void initView() {
 
         inflate(mContext, R.layout.order_service_option_gridview, this);
@@ -81,8 +82,10 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
         }
         createDataGridListQuestionnaire(question.getGetQuestion());
     }
+
     private KeyPairBoolData fileObject = new KeyPairBoolData();
     private String qLabelName = "";
+
     private void createDataGridListQuestionnaire(GetQuestion objQuestion) {
 
         try {
@@ -113,8 +116,8 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
                             fileObject.setName(data.getName());
                             qLabelName = labelName;
                             fileObject = iServiceOptionListOptionChange.openImageOptions(fileObject, qLabelName, viewsList);
-                            int j = 0+8;
-                            j=j+8;
+                            int j = 0 + 8;
+                            j = j + 8;
 
                         }
 
@@ -187,11 +190,19 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
                     } else {
                         if (selectedItemName != null) {
                             //JSONObject j = priceGridList.getJSONObject(selectedItemName);
-                            if (selectedPriceGridList.has(question.getColumnId())) {
+                            String cap = question.getColumnId().substring(0, 1).toUpperCase() + question.getColumnId().substring(1);
 
-                                Map<String, Object> kj = new Gson().fromJson(
-                                        String.valueOf(selectedPriceGridList.getJSONObject(question.getColumnId())), new TypeToken<HashMap<String, Object>>() {
-                                        }.getType());
+                            if (selectedPriceGridList.has(question.getColumnId()) || selectedPriceGridList.has(cap)) {
+                                Map<String, Object> kj = new HashMap<>();
+                                if (selectedPriceGridList.has(question.getColumnId())) {
+                                    kj = new Gson().fromJson(
+                                            String.valueOf(selectedPriceGridList.getJSONObject(question.getColumnId())), new TypeToken<HashMap<String, Object>>() {
+                                            }.getType());
+                                } else if (selectedPriceGridList.has(cap)) {
+                                    kj = new Gson().fromJson(
+                                            String.valueOf(selectedPriceGridList.getJSONObject(cap)), new TypeToken<HashMap<String, Object>>() {
+                                            }.getType());
+                                }
                                 for (Map.Entry<String, Object> entry : kj.entrySet()) {
                                     System.out.println(entry.getKey() + "/" + entry.getValue());
                                     QuestionnaireCheckbox questionnaireCheckbox = new QuestionnaireCheckbox();
@@ -234,6 +245,7 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
         }
         //calculatePrice();
     }
+
     public void updateDataGrid(DataGrid dataGridObj, int position) {
 
         //rvDataTable.setVisibility(VISIBLE);
@@ -250,6 +262,7 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
 //        rvDataTable.setAdapter(serviceOptionDataGridAdapter);
 
     }
+
     public ArrayList<DataGrid> getGridDataList() {
 
         return (gridDataList == null) ? new ArrayList<>() : gridDataList;
@@ -257,20 +270,29 @@ public class OrderItemServiceOptionAddItemGridView extends LinearLayout implemen
 
     private float getItemPrice(JSONObject selectedPriceGridListt, DataGridColumns questionn) {
         float itemPrice = 0;
-        if (selectedPriceGridListt.has(questionn.getColumnId())) {
+        String cap = questionn.getColumnId().substring(0, 1).toUpperCase() + questionn.getColumnId().substring(1); //
+
+        if (selectedPriceGridListt.has(questionn.getColumnId()) || selectedPriceGridListt.has(cap)) {
+
             Map<String, Object> kj = new Gson().fromJson(
                     String.valueOf(selectedPriceGridListt), new TypeToken<HashMap<String, Object>>() {
                     }.getType());
-            itemPrice = Float.parseFloat(kj.get(questionn.getColumnId()).toString());
+            if (selectedPriceGridListt.has(questionn.getColumnId())) {
+                itemPrice = Float.parseFloat(kj.get(questionn.getColumnId()).toString());
+            } else {
+                itemPrice = Float.parseFloat(kj.get(cap).toString());
+            }
         } else {
             itemPrice = 0;
         }
         return itemPrice;
     }
+
     public LinearLayout getllParentLayout() {
         return llParentLayout;
     }
-        @Override
+
+    @Override
     public void onEditClick(DataGrid gridObj, int position) {
 
     }

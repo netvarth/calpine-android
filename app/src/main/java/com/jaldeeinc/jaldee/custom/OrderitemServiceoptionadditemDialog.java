@@ -208,7 +208,7 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
             cv_submit.setVisibility(View.VISIBLE);
             cv_cover.setVisibility(View.GONE);
         }
-        if(itemDetails.getItems().getPrice() > 0){
+        if (itemDetails.getItems().getPrice() > 0) {
             tv_item_price.setText("₹ " + itemDetails.getItems().getPrice());
         } else {
             tv_item_price.setVisibility(View.GONE);
@@ -612,11 +612,17 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
 
     private float getItemPrice(JSONObject selectedPriceGridListt, DataGridColumns questionn) {
         float itemPrice = 0;
-        if (selectedPriceGridListt.has(questionn.getColumnId())) {
+        String cap = questionn.getColumnId().substring(0, 1).toUpperCase() + questionn.getColumnId().substring(1);
+
+        if (selectedPriceGridListt.has(questionn.getColumnId()) || selectedPriceGridListt.has(cap)) {
             Map<String, Object> kj = new Gson().fromJson(
                     String.valueOf(selectedPriceGridListt), new TypeToken<HashMap<String, Object>>() {
                     }.getType());
-            itemPrice = Float.parseFloat(kj.get(questionn.getColumnId()).toString());
+            if (selectedPriceGridListt.has(questionn.getColumnId())) {
+                itemPrice = Float.parseFloat(kj.get(questionn.getColumnId()).toString());
+            } else if (selectedPriceGridListt.has(cap)) {
+                itemPrice = Float.parseFloat(kj.get(cap).toString());
+            }
         } else {
             itemPrice = 0;
         }

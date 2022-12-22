@@ -299,7 +299,7 @@ public class QuestionnaireListView extends LinearLayout {
             if (checkBoxAdapter != null) {
                 checkedCount = checkBoxAdapter.getCheckedCount();
             }
-            if(checkedCount <= 0){
+            if (checkedCount <= 0) {
                 tvError.setVisibility(View.VISIBLE);
                 tvError.setText("Please select atleast " + 1 + " Item");
                 return false;
