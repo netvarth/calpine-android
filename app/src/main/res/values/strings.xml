@@ -1,0 +1,4 @@
+<resources>
+    <string name="db_name">Jaldee_customdb</string>
+    <string name="db_table_cacheIndex">CACHE_INDEX_TB</string>
+</resources>

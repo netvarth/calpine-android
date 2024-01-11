@@ -1,0 +1,888 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+//apply plugin: 'com.google.gms.google-services'
+android {
+    compileSdkVersion 33
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 33
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        jaldee {
+            storeFile file("/home/ajeesh/AndroidStudioProjects/flav/keystores/JaldeeCustomKey.jks")
+            storePassword 'Jaldee@*20*'
+            keyAlias 'jaldeecustomkey'
+            keyPassword 'Jaldee@*20*'
+        }
+        heartfulness {
+            storeFile file("/home/ajeesh/AndroidStudioProjects/flav/keystores/heartfulnessKeyStore.jks")
+            storePassword 'heart@*20*'
+            keyAlias 'heartfulnessapp'
+            keyPassword 'heart@*20*'
+        }
+        jaldeebusiness {
+            storeFile file("/home/ajeesh/AndroidStudioProjects/flav/keystores/JaldeeKeystore.jks")
+            storePassword 'Jaldee@2019'
+            keyAlias 'jaldeekeystore'
+            keyPassword 'Jaldee@2019'
+        }
+        nanohospital {
+            storeFile file("/home/ajeesh/AndroidStudioProjects/flav/keystores/nanohospitals.jks")
+            storePassword 'Jaldee@*20*'
+            keyAlias 'nanohospitals'
+            keyPassword 'Jaldee@*20*'
+        }
+        jollythomson {
+            storeFile file("/home/ajeesh/AndroidStudioProjects/flav/keystores/jollythomson.jks")
+            storePassword 'Jaldee@*20*'
+            keyAlias 'jollythomson'
+            keyPassword 'Jaldee@*20*'
+        }
+        shanthidham {
+            storeFile file("/home/ajeesh/AndroidStudioProjects/flav/keystores/shanthidham.jks")
+            storePassword 'Jaldee@2019'
+            keyAlias 'shanthidham'
+            keyPassword 'Jaldee@2019'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.jaldee
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    flavorDimensions 'default'
+
+    productFlavors {
+        careandcurehomeoclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.careandcurehomeoclinic'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.careandcurehomeoclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129977"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Care & Cure Homeo Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#2D665F'
+            resValue "color", "notification_icon_color", '#2D665F'
+        }
+        padannayilhomoeoclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.padannayilhomoeoclinic'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.padannayilhomoeoclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129421"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Padannayil Homoeo Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#C7E9FF'
+            resValue "color", "notification_icon_color", '#C7E9FF'
+        }
+        vcaredentalclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.vcaredentalclinic'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.vcaredentalclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129954"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"V CARE DENTAL CLINIC"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#8B3E17'
+            resValue "color", "notification_icon_color", '#8B3E17'
+        }
+        ciharhomoeopathy {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.ciharhomoeopathy'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.ciharhomoeopathy'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129821"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"CIHAR Homoeopathy"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#ff23729a'
+        }
+        voicethatcares {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.voicethatcares'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.voicethatcares'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"153963"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Voice That Cares"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#ff23729a'
+        }
+        keerthihomeo {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.keerthihomeo'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.keerthihomeo'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"127854"'//'"127854"' production
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Keerthi Homoeo Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#ff23729a'
+        }
+        smiledentalclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.smiledentalclinic'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.smiledentalclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129870"'//'"129871"' production
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Smile Dental Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#ffffff'
+            resValue "color", "notification_icon_color", '#ffffff'
+        }
+        drvivekmenon {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.drvivekmenon'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.drvivekmenon'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129871"'//'"129871"' production
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dr.Vivek Menon"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#016963'
+            resValue "color", "notification_icon_color", '#016963'
+        }
+        brahminsspices {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.brahminsspices'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.brahminsspices'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"154362"'//'"129864"' production , scale 154362
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Scale Brahmins Spices"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#000000'
+            resValue "color", "notification_icon_color", '#000000'
+        }
+        parakkaldentalclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.parakkaldentalclinic'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.parakkaldentalclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129710"'//'"129710"' production
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Parakkal Dental Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#000000'
+            resValue "color", "notification_icon_color", '#000000'
+        }
+        profjayarams {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.profjayarams'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.profjayarams'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+               buildConfigField "String", "PASSKEY", '"129765"'//prod - 129765 // scale - 154214
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Jayaram\'s Education"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#000000'
+            resValue "color", "notification_icon_color", '#000000'
+        }
+        sreekrishnatemple {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.sreekrishnatemple'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.sreekrishnatemple'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"153285"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"SreeKrishna Temple"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#2ACFAD'
+        }
+        doctorsdentalclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.doctorsdentalclinic'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.doctorsdentalclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"129610"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Doctors Dental Home Specality Clinic"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#F2F2F2'
+            resValue "color", "notification_icon_color", '#05C1C7'
+        }
+
+        aaahospital {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.aaahospital'
+            versionCode 10
+            versionName "1.0.1"
+            namespace 'com.jaldeeinc.aaahospital'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"152638"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"AAA Hospital"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#2ACFAD'
+            resValue "color", "notification_icon_color", '#2ACFAD'
+        }
+        dhyanhospitals {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.dhyanclinic'//dhyanhospitals'
+            versionCode 10
+            versionName "1.0.1"
+            namespace 'com.jaldeeinc.dhyanclinic'//dhyanhospitals'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"153719"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dhyan Hospitals"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#000000'
+            resValue "color", "notification_icon_color", '#C92626'
+        }
+        dhyanclinic {
+            dimension 'default'
+            applicationId 'com.jaldeeinc.dhyanclinic'
+            versionCode 10
+            versionName "1.0.1"
+            namespace 'com.jaldeeinc.dhyanclinic'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"46805"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dhyan Clinic"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#F2F2F2'
+            resValue "color", "notification_icon_color", '#C92626'
+        }
+
+        /!** PRODUCTION */
+        vibgyor {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.vibgyor'
+            versionCode 1
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.vibgyor'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"128672"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Vibgyor College Of Commerce & Management"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#E0E3EA'  //splash1 '#E0E3EA'  //splash2 '#B9EFE4'
+            resValue "color", "notification_icon_color", '#BEEFE3'
+        }
+        manappuramlabeaute {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.manappuramlabeaute'
+            versionCode 5
+            versionName "1.0.4"
+            namespace 'com.jaldeeinc.manappuramlabeaute'
+            buildConfigField "String", "VERSION", '"1.0.4"'
+            buildConfigField "String", "PASSKEY", '"129237"'//prod - 129237
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Manappuram La Beaute"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#A73F8E'
+            resValue "color", "notification_icon_color", '#A73F8E'
+        }
+        pattarumadomclinic {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.pattarumadomclinic'
+            versionCode 2
+            versionName "1.0.1"
+            namespace 'com.jaldeeinc.pattarumadomclinic'
+            buildConfigField "String", "VERSION", '"1.0.1"'
+            buildConfigField "String", "PASSKEY", '"129827"'//'"154303"' //'"129827"' production
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /* buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+             buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+             buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+             buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Pattarumadom Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#fdeec7'
+            resValue "color", "notification_icon_color", '#1B635F'
+        }
+        vishwasampada {//issue
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.vishwasampada'
+            versionCode 10001
+            versionName "1.0.1"
+            namespace 'com.jaldeeinc.vishwasampada'
+            buildConfigField "String", "VERSION", '"1.0.1"'
+            buildConfigField "String", "PASSKEY", '"128491"' //prod - 128491
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Vishwa Sampada"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#FFFFFF'
+        }
+        shanthidham {//issue
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.shanthidham'
+            versionCode 10010
+            versionName "1.1.0"
+            namespace 'com.jaldeeinc.shanthidham'
+            buildConfigField "String", "VERSION", '"1.1.0"'
+            buildConfigField "String", "PASSKEY", '"128983"' //prod - 128983
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Shanthidham"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#F8F6F6'
+            resValue "color", "notification_icon_color", '#3DA1FA'
+        }
+        ritsdental {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.ritsdental'
+            versionCode 3
+            versionName "1.0.2"
+            namespace 'com.jaldeeinc.ritsdental'
+            buildConfigField "String", "VERSION", '"1.0.2"'
+            buildConfigField "String", "PASSKEY", '"129802"' //prod - 129802
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"RIT"S Multi Speciality Dental Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#1B635F'
+        }
+        nanohospitals { //issue
+            signingConfig signingConfigs.nanohospital
+            dimension 'default'
+            applicationId 'com.jaldeeinc.nanohospitals'
+            versionCode 10
+            versionName "1.0.6"
+            namespace 'com.jaldeeinc.nanohospitals'
+            buildConfigField "String", "VERSION", '"1.0.6"'
+            buildConfigField "String", "PASSKEY", '"128621"' //prod - 128621
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Nano Hospitals"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFFFF'
+            resValue "color", "notification_icon_color", '#C92626'
+        }
+        mediexpat {//issue
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.mediexpat'
+            versionCode 10001
+            versionName "1.0.0"
+            namespace 'com.jaldeeinc.mediexpat'
+            buildConfigField "String", "VERSION", '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"128495"' //prod - 128495
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"MediExpat"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFFFF'
+            resValue "color", "notification_icon_color", '#E39C44'
+        }
+        kanhaspaces { //issue
+            signingConfig signingConfigs.heartfulness
+            dimension 'default'
+            applicationId 'com.jaldeeinc.kanhaspaces'
+            versionCode 14
+            versionName "1.0.4"
+            namespace 'com.jaldeeinc.kanhaspaces'
+            buildConfigField "String", "VERSION", '"1.0.4"'
+            buildConfigField "String", "PASSKEY", '"129160"' //prod - 129160
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Kanha Facility Manager"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFFFF'
+            resValue "color", "notification_icon_color", '#FFFFFF'
+        }
+        vunited {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.vunited'
+            versionCode 8
+            versionName "1.0.5"
+            namespace 'com.jaldeeinc.vunited'
+            buildConfigField "String", "VERSION", '"1.0.5"'
+            buildConfigField "String", "PASSKEY", '"127716"' //prod - 127716 //scale -152904
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"V-United"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#000000'
+            resValue "color", "notification_icon_color", '#0000FD'
+        }
+        drjollythomson {//issue
+            signingConfig signingConfigs.jaldeebusiness
+            dimension 'default'
+            applicationId 'com.jaldeeinc.drjollythomson'
+            versionCode 6
+            versionName "1.0.4"
+            namespace 'com.jaldeeinc.drjollythomson'
+            buildConfigField "String", "VERSION", '"1.0.4"'
+            buildConfigField "String", "PASSKEY", '"129091"' //prod - 129091
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dr Jolly Thomson\'s Life Care"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#FFFFFF'
+        }
+        drbasilhomeo {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.drbasilhomeo'
+            versionCode 1//12
+            versionName "1.0.8"//prod -"1.0.8" scale -"1.0.0"
+            namespace 'com.jaldeeinc.drbasilhomeo'
+            buildConfigField "String", "VERSION", '"1.0.8"'//prod '"1.0.8"' scale - '"1.0.0"'
+            buildConfigField "String", "PASSKEY", '"128479"' //prod - 128479, scale - 154388
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://test.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://test.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dr.Basil\'s Homeo Hospital"'
+            resValue "string", "db_version", '"2"'//scale -'"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#FFFFFF'
+        }
+        cosmofem {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.cosmofem'
+            versionCode 3
+            versionName "1.0.2"
+            namespace 'com.jaldeeinc.cosmofem'
+            buildConfigField "String", "VERSION", '"1.0.2"'
+            buildConfigField "String", "PASSKEY", '"129583"' //prod - 129583
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Cosmofem"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#1F89E1'
+        }
+        jaldeevets {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.jaldeevets'
+            versionCode 13
+            versionName "1.0.7"
+            namespace 'com.jaldeeinc.jaldeevets'
+            buildConfigField "String", "VERSION", '"1.0.7"'
+            buildConfigField "String", "PASSKEY", '"129278"' //prod - 129278 //scale - 153661  //prodQA - 129503
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Jaldee Vets"'
+            resValue "string", "db_version", '"5"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#fe6f27'
+        }
+        phoenixdentalclinic {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.phoenixdentalclinic'
+            versionCode 4
+            versionName "1.0.3"
+            namespace 'com.jaldeeinc.phoenixdentalclinic'
+            buildConfigField "String", "VERSION", '"1.0.3"'
+            buildConfigField "String", "PASSKEY", '"129606"' //prod - 129606
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /*           buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+                       buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+                       buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+                       buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            */
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Phoenix Multi Speciality Dental Clinic"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#E0E3EA'
+            resValue "color", "notification_icon_color", '#1B635F'
+        }
+        sulualternativemedicine {    //uses custom activity_main layout
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.sulualternativemedicine'
+            versionCode 4
+            versionName "1.0.3"
+            namespace 'com.jaldeeinc.sulualternativemedicine'
+            buildConfigField "String", "VERSION", '"1.0.3"'
+            /*buildConfigField "String", "PASSKEY", '"129623"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "PASSKEY", '"154147"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Sulu Alternative Medicine"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#34b648'
+        }
+        drbhavyahomoeopathy {  //uses custom activity_main layout and added a specific dependency for gif support
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.drbhavyahomoeopathy'
+            versionCode 5
+            versionName "1.0.4"
+            namespace 'com.jaldeeinc.drbhavyahomoeopathy'
+            buildConfigField "String", "VERSION", '"1.0.4"'
+            buildConfigField "String", "PASSKEY", '"128998"' //prod - 128998 // scale - 154315,154000
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dr Bhavya\'s Homoeopathy"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#2CB9CD'
+        }
+        drkishorekanhamedicalcentre {  //uses custom activity_main layout
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.drkishorekanhamedicalcentre'
+            versionCode 5
+            versionName "1.0.5"
+            namespace 'com.jaldeeinc.drkishorekanhamedicalcentre'
+            buildConfigField "String", "VERSION", '"1.0.5"'
+            buildConfigField "String", "PASSKEY", '"127690"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dr Kishore Sabbu : KMC : Kanha"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#833D6B'
+        }
+        nashamukthi_heartfulness {   //uses custom activity_main layout notnotnot
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.nashamukthi_heartfulness'
+            versionCode 6
+            versionName "1.0.3"
+            namespace 'com.jaldeeinc.nashamukthi_heartfulness'
+            buildConfigField "String", "VERSION", '"1.0.3"'
+            buildConfigField "String", "PASSKEY", '"1_128007"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '"&lan=hd"'
+            resValue "string", "app_name", '"Nasha Mukti by Heartfulness"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFBB86FC'
+            resValue "color", "notification_icon_color", '#FFBB86FC'
+        }
+        heartfulness {    //uses custom activity_main layout   notnotnot
+            signingConfig signingConfigs.heartfulness
+            dimension 'default'
+            applicationId 'com.jaldeeinc.heartfulness'
+            versionCode 10011
+            versionName "1.0.10"
+            namespace 'com.jaldeeinc.heartfulness'
+            buildConfigField "String", "VERSION", '"1.0.10"'
+            buildConfigField "String", "PASSKEY", '"128007"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"HealthCare by Heartfulness"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#FFBB86FC'
+            resValue "color", "notification_icon_color", '#FFBB86FC'
+        }
+        jaldeehomeo {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.jaldeehomeo'
+            versionCode 5
+            versionName "1.0.4"
+            namespace 'com.jaldeeinc.jaldeehomeo'
+            buildConfigField "String", "VERSION", '"1.0.4"'
+            buildConfigField "String", "PASSKEY", '"129485"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Jaldee Homeo"'
+            resValue "string", "db_version", '"5"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFF'
+            resValue "color", "notification_icon_color", '#087637'
+        }
+        drsmithasmihms {
+            signingConfig signingConfigs.jaldee
+            dimension 'default'
+            applicationId 'com.jaldeeinc.drsmithasmihms'
+            versionCode 4
+            versionName "1.0.3"
+            namespace 'com.jaldeeinc.drsmithasmihms'
+            buildConfigField "String", "VERSION", '"1.0.3"'
+            buildConfigField "String", "PASSKEY", '"129570"'
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            /*buildConfigField "String", "PASSKEY", '"154129"' //153719
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Dr Smithas MIHMS"'
+            resValue "string", "db_version", '"1"'
+            resValue "color", "splash_screen_bg_color", '#FFFFFFFF'
+            resValue "color", "notification_icon_color", '#1B635F'
+        }
+        jaldeebusiness {
+            signingConfig signingConfigs.jaldeebusiness
+            dimension 'default'
+            applicationId 'com.jaldeeinc.jaldeebusiness'
+            /*versionCode 10
+            versionName "1.0.1"*/
+            versionCode 10079
+            versionName "1.11.8"
+            namespace 'com.jaldeeinc.jaldeebusiness'
+            buildConfigField "String", "VERSION", '"1.11.8"' //scale - 1.11.4 //prod - 1.11.9
+            buildConfigField "String", "PASSKEY", '"JALDEE"'
+            /*buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_scale_"'
+            buildConfigField "String", "BASE_URL", '"https://scale.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://scale.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeuiscale.s3.ap-south-1.amazonaws.com/"'*/
+            buildConfigField "String", "SHARED_PREF", '"jaldeecustom_firebase_prod_"'
+            buildConfigField "String", "BASE_URL", '"https://www.jaldee.com/v1/rest/"'
+            buildConfigField "String", "UIROOT_URL", '"https://www.jaldee.com/"'
+            buildConfigField "String", "S3CONFIG_URL", '"https://jaldeeui.s3.ap-south-1.amazonaws.com/"'
+            buildConfigField "String", "LAN", '""'
+            resValue "string", "app_name", '"Jaldee Business Suite"'
+            resValue "string", "db_version", '"2"'
+            resValue "color", "splash_screen_bg_color", '#6D38DB'
+            resValue "color", "notification_icon_color", '#194179'
+            //sample url --- https://www.jaldee.com/business/login?at=516064dc536ccf11JALDEE&muid=null&device=Google%20Pixel%204a%2013%20TIRAMISU
+        }
+    }
+}
+
+dependencies {
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+
+    implementation 'com.google.firebase:firebase-analytics'
+    // Add the dependency for the Firebase SDK for Google Analytics
+
+    implementation 'com.google.firebase:firebase-messaging'
+
+    implementation('com.squareup.retrofit2:retrofit:2.9.0') {
+        // exclude Retrofit’s OkHttp dependency module and define your own module import
+        exclude module: 'okhttp'
+    }
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation 'com.paytm.appinvokesdk:appinvokesdk:1.6.8'
+    implementation 'com.karumi:dexter:6.2.3'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+    testImplementation 'junit:junit:4.+'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    drbhavyahomoeopathyImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'  //for use gif
+    sulualternativemedicineImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'  //for use gif
+    pattarumadomclinicImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'  //for use gif
+    vunitedImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'  //for use gif
+    brahminsspicesImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'  //for use gif
+    jaldeebusinessImplementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'  //for use gif
+}

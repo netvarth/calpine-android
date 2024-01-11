@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "906660995084",
+    "project_id": "customapps-54626",
+    "storage_bucket": "customapps-54626.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906660995084:android:82854b4930d04f78aece29",
+        "android_client_info": {
+          "package_name": "com.jaldeeinc.vishwasampada"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906660995084-3q5oacggl5gpg82hvinl0qe6rbvk75i2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1VrAMH_gI24zbusLcOdlhOwDGak3H5Yk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906660995084-3q5oacggl5gpg82hvinl0qe6rbvk75i2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906660995084-4tv1npjpsrjnr7tdhjhck6pomonm4dgs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaldeeinc.manappuramlabeaute"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "906354236471",
+    "firebase_url": "https://jaldee-4e85e.firebaseio.com",
+    "project_id": "jaldee-4e85e",
+    "storage_bucket": "jaldee-4e85e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906354236471:android:4f3cf632db00b3583633b2",
+        "android_client_info": {
+          "package_name": "com.jaldeeinc.manappuramlabeaute"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtFtfLJhLB0btRShx1cXWr6o8Kjya3qI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906354236471-jdan9m82qtls09iahte8egdffvvhl5pv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906354236471-1aqpg6rdegsdvfcl3cfuo7c9056upsvg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaldeeinc.shanthidham"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
